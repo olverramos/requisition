@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load tools %}
+{% load mathfilters %}
+
+{% block title %}{{table_title}}{% endblock %}
+
+{% block body %} class="index-page bg-gray-200" {% endblock body %}
+{% block content %}
+    
+    {% block form %} {% endblock %}
+
+    {% block import_form %} {% endblock %}
+
+    {% block add_forms %} {% endblock %}
+
+    <header class="header-2">
+        <div class="page-header relative">
+            <div class="container" style="margin-top: 1px;">
+                <div class="row">
+                    <div class="text-left mx-auto">
+                        <h3 class="text-primary">
+                            {{table_title}}
+                        </h3>
+                        <p>{{table_description}}</p>
+                        {% block custom_filter %}
+                        {% endblock %}
+                        {% if filter_form %}
+                            <form role="form" id="filter_form" name="filter_form" method="post" autocomplete="off" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="page" id="page_id">
+                                <div class="row">
+                                    <div class="col input-group">
+                                        {% for field in filter_form %}
+                                            <div class="col col-sm-1 text-secondary align-self-center text-right">
+                                                &nbsp; {{field.label_tag}}
+                                            </div>
+                                            <div class="col col-sm-3 mb-2">
+                                                {{ field }}
+                                            </div>
+                                            <span class="text-danger">{{ field.errors }} </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-sm-1 ms-lg-auto">
+                                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    {% if back_url %}
+                        <a href="{{back_url}}">
+                            <button type="button" class="btn bg-gradient-secondary">
+                                <span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span>
+                            </button>
+                        </a>
+                    {% endif %}
+                    {% if not disable_add %}
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal" data-bs-target="#formModal"  onclick="load_data('add', '');">
+                            <span aria-hidden="true"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                        </button>
+                    {% endif %}
+                    {% if can_import %}
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal" data-bs-target="#formModal"  onclick="import_data();">
+                            <span aria-hidden="true"><i class="fa-solid fa-file-import"></i></span>
+                        </button>
+                    {% endif %}
+                    {% if can_export %}
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal" data-bs-target="#formModal"  onclick="export_data();">
+                            <span aria-hidden="true"><i class="fa-solid fa-file-export"></i></span>
+                        </button>
+                    {% endif %}
+                    
+                </div>
+
+                {% block data_table %}
+                {% endblock %}
+                {% include "core/paginator.html" %}
+            </div>
+        </div>
+    </header>   
+{% endblock %}
+
+{% block javascripts %}
+
+    {% if filter_form %}
+        {{filter_form.media}}
+    {% endif %}
+
+    {% if import_form %}
+        {{import_form.media}}
+    {% endif %}
+
+    {% if form %}
+        {{form.media}}
+    {% endif %}
+
+    {% block add_javascripts %} {% endblock %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="es" itemscope itemtype="http://schema.org/WebPage">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/favicon/apple-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+
+        <title>
+            {{COMERCIAL_APP_NAME}} - {% block title %}{% endblock title %}
+        </title>
+        <!--     Fonts and icons     -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
+        <!-- Nucleo Icons -->
+        <link href="{% static 'css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
+
+        <!-- Font Awesome Icons -->
+        <script src="https://kit.fontawesome.com/2111206514.js" crossorigin="anonymous"></script>
+        <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
+
+        <!-- CSS Files -->
+        <link id="pagestyle" href="{% static 'css/soft-design-system.css' %}" rel="stylesheet" />
+        <link id="pagestyle" href="{% static 'css/style.css' %}" rel="stylesheet" />
+    </head>
+
+    <body {% block body %}{% endblock body %} >
+
+        {% block header %}
+        <div style="margin-bottom: 10px;" class="d-none d-sm-block">
+            {% include 'core/includes/navigation.html' %}
+        </div>
+        <div style="margin-bottom: 10px;" class="d-block d-sm-none">
+            {% include 'core/includes/navigation_xs.html' %}
+        </div>
+    {% endblock header %}
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mx-lg-5 mx-md-3 mx-sm-1 px-lg-5 px-md-3 px-sm-0">
+            {% block content %}{% endblock content %}
+        </div>
+        <footer>
+            {% block footer %}
+                <div style="margin-top: 10px;" class="d-none d-sm-block">
+                    {% include 'core/includes/footer.html' %}
+                </div>
+                <div style="margin-top: 10px;" class="d-block d-sm-none">
+                    {% include 'core/includes/footer_xs.html' %}
+                </div>
+            {% endblock footer %}
+        </footer>
+            
+        {% include 'core/includes/scripts.html' %}
+
+        {% block javascripts %}{% endblock javascripts %}
+
+    </body>
+</html>

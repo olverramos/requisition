@@ -1,0 +1,102 @@
+{% load static %}
+
+<ul class="nav nav-pills bg-white justify-content-center">
+    <li class="nav-item mt-2">
+        <a class="navbar-brand" href="/" rel="tooltip" title="Plataforma de Comunidades" data-placement="bottom">
+            <h4>
+                <img src="{% static 'img/arvii_logo.png' %}" width="20%" />
+                {{COMERCIAL_APP_NAME}}
+            </h4>
+        </a>
+    </li>
+    {% if ACCOUNT %}
+        <li class="mx-2 nav-item dropdown dropdown-hover">
+            <a class="cursor-pointer" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="d-inline-block">
+                    <div class="icon d-flex">
+                        <i class="fa fa-bars text-gradient text-primary"></i>
+                    </div>
+                </div>
+                Menu
+                <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-1">
+            </a>
+            <div class="dropdown-menu dropdown-menu-animation dropdown-md p-1 border-radius-lg mt-0" aria-labelledby="dropdownMenu">
+                <a href="{% url 'home' %}" class="border-radius-md">
+                    <div class="d-inline-block">
+                        <div class="icon h-10 me-3 d-flex mt-1">
+                            <i class="fa fa-home text-gradient text-primary"></i>
+                        </div>                   
+                    </div>
+                    Inicio
+                </a>
+                <a href="{% url 'community_own_communities' %}" class="dropdown-item border-radius-md">
+                    <span class="ps-3">Mis Comunidades</span>
+                </a>
+                {% if ACCOUNT.role.id != "member" %}
+                    <a href="{% url 'community_communities' %}" class="dropdown-item border-radius-md">
+                        <span class="ps-3">Administrar Comunidades</span>
+                    </a>
+                {% endif %}
+                <a href="{% url 'community_communities_by_register' %}" class="dropdown-item border-radius-md">
+                    <span class="ps-3">Comunidades a Registrarse</span>
+                </a>
+                {% if ACCOUNT.role.id == "admin" %}
+                    <a href="{% url 'admin_bussiness_companies' %}" class="dropdown-item border-radius-md">
+                        <span class="ps-3">Administrar Negocios</span>
+                    </a>
+                {% endif %}
+                <a href="{% url 'bussiness_companies' %}" class="dropdown-item border-radius-md">
+                    <span class="ps-3">Mis Negocios</span>
+                </a>       
+            </div>
+        </li>
+        <li class="mx-2 nav-item dropdown dropdown-hover">
+            <a class="cursor-pointer" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="d-inline-block">
+                    <div class="icon d-flex">
+                        <i class="fa fa-user text-gradient text-primary"></i>
+                    </div>
+                </div>
+                {{ACCOUNT.username}}
+                <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-1">
+            </a>
+            <div class="dropdown-menu dropdown-menu-animation dropdown-md p-1 border-radius-lg mt-0" aria-labelledby="dropdownUser">
+                <a class="nav-link nav-link-icon" href="{% url 'auth_accounts_profile' %}">
+                    <i class="fa fa-user"></i>
+                    <span class="ps-0">Perfil</span>
+                </a>
+                <a class="nav-link nav-link-icon" href="{% url 'auth_passwordchange' %}">
+                    <i class="fa fa-lock"></i>
+                    <span class="ps-0">Camb. Contraseña</span>
+                </a>
+                <a class="nav-link nav-link-icon" href="{% url 'auth_logout' %}">
+                    <i class="fa fa-sign-out"></i>
+                    <span class="ps-0">Salir</span>
+                </a>        
+            </div>
+        </li>
+    {% else %}
+        <li class="mx-2 nav-item">
+            <a href="{% url 'home' %}" class="nav-item">
+                <div class="d-inline-block">
+                    <div class="icon d-flex">
+                        <i class="fa fa-home text-secundary"></i>
+                    </div>                   
+                </div>
+                Inicio
+            </a>        
+        </li>
+        <li class="mx-2 nav-item">
+            <a class="nav-item" href="{% url 'auth_login' %}">
+                <i class="fa fa-sign-in"></i>
+                <span class="">Ingresar</span>
+            </a> 
+        </li>
+        <li class="nav-item">
+            <a class="nav-item" href="{% url 'auth_register' %}">
+                <i class="fa fa-user-plus"></i>
+                <span class="">Registrarse</span>
+            </a>
+        </li>
+    {% endif %}
+</nav>

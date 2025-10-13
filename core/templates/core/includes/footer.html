@@ -1,0 +1,32 @@
+<footer class="footer bottom-0 py-0 w-100 bg-secondary">
+    <div class="container">
+        <div class="row align-items-center justify-content-lg-between">
+            <div class="col-6 col-md-3 my-auto">
+                <div class="copyright text-center text-sm text-white text-lg-start">
+                    <a class="font-weight-bold text-white" href="{{ENTERPRISE.URL}}" target="_blank">{{ENTERPRISE.NAME}}</a>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-3 my-auto">
+                <div class="copyright text-center text-sm text-white text-lg-center">
+                    Email: <a href="mailto:{{ENTERPRISE.EMAIL}}">{{ENTERPRISE.EMAIL}}</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-2 my-auto">
+                <div class="copyright text-center text-sm text-white text-lg-center">
+                    {{ENTERPRISE.CITY}}
+                </div>
+            </div>
+            <div class="col-12 col-md-3 my-auto">
+                <div class="copyright text-center text-sm text-white text-lg-center">
+                    &copy; 
+                    Derechos Reservados {% now 'Y' %}
+                </div>
+            </div>
+            <div class="col-12 col-md-1 my-auto">
+                <div class="copyright text-center text-sm text-white text-lg-center">
+                    v {{APP_VERSION}}
+                </div>
+            </div>
+    </div>
+</footer>
