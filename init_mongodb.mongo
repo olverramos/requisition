@@ -1,0 +1,6 @@
+use communiydb
+db.createUser( { user: "admin",
+                 pwd: "am3ricas2024",
+                 roles: [ "readWrite"] },
+               { w: "majority" , wtimeout: 5000 } )
+               

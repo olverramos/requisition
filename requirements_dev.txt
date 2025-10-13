@@ -1,0 +1,16 @@
+django
+mongoengine
+python-dotenv
+django-mongoengine
+django-theme-soft-design
+str2bool
+whitenoise
+gunicorn
+django-extensions
+django-mathfilters
+pymongo[srv]
+sendgrid
+pyshorteners
+django-fileprovider
+django-bootstrap-datepicker-plus
+styleframe

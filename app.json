@@ -1,0 +1,21 @@
+{
+    "name": "ARVII Requisition App",
+    "description": "Plataforma WEB para el registro de Solicitudes.",
+    "image": "heroku/python",
+    "repository": "https://github.com/olverramos/requisition.git",
+    "keywords": ["python", "django"],
+    "env": {
+      "DJANGO_SECRET_KEY": {
+        "description": "The secret key for the Django application.",
+        "generator": "secret"
+      }
+    },
+    "environments": {
+      "test": {
+        "scripts": {
+          "test": "./app/manage.py test --debug-mode"
+        }
+      }
+    }
+  }
+  
