@@ -1,7 +1,7 @@
 APP_NAME=Arvii
 DATABASE_USERNAME=admin
 DATABASE_PASSWORD=am3ricas2024
-DATABASE_NAME=communitydb
+DATABASE_NAME=requisitiondb
 DATABASE_HOST=arvii.i9iybpi.mongodb.net
 DATABASE_PORT=27017
 DATABASE_SCHEME=mongodb+srv

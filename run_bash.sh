@@ -1,1 +1,1 @@
-heroku run bash -a arvii-community
+heroku run bash -a arvii-requisition

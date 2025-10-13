@@ -1,4 +1,4 @@
-use communiydb
+use requisitiondb
 db.createUser( { user: "admin",
                  pwd: "am3ricas2024",
                  roles: [ "readWrite"] },
