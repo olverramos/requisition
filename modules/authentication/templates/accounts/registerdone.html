@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Cuenta Confirmada{% endblock title %}
+
+{% block body %} class="sign-in-illustration" {% endblock body %}
+
+{% block content %}
+    <section>   
+        <div class="page-header min-vh-80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+                        <div class="card card-plain">
+                            {% if account %}
+                                {% if not is_expired %}
+                                    <div class="card-header pb-0 text-left">
+                                        <h4 class="font-weight-bolder">Cuenta Confirmada</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        Hola <b>{{account.complete_name}}</b>!
+                                        <br/>
+                                        Tu cuenta fue activada satisfactoriamente.
+                                    </div>
+                                    <div class="card-footer pt-0">
+                                        <a href="{% url 'auth_login' %}" class="text-primary text-gradient font-weight-bold">Ingresa Aqui!</a>
+                                    </div>
+                                {% else %}
+                                    <div class="card-header pb-0 text-left">
+                                        <h4 class="font-weight-bolder">El Token ha expirado</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        Hola <b>{{account.complete_name}}</b>!
+                                        <br/>
+                                        El sistema debe generarte de nuevo la invitación al correo.
+                                    </div>
+                                    <div class="card-footer pt-0">
+                                        <a href="{% url 'auth_accounts_generate_confirm' account_id=account.id %}" class="text-primary text-gradient font-weight-bold">Enviar Email Nuevamente</a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="card-header pb-0 text-left">
+                                    <h4 class="font-weight-bolder">Hay un error en el enlace</h4>
+                                </div>
+                                <div class="card-body">
+                                    El enlace de la cuenta está errado, te recomendamos ingresar al correo electrónico y copiar la url y pegarlo de nuevo en el navegador.
+                                </div>
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                        ¿No tienes una cuenta?
+                                        <a href="{% url 'auth_register' %}" class="text-primary text-gradient font-weight-bold">¡Crea una!</a>
+                                    </p>
+                                </div>                                
+                            {% endif %}
+                            <div class="card-footer pt-0">
+                                <a href="{% url 'home' %}" class="text-primary text-gradient font-weight-bold">Ir a inicio</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% include "core/includes/text_auth.html" %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

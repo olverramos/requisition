@@ -56,7 +56,7 @@ else:
     ALLOWED_HOSTS = ['*']
 
 # Add here your deployment HOSTS
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8150', 'http://127.0.0.1:8150']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8150', 'http://127.0.0.1:8152']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')
 if RENDER_EXTERNAL_HOSTNAME:    
@@ -82,15 +82,15 @@ EXTERNAL_APPS = [
     'django_extensions',
     'mathfilters',
     'fileprovider',
-    "bootstrap4",
+    # "bootstrap",
     'bootstrap_datepicker_plus',
 ]
 
 MODULES_APPS = [
-    # 'modules.localization.apps.LocalizationConfig',
+    'modules.localization.apps.LocalizationConfig',
     # 'modules.requisition.apps.RequisitionConfig',
-    # 'modules.authentication.apps.AuthenticationConfig',
-    # 'modules.bussiness.apps.BussinessConfig',
+    'modules.authentication.apps.AuthenticationConfig',
+    'modules.base.apps.BaseConfig',
     # 'modules.phrases.apps.PhrasesConfig',
     # 'modules.payments.apps.PaymentsConfig',
 ]

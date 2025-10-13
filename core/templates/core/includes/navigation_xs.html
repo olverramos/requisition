@@ -29,9 +29,10 @@
                     </div>
                     Inicio
                 </a>
-                <a href="{% url 'community_own_communities' %}" class="dropdown-item border-radius-md">
-                    <span class="ps-3">Mis Comunidades</span>
+                <a href="{% url 'base_ramos' %}" class="dropdown-item border-radius-md">
+                    <span class="ps-3">Ramos</span>
                 </a>
+                {% comment %} 
                 {% if ACCOUNT.role.id != "member" %}
                     <a href="{% url 'community_communities' %}" class="dropdown-item border-radius-md">
                         <span class="ps-3">Administrar Comunidades</span>
@@ -47,10 +48,10 @@
                 {% endif %}
                 <a href="{% url 'bussiness_companies' %}" class="dropdown-item border-radius-md">
                     <span class="ps-3">Mis Negocios</span>
-                </a>       
+                </a>        {% endcomment %}
             </div>
         </li>
-        <li class="mx-2 nav-item dropdown dropdown-hover">
+        {% comment %} <li class="mx-2 nav-item dropdown dropdown-hover">
             <a class="cursor-pointer" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="d-inline-block">
                     <div class="icon d-flex">
@@ -74,7 +75,7 @@
                     <span class="ps-0">Salir</span>
                 </a>        
             </div>
-        </li>
+        </li> {% endcomment %}
     {% else %}
         <li class="mx-2 nav-item">
             <a href="{% url 'home' %}" class="nav-item">

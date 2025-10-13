@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block body %} class="index-page bg-gray-200" {% endblock body %}
+
+{% block content %}
+<header class="header-2">
+    <div class="page-header relative">
+        <div class="container" style="margin-top: 20px;">
+            <div class="row">
+                {% comment %} <div class="text-left mx-auto">
+                    <h3 class="text-primary">
+                        Nuestras Comunidades
+                    </h3>
+                    <p>Encuentra el servicio o el producto que busca en nuestra gran comunidad</p>
+                    <form role="form" id="search-form" method="post" autocomplete="off" action="{% url 'bussiness_companies_search' %}">
+                        {% csrf_token %}
+                        <div class="row row-cols-lg-4 row-cols-md-4 row-cols-sm-8 row-cols-xs-12">
+                            <div class="row col-lg-12 col-md-12">
+                                <div class="input-group mb-2 w-100">
+                                    <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+                                    <input class="form-control" placeholder="Escribe palabras para la búsqueda" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='search' id='search_id' >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                <label class="text-secondary align-self-center">Categoría</label>
+                                <select class="form-control select2" name="category" id="category_id" placeholder="Categoría" >
+                                    <option value="">Todas</option>
+                                    {% for category in category_list %}
+                                        <option value='{{category.id}}'>{{category}}</option>
+                                    {% endfor %}
+                                </select>    
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                <label class="text-secondary align-self-center">Comunidad</label>
+                                <select class="form-control select2" name="community" id="community_id" placeholder="Comunidad" >
+                                    <option value="">Todas</option>
+                                    
+                                    {% for community in community_list %}
+                                        <option value='{{community.id}}'>{{community}}</option>
+                                    {% endfor %}
+                                </select>    
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                <label class="text-secondary align-self-center">Departamento</label>
+                                <select class="form-control select2" name="state" id="state_id" placeholder="Departamento" >
+                                    <option value="">Todos</option>
+                                    {% for state in state_list %}
+                                        <option value='{{state.id}}'>{{state}}</option>
+                                    {% endfor %}
+                                </select>    
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                <label class="col text-secondary align-self-center">Ciudad</label>
+                                <select class="form-control select2" name="city" id="city_id" placeholder="Ciudad" >
+                                    <option value="">Todas</option>
+                                    {% for city in city_list %}
+                                        <option value='{{city.id}}'>{{city}}</option>
+                                    {% endfor %}
+                                </select>    
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 justify-content-xs-end">
+                                <button type="submit" class="btn bg-gradient-primary w-100 ms-lg-1 mt-4 mb-2">Buscar</button>
+                            </div>
+                        </div> 
+                    </form>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </div>
+</header>  
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'js/home.js' %}"></script>
+    <script src="{% static 'js/localization.js' %}"></script>
+{% endblock %}

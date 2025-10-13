@@ -52,11 +52,11 @@
                                 <a href="{% url 'auth_accounts' %}" class="dropdown-item border-radius-md">
                                     <span class="ps-3">Usuarios</span>
                                 </a>
-                                <a href="{% url 'bussiness_categories' %}" class="dropdown-item border-radius-md">
-                                    <span class="ps-3">Categorías</span>
+                                <a href="{% url 'base_ramos' %}" class="dropdown-item border-radius-md">
+                                    <span class="ps-3">Ramos</span>
                                 </a>
                             {% endif %}
-                            {% if ACCOUNT.role.id != "member" %}
+                            {% comment %} {% if ACCOUNT.role.id != "member" %}
                                 <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-start align-items-center px-0 mt-3">
                                     <div class="d-inline-block">
                                         <div class="icon h-10 me-3 d-flex mt-1">
@@ -112,7 +112,7 @@
                             {% endif %}
                             <a href="{% url 'bussiness_companies' %}" class="dropdown-item border-radius-md">
                                 <span class="ps-3">Mis Negocios</span>
-                            </a>
+                            </a> {% endcomment %}
                         </div>
                     </li>
                 {% endif %}

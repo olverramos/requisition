@@ -1,0 +1,6 @@
+ARVII Comunidades
+
+{{complete_name}} Gracias por unirte a Nuestra Gran Comunidad de Usuarios, has que tu negocio sea visible en toda la plataforma.
+
+Copia el siguiente enlace y pegalo en el la barra de direcciones del navegador: {{confirm_url}}
+

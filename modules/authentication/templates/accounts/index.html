@@ -1,0 +1,81 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block add_forms %}
+    {% include "accounts/set_password_modal.html" %}
+{% endblock %}
+
+{% block form %}
+    {% include "accounts/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Usuario</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Telefono</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Whatsapp</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Rol</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Ciudad</th>
+                        <th class="text-secondary opacity-7"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in paginator.data %}
+                        <tr>
+                            <td>
+                                <div class="d-flex px-2">
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-xs">{{account.complete_name}}</h6>
+                                        <p class="text-xs text-secondary mb-0">{{account.username}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{account.phone}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{account.whatsapp}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{account.role}}</span>
+                            </td>
+                            <td class="align-middle">
+                                {% if account.city %}
+                                    <span class="text-secondary text-xs font-weight-bold">{{account.city}}{% if account.state %} - {{account.state}}{% endif %}</span>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Usuario" onclick="load_data('view', '{{account.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Usuario" onclick="load_data('edit', '{{account.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#setPasswordModal" data-original-title="Cambiar Contraseña" onclick="load_setpassword_data('{{account.id}}');">
+                                    <i class="fa fa-lock text-sm"></i>
+                                </button>
+                                {% if not account.is_active %}
+                                    <a href="{{account.id}}/activate/">
+                                        <button type="button" class="btn">
+                                            <i class="fa fa-user-check text-sm"></i>
+                                        </button>
+                                    </a>
+                                {% endif %}
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Usuario" onclick="load_data('delete', '{{account.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

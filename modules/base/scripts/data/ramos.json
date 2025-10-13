@@ -1,0 +1,31 @@
+[
+    {
+        "id": "cumplimiento",
+        "name": "Cumplimiento",
+        "fields": [
+            {
+                "field_type": "IN",
+                "name": "Nro Contrato",
+                "mandatory": true
+            }
+        ],
+        "available_documents": [
+            {
+                "name": "Contrato",
+                "mandatory": true
+            },
+            {
+                "name": "Copia RUT",
+                "mandatory": false
+            },
+            {
+                "name": "Copia Cédula",
+                "mandatory": false
+            },
+            {
+                "name": "Requerimiento de Cotizacón",
+                "mandatory": false
+            }
+        ]
+    }
+]

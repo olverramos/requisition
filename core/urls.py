@@ -8,8 +8,8 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
 
     path("auth/", include('modules.authentication.urls')),
-    # path("localization/", include('modules.localization.urls')),
-    # path("bussiness/", include('modules.bussiness.urls')),
+    path("localization/", include('modules.localization.urls')),
+    path("base/", include('modules.base.urls')),
     # path("community/", include('modules.community.urls')),
     # path("ap/", include('modules.payments.urls')),
 

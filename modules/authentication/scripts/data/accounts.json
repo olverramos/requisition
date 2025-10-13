@@ -1,0 +1,30 @@
+[
+  {
+    "username": "olver.ramos@gmail.com",
+    "email": "olver.ramos@gmail.com",
+    "first_name": "Olver Eduardo",
+    "last_name": "Ramos",
+    "password": "PIPElalo2024",
+    "genre_id": "M",
+    "address": "Calle 10A # 72-36",
+    "phone": "3226542978",
+    "whatsapp": "3226542978",
+    "state_code": "76",
+    "city_code": "76001",
+    "role_id": "admin"
+  },
+  {
+    "username": "joseaza@segurosseycon.com",
+    "email": "joseaza@segurosseycon.com",
+    "first_name": "José Fernando",
+    "last_name": "Aza",
+    "password": "prueba",
+    "genre_id": "M",
+    "address": "",
+    "phone": "3176403705",
+    "whatsapp": "3176403705",
+    "state_code": "76",
+    "city_code": "76001",
+    "role_id": "admin"
+  } 
+] 

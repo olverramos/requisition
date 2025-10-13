@@ -1,0 +1,38 @@
+[
+    {
+        "id": "SU",
+        "name": "Selección única"
+    },
+    {
+        "id": "IN",
+        "name": "Campo de Texto"
+    },
+    {
+        "id": "TA",
+        "name": "Campo de Texto Largo"
+    },
+    {
+        "id": "PA",
+        "name": "Campo de Password"
+    },
+    {
+        "id": "DA",
+        "name": "Campo de Fecha"
+    },
+    {
+        "id": "DM",
+        "name": "Campo de Fecha Mes"
+    },
+    {
+        "id": "TI",
+        "name": "Campo de Hora"
+    },
+    {
+        "id": "AU",
+        "name": "Campo Autonumerico"
+    },
+    {
+        "id": "AD",
+        "name": "Campo Autofecha"
+    }
+]
