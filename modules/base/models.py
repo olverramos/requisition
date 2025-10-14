@@ -41,7 +41,6 @@ class FieldType(Document):
             pass
 
 
-
 class FieldOption(EmbeddedDocument):
     name = fields.StringField(max_length=100, verbose_name='Nombre')
 
@@ -144,6 +143,5 @@ class Ramo(Document):
                             ramo.save()
 
                             print (f'Ramo {ramo} creada')
-
         except FileNotFoundError:
             pass
