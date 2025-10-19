@@ -3,11 +3,7 @@
         "id": "cumplimiento",
         "name": "Cumplimiento",
         "fields": [
-            {
-                "field_type": "IN",
-                "name": "Nro Contrato",
-                "mandatory": true
-            }
+            "Nro Contrato"
         ],
         "available_documents": [
             {

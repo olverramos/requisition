@@ -91,8 +91,7 @@ MODULES_APPS = [
     'modules.authentication.apps.AuthenticationConfig',
     'modules.parameters.apps.ParametersConfig',
     'modules.base.apps.BaseConfig',
-    # 'modules.phrases.apps.PhrasesConfig',
-    # 'modules.payments.apps.PaymentsConfig',
+    'modules.operative.apps.OperativeConfig',
 ]
 
 INSTALLED_APPS = [

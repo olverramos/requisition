@@ -42,20 +42,73 @@ class FieldType(Document):
 
 
 class FieldOption(EmbeddedDocument):
-    name = fields.StringField(max_length=100, verbose_name='Nombre')
+    value = fields.StringField(verbose_name='Valor')
+    title = fields.StringField(verbose_name='Nombre')
 
 
-class RamoField(EmbeddedDocument):
+class RamoField(Document):
     field_type = fields.ReferenceField(FieldType, verbose_name="Tipo de Campo")
-    name = fields.StringField(max_length=100, verbose_name='Nombre')
+    name = fields.StringField(verbose_name='Nombre', unique=True)
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
     options = fields.ListField(
         fields.EmbeddedDocumentField('FieldOption'), blank=True,
     )
 
+    meta = {
+        'collection': 'parameters_ramofields',
+        'ordering': ['name'],
+        'indexes': [
+            ('name',), 
+        ]
+    }
+    
+    def __str__(self):
+        return f"{self.name}"
+    
+    @staticmethod
+    def init_table():
+        try:
+            with open(f'{module_folder}/scripts/data/ramofields.json') as data_fp:
+                data_list = json.load(data_fp)
+                for data in data_list:
+                    field_type = None
+                    if 'field_type' in data.keys():
+                        field_type_id = data["field_type"]
+                        try:
+                            field_type = FieldType.objects.get(pk=field_type_id)
+                        except FieldType.DoesNotExist:
+                            print (f"Tipo de Campo {field_type} no Existe")
+                            field_type = None
+                    
+                    if field_type is not None and 'name' in data.keys():
+                        mandatory = False
+                        if 'mandatory' in data.keys():
+                            mandatory = data["mandatory"]
+                    
+                        try:
+                            ramo_field = RamoField.objects.get(id=data["id"])
+                        except RamoField.DoesNotExist:
+                            ramo_field = RamoField()
+                            ramo_field.field_type = field_type
+                            ramo_field.name = data['name']
+                            ramo_field.mandatory = mandatory
+                            ramo_field.options = []
+                            if 'options' in data.keys():
+                                for option_data in data["options"]:
+                                    if 'value' in option_data.keys() and 'title' in option_data.keys():
+                                        option = FieldOption()
+                                        option.value = option_data['value']
+                                        option.title = option_data['title']
+                                        ramo_field.options.append(option)
+                            ramo_field.save()
+
+                            print (f'Campo {ramo_field} creado')
+
+        except FileNotFoundError:
+            pass
 
 class AvailableDocument(EmbeddedDocument):
-    name = fields.StringField(max_length=100, verbose_name='Nombre')
+    name = fields.StringField(verbose_name='Nombre')
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
 
 
@@ -63,7 +116,7 @@ class Ramo(Document):
     id = fields.StringField(verbose_name='ID', primary_key=True, max_length=20)
     name = fields.StringField(max_length=100, verbose_name='Nombre')
     ramo_fields = fields.ListField(
-        fields.EmbeddedDocumentField(RamoField), blank=True,
+        fields.ReferenceField(RamoField), blank=True,
     )
     available_documents = fields.ListField(
         fields.EmbeddedDocumentField(AvailableDocument), blank=True,
@@ -99,31 +152,14 @@ class Ramo(Document):
                             ramo.name = data['name']
                             ramo.ramo_fields = []
                             if 'fields' in data.keys():
-                                for field_data in data['fields']:
-                                    field_type = None
-                                    if 'field_type' in field_data.keys():
-                                        field_type_id = field_data["field_type"]
-                                        try:
-                                            field_type = FieldType.objects.get(pk=field_type_id)
-                                        except FieldType.DoesNotExist:
-                                            print (f"Tipo de Campo {field_type} no Existe")
-                                            field_type = None
+                                for field_name in data['fields']:
+                                    try:
+                                        ramo_field = RamoField.objects.get(name=field_name)
+                                        ramo.ramo_fields.append(ramo_field)
+                                    except RamoField.DoesNotExist:
+                                        print (f"Campo {field_name} no Existe")
+                                        ramo_field = None
 
-                                    if field_type is not None and 'name' in field_data.keys():
-                                        name = field_data["name"]
-                                        mandatory = False
-                                        if 'mandatory' in field_data.keys():
-                                            mandatory = field_data["mandatory"]
-                                        
-                                        field = RamoField()
-                                        field.field_type = field_type
-                                        field.name = name
-                                        field.mandatory = mandatory
-                                        options = []
-                                        if 'options' in field_data.keys():
-                                            options = field_data["options"]
-                                        field.options = options
-                                    ramo.ramo_fields.append(field)
                             ramo.available_documents = []
                             if 'available_documents' in data.keys():
                                 for available_documents_data in data['available_documents']:
