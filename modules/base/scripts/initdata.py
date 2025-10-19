@@ -1,6 +1,7 @@
-from modules.base.models import Ramo, FieldType
+from modules.base.models import PersonType, DocumentType, Applicant
     
 def run():
-    FieldType.init_table()
-    Ramo.init_table()
+    PersonType.init_table()
+    DocumentType.init_table()
+    Applicant.init_table()
     print("Base Data Added!")

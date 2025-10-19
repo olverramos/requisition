@@ -9,6 +9,7 @@ urlpatterns = [
 
     path("auth/", include('modules.authentication.urls')),
     path("localization/", include('modules.localization.urls')),
+    path("parameters/", include('modules.parameters.urls')),
     path("base/", include('modules.base.urls')),
     # path("community/", include('modules.community.urls')),
     # path("ap/", include('modules.payments.urls')),

@@ -88,8 +88,8 @@ EXTERNAL_APPS = [
 
 MODULES_APPS = [
     'modules.localization.apps.LocalizationConfig',
-    # 'modules.requisition.apps.RequisitionConfig',
     'modules.authentication.apps.AuthenticationConfig',
+    'modules.parameters.apps.ParametersConfig',
     'modules.base.apps.BaseConfig',
     # 'modules.phrases.apps.PhrasesConfig',
     # 'modules.payments.apps.PaymentsConfig',
