@@ -11,7 +11,8 @@ class CreateRequestForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Número'
+                'placeholder': 'Número',
+                'readonly': True
             }
         ),
     )
@@ -21,7 +22,7 @@ class CreateRequestForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Solicitante',
+                'placeholder': 'Email Solicitante',
             }
         ),
     )
@@ -30,8 +31,9 @@ class CreateRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Solicitante',
+                'class': 'form-control form-control-lg readonly',
+                'placeholder': 'Nombre Solicitante',
+                'readonly': True
             }
         ),
     )
@@ -193,3 +195,19 @@ class RequestFilterForm(forms.Form):
 
     class Media:
         js = ('js/requests/index.js',  )
+
+
+class SearchRequestForm(forms.Form):
+    applicant_email = forms.CharField(
+        label=_("Email Solicitante"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el email del solicitante'
+            }
+        ),
+    )
+    class Media:
+        js = ('js/requests/index.js',  )
+

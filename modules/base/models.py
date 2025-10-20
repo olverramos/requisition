@@ -23,7 +23,7 @@ class PersonType(Document):
     @staticmethod
     def init_table():
         try:
-            with open(f'{module_folder}/scripts/data/fieldtypes.json') as data_fp:
+            with open(f'{module_folder}/scripts/data/persontypes.json') as data_fp:
                 data_list = json.load(data_fp)
                 for data in data_list:
                     if 'id' in data.keys() and 'name' in data.keys():

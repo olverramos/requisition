@@ -11,8 +11,7 @@ urlpatterns = [
     path("localization/", include('modules.localization.urls')),
     path("parameters/", include('modules.parameters.urls')),
     path("base/", include('modules.base.urls')),
-    # path("community/", include('modules.community.urls')),
-    # path("ap/", include('modules.payments.urls')),
+    path("operative/", include('modules.operative.urls')),
 
     path("demo/", include('theme_soft_design.urls')),
     

@@ -57,8 +57,8 @@ class OperativeRequest(Document):
     applicant = fields.ReferenceField('base.Applicant', verbose_name="Solicitante")
     taker = fields.ReferenceField('base.Taker', verbose_name="Tomador")
     ramo = fields.ReferenceField('parameters.Ramo', verbose_name="Ramo")
-    number = fields.IntegerField(verbose_name='Número de Solicitud')
-    value = fields.IntegerField(verbose_name='Valor')
+    number = fields.IntField(verbose_name='Número de Solicitud')
+    value = fields.IntField(verbose_name='Valor')
     status = fields.ReferenceField(RequestStatus, verbose_name="Estado")
     assigned_to = fields.ReferenceField('auths.Account', verbose_name="Asignado a", null=True, blank=True)
     assigned_at = fields.DateTimeField(verbose_name="Fecha Asignación", null=True, blank=True)
@@ -193,3 +193,19 @@ class OperativeRequest(Document):
                             print (f'Solicitud {operative_request} creada')
         except FileNotFoundError:
             pass
+
+class RequestEvent(Document):
+    operative_request = fields.ReferenceField(OperativeRequest, verbose_name="Solicitud")
+    status = fields.ReferenceField(RequestStatus, verbose_name="Estado")
+    observations = fields.StringField(verbose_name='Observaciones', null=True, blank=True)
+    created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+
+    meta = {
+        'collection': 'operative_requestevents',
+        'ordering': ['created_at'],
+        'indexes': [
+            ('operative_request',), 
+        ]
+    }
+    

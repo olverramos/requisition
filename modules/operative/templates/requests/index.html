@@ -1,0 +1,57 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">ID</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Número</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Ramo</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">Tomador</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Valor</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Asignado a</th>
+                        <th class="text-secondary opacity-7" width="10%"></th>
+                    </tr>
+                </thead>
+               <tbody>
+                    {% for operative_request in paginator.data %}
+                        <tr>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.id}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.number}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.ramo}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.taker}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.value}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{% if operative_request.assigned_by %}{{operative_request.assigned_by}}{% endif %}</span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{ramo.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Ramo" onclick="load_data('edit', '{{ramo.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Ramo" onclick="load_data('delete', '{{ramo.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

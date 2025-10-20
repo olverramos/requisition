@@ -86,7 +86,7 @@ class RamoField(Document):
                             mandatory = data["mandatory"]
                     
                         try:
-                            ramo_field = RamoField.objects.get(id=data["id"])
+                            ramo_field = RamoField.objects.get(name=data["name"])
                         except RamoField.DoesNotExist:
                             ramo_field = RamoField()
                             ramo_field.field_type = field_type

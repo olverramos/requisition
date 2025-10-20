@@ -1,0 +1,107 @@
+
+<form role="form" id="ramo-form" method="post" autocomplete="off" action="create/">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.applicant_email.label}}</label>
+                {{form.applicant_email}}
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.applicant_name.label}}</label>
+                {{form.applicant_name}}
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.ramo.label}}</label>
+                {{form.ramo}}
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.number.label}}</label>
+                {{form.number}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>INFORMACIÓN DEL TOMADOR</center>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_person_type.label}}</label>
+                {{form.taker_person_type}}
+            </div>
+            <div class="col col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_document_type.label}}</label>
+                {{form.taker_document_type}}
+            </div>
+            <div class="col col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_identification.label}}</label>
+                {{form.taker_identification}}
+            </div>
+            <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_name.label}}</label>
+                {{form.taker_name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_phone_number.label}}</label>
+                {{form.taker_phone_number}}
+            </div>
+            <div class="col col-lg-4 col-md-4 col-sm-8 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_email.label}}</label>
+                {{form.taker_email}}
+            </div>
+            <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_contact_name.label}}</label>
+                {{form.taker_contact_name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_address.label}}</label>
+                {{form.taker_address}}
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_state.label}}</label>
+                {{form.taker_state}}
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.taker_city.label}}</label>
+                {{form.taker_city}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>INFORMACIÓN DE LA SOLICITUD</center>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <label class="text-main align-self-center">{{form.value.label}}</label>
+                {{form.value}}
+            </div>
+            CAMPOS PERSONALIZADOS            
+        </div>
+        <div class="row">
+            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label class="text-main align-self-center">{{form.observations.label}}</label>
+                {{form.observations}}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
+                <center>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn bg-gradient-primary" id="id_form_button" onclick="submit();">Guardar</button>
+                </center>
+            </div>
+        </div>
+    </div>
+</form>
