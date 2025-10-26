@@ -37,6 +37,10 @@ $(document).ready(function() {
                     var field_code = '<div class="col col-lg-4 col-md-4 col-sm-8 col-xs-12">\n';
                     field_code += '<label class="text-main align-self-center">';
                     field_code += field_data.title ;  
+                    if ( field_data.mandatory )
+                    {
+                        field_code += ' *'     
+                    }
                     field_code += '</label>';
                     if ( field_data.field_type == 'IN') {
                         field_code += '<input type="text" '
@@ -81,6 +85,10 @@ $(document).ready(function() {
                     
                     document_code += '<label class="text-main align-self-center">';
                     document_code += document_data.title ;  
+                    if ( document_data.mandatory )
+                    {
+                        document_code += ' *'     
+                    }
                     document_code += '</label>';
                     
                     document_code += '<input type="file" '
@@ -89,17 +97,16 @@ $(document).ready(function() {
                     {
                         document_code += ' required '     
                     }
-                    document_code += 'name="';
+                    document_code += 'name="document_';
                     document_code += document_data.name ;
                     document_code += '" ';
-                    document_code += 'id="id_';
+                    document_code += 'id="id_document_';
                     document_code += document_data.name ;
                     document_code += '">';
 
                     document_code += "</div>\n";
                     documents_code += document_code;
                 }
-                alert(documents_code);
                 $('#ramo_document_id').html(documents_code);
             },
             error: function(msg) {

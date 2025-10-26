@@ -7,7 +7,6 @@
             <table class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">ID</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Número</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Ramo</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">Tomador</th>
@@ -19,9 +18,6 @@
                <tbody>
                     {% for operative_request in paginator.data %}
                         <tr>
-                            <td class="align-middle">
-                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.id}}</span>
-                            </td>
                             <td class="align-middle">
                                 <span class="text-secondary text-xs font-weight-bold">{{operative_request.number}}</span>
                             </td>

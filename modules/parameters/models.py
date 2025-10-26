@@ -45,6 +45,9 @@ class FieldOption(EmbeddedDocument):
     value = fields.StringField(verbose_name='Valor')
     title = fields.StringField(verbose_name='Nombre')
 
+    def __str__(self):
+        return f"{self.title}"
+    
 
 class RamoField(Document):
     field_type = fields.ReferenceField(FieldType, verbose_name="Tipo de Campo")
@@ -64,7 +67,7 @@ class RamoField(Document):
     }
     
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.title}"
     
     @staticmethod
     def init_table():
@@ -114,6 +117,8 @@ class AvailableDocument(EmbeddedDocument):
     title = fields.StringField(verbose_name='Título')
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
 
+    def __str__(self):
+        return f"{self.title}"
 
 class Ramo(Document):
     id = fields.StringField(verbose_name='ID', primary_key=True, max_length=20)

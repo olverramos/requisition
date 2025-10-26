@@ -45,13 +45,20 @@ class RequestField(EmbeddedDocument):
     field = fields.ReferenceField('parameters.RamoField', verbose_name="Campo")
     value = fields.StringField(verbose_name='Valor')
 
+    def __str__(self):
+        return f"{self.field} - {self.value}"
+    
 
 class RequestDocument(EmbeddedDocument):
     document_name = fields.StringField(verbose_name='Nombre')
+    document_title = fields.StringField(verbose_name='Título')
     filename = fields.StringField(verbose_name='Nombre Archivo')
     file_type = fields.StringField(verbose_name='Tipo Archivo')
     content = fields.StringField(verbose_name='Contenido Base64')
 
+    def __str__(self):
+        return f"{self.field} - {self.value}"
+    
 
 class OperativeRequest(Document):
     applicant = fields.ReferenceField('base.Applicant', verbose_name="Solicitante")

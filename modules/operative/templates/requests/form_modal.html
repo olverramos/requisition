@@ -1,5 +1,5 @@
 
-<form role="form" id="ramo-form" method="post" autocomplete="off" action=".">
+<form role="form" id="ramo-form" method="post" autocomplete="off" action="." enctype="multipart/form-data">
     <div class="modal-body">
         {% csrf_token %}
         <div class="row">
@@ -112,7 +112,7 @@
             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
                 <center>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn bg-gradient-primary" id="id_form_button" onclick="submit();">Guardar</button>
+                    <button type="submit" class="btn bg-gradient-primary" id="id_form_button">Guardar</button>
                 </center>
             </div>
         </div>

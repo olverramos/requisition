@@ -1,16 +1,17 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm
+from modules.parameters.models import RamoField, AvailableDocument
 from django.contrib.auth.decorators import login_required
 from modules.authentication.models import Account
 from modules.base.models import Applicant, Taker
-from modules.parameters.models import RamoField
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from core.utils import getPaginator
 from django.contrib import messages
 import datetime
+import base64
 
 
 @login_required(login_url="/auth/login/")
@@ -22,7 +23,7 @@ def requests_index_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    operative_request_list = OperativeRequest.objects.exclude(status__id='9')
+    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
     
     data['page'] = page
     filter_form = RequestFilterForm()
@@ -106,7 +107,6 @@ def create_request_view(request):
     }
     form = CreateRequestForm(initial=data)
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         form = CreateRequestForm(request.POST, request.FILES)
         if form.is_valid():
             applicant_email = form.cleaned_data['applicant_email']
@@ -167,24 +167,27 @@ def create_request_view(request):
                     request_field.value = ramo_field_value
                     request_fields.append(request_field)
 
-            request_documents_data = []
-            if 'documents' in request.POST.keys():
-                request_documents_data = request.POST['documents']
-            
             request_documents = []
-            # for documents_data in request_documents_data:
-            #     document_name = documents_data["document_name"]
-                
+            for document_field in ramo.available_documents:
+                document_file = None
+                document_field_name = 'document_' + document_field.name
+                if document_field_name in request.FILES.keys():
+                    document_file = request.FILES[document_field_name]
 
-            #     ramo_field = None
-            #     document_name = fields.StringField(verbose_name='Nombre')
-            #     filename = fields.StringField(verbose_name='Nombre Archivo')
-            #     file_type = fields.StringField(verbose_name='Tipo Archivo')
-            #     content = fields.StringField(verbose_name='Contenido Base64')
+                if document_field is not None and document_file is not None:
+                    request_document = RequestDocument()
+                    request_document.document_name = document_field.name
+                    request_document.document_title = document_field.title
 
-            #     request_documents = fields.ListField(
-            #         fields.EmbeddedDocumentField(RequestDocument), blank=True,
-            #     )
+                    filename = document_file.name
+                    file_type = document_file.content_type
+                    content = base64.b64encode(document_file.read()).decode('utf-8')
+
+                    request_document.filename = filename
+                    request_document.file_type = file_type
+                    request_document.content = content
+
+                    request_documents.append(request_document)
 
             try:
                 request_status = RequestStatus.objects.get(id='1')
