@@ -1,7 +1,8 @@
 {% load static %}
-<!DOCTYPE html>
+{% load humanize %}
 
-<html lang="es" itemscope itemtype="http://schema.org/WebPage">
+<!DOCTYPE html>
+<html lang="es">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,32 +15,34 @@
         <title>
             {{COMERCIAL_APP_NAME}} - {% block title %}{% endblock title %}
         </title>
-        <!--     Fonts and icons     -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 
-        <!-- Nucleo Icons -->
-        <link href="{% static 'css/nucleo-icons.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
+        {% include "core/includes/static_include.html" %}
 
-        <!-- Font Awesome Icons -->
-        <script src="https://kit.fontawesome.com/2111206514.js" crossorigin="anonymous"></script>
-        <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
-
-        <!-- CSS Files -->
-        <link id="pagestyle" href="{% static 'css/soft-design-system.css' %}" rel="stylesheet" />
-        <link id="pagestyle" href="{% static 'css/style.css' %}" rel="stylesheet" />
     </head>
 
-    <body {% block body %}{% endblock body %} >
+    <body {% block body %}{% endblock body %}>
+
+        <script>
+            let ACCOUNT = JSON.parse('{{ ACCOUNT.to_json|escapejs }}');
+            let APP_URL = "{{ APP_URL|escapejs }}";
+            let APP_NAME = "{{ APP_NAME }}";
+            let ENTERPRISE = "{{ ENTERPRISE }}";
+            let COMERCIAL_APP_NAME = "{{ COMERCIAL_APP_NAME }}";
+            let TODAY = "{{ TODAY }}";
+            let STATIC_URL = "{{ STATIC_URL|escapejs }}";
+            let VERSION = "{{ APP_VERSION }}";
+            let ENVIRONMENT = "{{ ENVIRONMENT }}";
+            let CURRENT_YEAR = "{{ CURRENT_YEAR }}";
+        </script>
 
         {% block header %}
-        <div style="margin-bottom: 10px;" class="d-none d-sm-block">
-            {% include 'core/includes/navigation.html' %}
-        </div>
-        <div style="margin-bottom: 10px;" class="d-block d-sm-none">
-            {% include 'core/includes/navigation_xs.html' %}
-        </div>
-    {% endblock header %}
+            <div style="margin-bottom: 10px;" class="d-none d-sm-block">
+                {% include 'core/includes/navigation.html' %}
+            </div>
+            <div style="margin-bottom: 10px;" class="d-block d-sm-none">
+                {% include 'core/includes/navigation_xs.html' %}
+            </div>
+        {% endblock header %}
         
         {% if messages %}
             {% for message in messages %}
@@ -53,20 +56,17 @@
         <div class="mx-lg-5 mx-md-3 mx-sm-1 px-lg-5 px-md-3 px-sm-0">
             {% block content %}{% endblock content %}
         </div>
-        <footer>
-            {% block footer %}
-                <div style="margin-top: 10px;" class="d-none d-sm-block">
-                    {% include 'core/includes/footer.html' %}
-                </div>
-                <div style="margin-top: 10px;" class="d-block d-sm-none">
-                    {% include 'core/includes/footer_xs.html' %}
-                </div>
-            {% endblock footer %}
-        </footer>
-            
-        {% include 'core/includes/scripts.html' %}
+        
+        {% block footer %}
+            <div style="margin-top: 10px;" class="d-none d-sm-block">
+                {% include 'core/includes/footer.html' %}
+            </div>
+            <div style="margin-top: 10px;" class="d-block d-sm-none">
+                {% include 'core/includes/footer_xs.html' %}
+            </div>
+        {% endblock footer %}
 
-        {% block javascripts %}{% endblock javascripts %}
+        {% block javascripts %}{% endblock javascripts %} 
 
     </body>
 </html>

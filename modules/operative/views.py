@@ -101,12 +101,16 @@ def requests_search_view(request):
 
 def create_request_view(request):
     error = None
-    form = CreateRequestForm()
+    data = {
+        'number': OperativeRequest.getNextNumber()
+    }
+    form = CreateRequestForm(initial=data)
     if request.method == 'POST':
+        import pdb; pdb.set_trace()
         form = CreateRequestForm(request.POST, request.FILES)
         if form.is_valid():
-            number = form.cleaned_data['number']
             applicant_email = form.cleaned_data['applicant_email']
+            applicant_id = form.cleaned_data['applicant_id']
             taker_person_type = form.cleaned_data['taker_person_type']
             taker_document_type = form.cleaned_data['taker_document_type']
             taker_identification = form.cleaned_data['taker_identification']
@@ -150,24 +154,12 @@ def create_request_view(request):
                 taker.updated_by = applicant.email
                 taker.save()
 
-            request_fields_data = []
-            if 'fields' in request.POST.keys():
-                request_fields_data = request.POST['fields']
-
             request_fields = []
-            for field_data in request_fields_data:
-                ramo_field = None
-                if 'field' in field_data.keys():
-                    field_id = field_data["field"]
-                    try:
-                        ramo_field = RamoField.objects.get(pk=field_id)
-                    except RamoField.DoesNotExist:
-                        print (f"Ramo Field {ramo_field} no Existe")
-                        ramo_field = None
-                
+
+            for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
-                if 'value' in field_data.keys():
-                    ramo_field_value = field_data["value"]
+                if ramo_field.name in request.POST.keys():
+                    ramo_field_value = request.POST[ramo_field.name]
 
                 if ramo_field is not None and ramo_field_value is not None:
                     request_field = RequestField()
@@ -194,13 +186,6 @@ def create_request_view(request):
             #         fields.EmbeddedDocumentField(RequestDocument), blank=True,
             #     )
 
-
-            try:
-                operative_request = OperativeRequest.objects.get(number=number)
-                error = 'Hay una solicitud registrada con el número'
-            except OperativeRequest.DoesNotExist:
-                operative_request = None
-
             try:
                 request_status = RequestStatus.objects.get(id='1')
             except RequestStatus.DoesNotExist:
@@ -208,6 +193,8 @@ def create_request_view(request):
                 request_status = None
 
             if error is None:
+                number = OperativeRequest.getNextNumber()
+
                 operative_request:OperativeRequest = OperativeRequest()
                 operative_request.applicant = applicant
                 operative_request.taker = taker
@@ -231,7 +218,7 @@ def create_request_view(request):
                 request_event.save()
 
                 messages.success (request, f'Solicitud {operative_request} creada satisfactoriamente!')
-                return redirect(reverse_lazy("base_requests"))
+                return redirect(reverse_lazy("operative_requests"))
         else:
             error = "¡Error en el registro de la solicitud!"
         if error is not None:

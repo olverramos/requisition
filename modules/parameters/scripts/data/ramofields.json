@@ -1,7 +1,8 @@
 [
     {
         "field_type": "IN",
-        "name": "Nro Contrato",
+        "name": "contract_number",
+        "title": "Nro Contrato",
         "mandatory": true
     }
 ]

@@ -7,7 +7,8 @@ from django import forms
 
 class CreateRequestForm(forms.Form):
     number = forms.IntegerField(
-        label=_("Número *"),
+        label=_("Número"),
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
@@ -37,6 +38,10 @@ class CreateRequestForm(forms.Form):
             }
         ),
     )
+    applicant_id = forms.CharField(
+        required=True,
+        widget=forms.HiddenInput( ),
+    )
     taker_person_type = forms.ModelChoiceField(
         label=_("Tipo de Persona *"),
         required=True,
@@ -45,7 +50,7 @@ class CreateRequestForm(forms.Form):
             attrs={
                 'class': 'form-control form-control-lg form-select', 
                 'placeholder': 'Tipo de Persona', 
-                'id': 'person_type_id'
+                'id': 'taker_person_type_id'
             }
         ),
     )
@@ -57,7 +62,7 @@ class CreateRequestForm(forms.Form):
             attrs={
                 'class': 'form-control form-control-lg form-select', 
                 'placeholder': 'Tipo de Documento', 
-                'id': 'document_type_id'
+                'id': 'taker_document_type_id'
             }
         ),
     )
@@ -126,14 +131,14 @@ class CreateRequestForm(forms.Form):
         required=False,
         queryset=State.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Departamento', 'id': 'state_id'}),
+            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Departamento', 'id': 'taker_state_id'}),
     )
     taker_city = forms.ModelChoiceField(
         label=_("Ciudad"),
         required=False,
         queryset=City.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'city_id'}),
+            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'taker_city_id'}),
     )    
     ramo = forms.ModelChoiceField(
         label=_("Ramo *"),
@@ -164,7 +169,11 @@ class CreateRequestForm(forms.Form):
     )
 
     class Media:
-        js = ('js/requests/index.js', 'js/requests/form.js', )
+        js = (
+            'js/requests/index.js', 
+            'js/requests/form.js', 
+            'js/localization.js', 
+        )
 
 
 class RequestFilterForm(forms.Form):

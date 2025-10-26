@@ -49,6 +49,7 @@ class FieldOption(EmbeddedDocument):
 class RamoField(Document):
     field_type = fields.ReferenceField(FieldType, verbose_name="Tipo de Campo")
     name = fields.StringField(verbose_name='Nombre', unique=True)
+    title = fields.StringField(verbose_name='Título', unique=True)
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
     options = fields.ListField(
         fields.EmbeddedDocumentField('FieldOption'), blank=True,
@@ -80,7 +81,7 @@ class RamoField(Document):
                             print (f"Tipo de Campo {field_type} no Existe")
                             field_type = None
                     
-                    if field_type is not None and 'name' in data.keys():
+                    if field_type is not None and 'name' in data.keys() and 'title' in data.keys():
                         mandatory = False
                         if 'mandatory' in data.keys():
                             mandatory = data["mandatory"]
@@ -91,6 +92,7 @@ class RamoField(Document):
                             ramo_field = RamoField()
                             ramo_field.field_type = field_type
                             ramo_field.name = data['name']
+                            ramo_field.title = data['title']
                             ramo_field.mandatory = mandatory
                             ramo_field.options = []
                             if 'options' in data.keys():
@@ -109,6 +111,7 @@ class RamoField(Document):
 
 class AvailableDocument(EmbeddedDocument):
     name = fields.StringField(verbose_name='Nombre')
+    title = fields.StringField(verbose_name='Título')
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
 
 
@@ -165,12 +168,14 @@ class Ramo(Document):
                                 for available_documents_data in data['available_documents']:
                                     if 'name' in available_documents_data.keys():
                                         name = available_documents_data["name"]
+                                        title = available_documents_data["title"]
                                         mandatory = False
                                         if 'mandatory' in available_documents_data.keys():
                                             mandatory = available_documents_data["mandatory"]
                                         
                                         available_document = AvailableDocument()
                                         available_document.name = name
+                                        available_document.title = title
                                         available_document.mandatory = mandatory
                                     ramo.available_documents.append(available_document)
                             

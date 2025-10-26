@@ -1,4 +1,4 @@
-from .models import Applicant, Taker
+from .models import Applicant, Taker, DocumentType
 from django.contrib.auth.decorators import login_required
 from .forms import CreateApplicantForm, ApplicantFilterForm, CreateTakerForm, \
     TakerFilterForm
@@ -146,13 +146,13 @@ def get_applicant_view(request, applicant_id):
         applicant_data['email'] = applicant.email
         applicant_data['phone_number'] = applicant.phone_number
         if applicant.state is not None:
-            applicant_data['state'] = applicant.state.id
+            applicant_data['state'] = str(applicant.state.id)
         if applicant.city is not None:
-            applicant_data['city'] = applicant.city.id
+            applicant_data['city'] = str(applicant.city.id)
     except Applicant.DoesNotExist:
-        return 
+        pass
 
-    return JsonResponse(data=applicant_data)
+    return JsonResponse(data=applicant_data, safe=False)
 
 @login_required(login_url="/auth/login/")
 def takers_index_view(request):
@@ -309,10 +309,80 @@ def get_taker_view(request, taker_id):
         taker_data['contact_name'] = taker.contact_name
         taker_data['address'] = taker.address
         if taker.state is not None:
-            taker_data['state'] = taker.state.id
+            taker_data['state'] = str(taker.state.id)
         if taker.city is not None:
-            taker_data['city'] = taker.city.id
+            taker_data['city'] = str(taker.city.id)
     except Taker.DoesNotExist:
-        return 
+        pass
 
-    return JsonResponse(data=taker_data)
+    return JsonResponse(data=taker_data, safe=False)
+
+@login_required(login_url="/auth/login/")
+def ajax_search_applicant(request):
+    applicant_data = {}
+
+    email = None
+    if 'email' in request.GET.keys() and request.GET['email']:
+        email = request.GET['email']
+
+    try:
+        applicant:Applicant = Applicant.objects.get(email=email)
+        applicant_data['id'] = str(applicant.id)
+        applicant_data['identification'] = applicant.identification
+        applicant_data['name'] = applicant.name
+        applicant_data['email'] = applicant.email
+        applicant_data['phone_number'] = applicant.phone_number
+        if applicant.state is not None:
+            applicant_data['state'] = str(applicant.state.id)
+            applicant_data['state_name'] = applicant.state.name
+        if applicant.city is not None:
+            applicant_data['city'] = str(applicant.city.id)
+            applicant_data['city_name'] = applicant.city.name
+    except Applicant.DoesNotExist:
+        pass
+    return JsonResponse(data=applicant_data, safe=False)
+
+@login_required(login_url="/auth/login/")
+def ajax_documenttypes(request, person_type_id):
+    taker = None
+    data_list = []
+
+    document_type_list = DocumentType.objects.filter(person_type=person_type_id)
+    for document_type in document_type_list:
+        data = {
+            'id': str(document_type.id),
+            'name': str(document_type)
+        }
+        data_list.append(data)
+
+    return JsonResponse(data=data_list, safe=False)
+
+
+@login_required(login_url="/auth/login/")
+def ajax_search_taker(request):
+    taker_data = {}
+
+    identification = None
+    if 'identification' in request.GET.keys() and request.GET['identification']:
+        identification = request.GET['identification']
+    try:
+        taker:Taker = Taker.objects.get(identification=identification)
+        taker_data['id'] = str(taker.id)
+        taker_data['person_type'] = taker.person_type.id
+        taker_data['document_type'] = taker.document_type.id
+        taker_data['identification'] = taker.identification
+        taker_data['name'] = taker.name
+        taker_data['email'] = taker.email
+        taker_data['phone_number'] = taker.phone_number
+        taker_data['contact_name'] = taker.contact_name
+        taker_data['address'] = taker.address
+        if taker.state is not None:
+            taker_data['state'] = str(taker.state.id)
+            taker_data['state_name'] = taker.state.name
+        if taker.city is not None:
+            taker_data['city'] = str(taker.city.id)
+            taker_data['city_name'] = taker.city.name
+    except Taker.DoesNotExist:
+        pass
+
+    return JsonResponse(data=taker_data, safe=False)

@@ -8,3 +8,4 @@ ENTERPRISE = {
     'EMAIL': 'admin@arvii.com.co',
     'URL': 'https://segurosseycon.com/'
 }
+

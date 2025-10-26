@@ -225,8 +225,7 @@ def delete_ramo_view(request, ramo_id):
 
 
 @login_required(login_url="/auth/login/")
-def get_ramo_view(request, ramo_id):
-    ramo = None
+def get_ramo_view(request, ramo_id) -> JsonResponse:
     ramo_data = {}
     try:
         ramo:Ramo = Ramo.objects.get(pk=ramo_id)
@@ -247,6 +246,53 @@ def get_ramo_view(request, ramo_id):
                 ramo_field['options'].append(ramo_option_data)
             ramo_data['fields'].append(ramo_field)
     except Ramo.DoesNotExist:
-        return 
+        pass
 
     return JsonResponse(data=ramo_data)
+
+@login_required(login_url="/auth/login/")
+def ajax_getfields(request, ramo_id) -> JsonResponse:
+    fields_data = []
+    try:
+        ramo:Ramo = Ramo.objects.get(pk=ramo_id)
+        for ramo_field in ramo.ramo_fields:
+            field_data = {
+                'ramo': str(ramo.id),
+                'field_type': str(ramo_field.field_type.id),
+                'name': ramo_field.name,
+                'title': ramo_field.title if ramo_field.title is not None else ramo_field.name.title(),
+                'mandatory': ramo_field.mandatory,
+                'options': []
+            }
+            
+            for ramo_field_option in ramo_field.options:
+                option_data = {
+                    'value': ramo_field_option.value,
+                    'title': ramo_field_option.title
+                }
+                field_data['options'].append(option_data)
+
+            fields_data.append(field_data)
+    except Ramo.DoesNotExist:
+        pass 
+
+    return JsonResponse(data=fields_data, safe=False)
+
+@login_required(login_url="/auth/login/")
+def ajax_getdocuments(request, ramo_id) -> JsonResponse:
+    fields_data = []
+    try:
+        ramo:Ramo = Ramo.objects.get(pk=ramo_id)
+        for document in ramo.available_documents:
+            field_data = {
+                'ramo': str(ramo.id),
+                'name': document.name,
+                'title': document.title if document.title is not None else document.name.title(),
+                'mandatory': document.mandatory,
+            }
+            
+            fields_data.append(field_data)
+    except Ramo.DoesNotExist:
+        pass 
+
+    return JsonResponse(data=fields_data, safe=False)

@@ -1,12 +1,12 @@
 [
     {
         "id": "CC",
-        "name": "CEdula de Ciudadanía",
+        "name": "Cédula de Ciudadanía",
         "person_type": "PN"
     },
     {
         "id": "CE",
-        "name": "Cedula de Extranjería",
+        "name": "Cédula de Extranjería",
         "person_type": "PN"
     },
     {

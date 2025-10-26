@@ -36,9 +36,9 @@ try:
 except:
     pass
 
-APP_URL = 'http://localhost:8150/'
+APP_URL = 'http://localhost:8152/'
 if ENVIRONMENT == "PRODUCTION":
-    APP_URL = 'https://comunidades.arvii.com.co/'
+    APP_URL = 'https://solicitudes.arvii.com.co/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/

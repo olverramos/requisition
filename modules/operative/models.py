@@ -87,6 +87,15 @@ class OperativeRequest(Document):
         return f"{self.number}"
     
     @staticmethod
+    def getNextNumber():
+        next_number = 1
+        request_list = OperativeRequest.objects().order_by('-number')
+        if request_list.count() > 0:
+            max_request = request_list.first()
+            next_number = max_request.number + 1
+        return next_number        
+
+    @staticmethod
     def init_table():
         from modules.authentication.models import Account
         from modules.base.models import Applicant, Taker

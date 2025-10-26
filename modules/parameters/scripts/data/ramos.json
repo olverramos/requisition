@@ -3,23 +3,27 @@
         "id": "cumplimiento",
         "name": "Cumplimiento",
         "fields": [
-            "Nro Contrato"
+            "contract_number"
         ],
         "available_documents": [
             {
-                "name": "Contrato",
+                "name": "contrato",
+                "title": "Contrato",
                 "mandatory": true
             },
             {
-                "name": "Copia RUT",
+                "name": "rut",
+                "title": "Copia RUT",
                 "mandatory": false
             },
             {
-                "name": "Copia Cédula",
+                "name": "cc",
+                "title": "Copia Cédula",
                 "mandatory": false
             },
             {
-                "name": "Requerimiento de Cotizacón",
+                "name": "requerimiento",
+                "title": "Requerimiento de Cotizacón",
                 "mandatory": false
             }
         ]

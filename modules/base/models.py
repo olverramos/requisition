@@ -10,7 +10,7 @@ class PersonType(Document):
     name = fields.StringField(verbose_name='Nombre')
 
     meta = {
-        'collection': 'base_fieldtypes',
+        'collection': 'base_persontypes',
         'ordering': ['name'],
         'indexes': [
             ('name',), 
