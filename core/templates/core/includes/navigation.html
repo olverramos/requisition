@@ -49,12 +49,13 @@
                                                         Admin
                                                     </div>
                                                 </div>
-                                                <a href="{% url 'auth_accounts' %}" class="dropdown-item border-radius-md">
-                                                    <span class="ps-3">Usuarios</span>
-                                                </a>
-                                                <a href="{% url 'parameters_ramos' %}" class="dropdown-item border-radius-md">
-                                                    <span class="ps-3">Ramos</span>
-                                                </a>
+                                                {% for menu in MENU.admin %}
+                                                    {% with menuurl=menu.url %}
+                                                        <a href="{% url menuurl %}" class="dropdown-item border-radius-md">
+                                                            <span class="ps-3">{{menu.title}}</span>
+                                                        </a>
+                                                    {% endwith %}
+                                                {% endfor %}
                                             {% endif %}
                                             {% comment %} {% if ACCOUNT.role.id != "member" %}
                                                 <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-start align-items-center px-0 mt-3">

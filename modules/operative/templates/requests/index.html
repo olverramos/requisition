@@ -8,8 +8,9 @@
                 <thead>
                     <tr>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Número</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Solicitante</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Ramo</th>
-                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">Tomador</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Tomador</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Valor</th>
                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Asignado a</th>
                         <th class="text-secondary opacity-7" width="10%"></th>
@@ -20,6 +21,9 @@
                         <tr>
                             <td class="align-middle">
                                 <span class="text-secondary text-xs font-weight-bold">{{operative_request.number}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.applicant}}</span>
                             </td>
                             <td class="align-middle">
                                 <span class="text-secondary text-xs font-weight-bold">{{operative_request.ramo}}</span>

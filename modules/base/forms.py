@@ -60,6 +60,22 @@ class CreateApplicantForm(forms.Form):
         js = ('js/applicants/index.js', 'js/applicants/form.js', )
 
 
+class EditApplicantForm(CreateApplicantForm):
+    email = forms.CharField(
+        label=_("Email *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Email'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/applicants/index.js', 'js/applicants/form.js', )
+
+
 class ApplicantFilterForm(forms.Form):
     search = forms.CharField(
         label=_("Buscar"),

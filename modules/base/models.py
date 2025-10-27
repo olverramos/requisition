@@ -185,8 +185,6 @@ class Taker(Document):
             with open(f'{module_folder}/scripts/data/takers.json') as data_fp:
                 data_list = json.load(data_fp)
                 for data in data_list:
-                    import pdb; pdb.set_trace()
-                    
                     person_type = None
                     if 'person_type' in data.keys():
                         try:

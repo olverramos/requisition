@@ -6,6 +6,28 @@ def generic_variables(request):
     account = None
     if request.user.is_authenticated:
         account = Account.getAccount(request.user)
+    
+    menu_list = {
+        'admin': [
+            {
+                'url': 'auth_accounts',
+                'title': 'Usuarios'
+            },
+            {
+                'url': 'parameters_ramos',
+                'title': 'Ramos'
+            },
+            {
+                'url': 'base_applicants',
+                'title': 'Solicitantes'
+            },
+            {
+                'url': 'base_takers',
+                'title': 'Tomadores'
+            },
+        ]
+    }
+
     return {    
                 'ACCOUNT': account,
                 'CURRENT_YEAR': datetime.date.today().strftime("%Y"),
@@ -17,4 +39,5 @@ def generic_variables(request):
                 'STATIC_URL': settings.STATIC_URL,
                 'ENVIRONMENT': settings.ENVIRONMENT,
                 'ENTERPRISE': settings.ENTERPRISE,
+                'MENU': menu_list
             }

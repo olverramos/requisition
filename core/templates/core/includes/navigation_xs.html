@@ -29,9 +29,13 @@
                                     </div>
                                     Inicio
                                 </a>
-                                <a href="{% url 'parameters_ramos' %}" class="dropdown-item border-radius-md">
-                                    <span class="ps-3">Ramos</span>
-                                </a>
+                                {% for menu in MENU.admin %}
+                                    {% with menuurl=menu.url %}
+                                        <a href="{% url menuurl %}" class="dropdown-item border-radius-md">
+                                            <span class="ps-3">{{menu.title}}</span>
+                                        </a>
+                                    {% endwith %}
+                                {% endfor %}
                                 {% comment %} 
                                 {% if ACCOUNT.role.id != "member" %}
                                     <a href="{% url 'community_communities' %}" class="dropdown-item border-radius-md">

@@ -133,6 +133,7 @@ def create_request_view(request):
                     error = 'No existe un solicitante con el email'
 
             taker = None
+            import pdb; pdb.set_trace()
             if taker_identification is not None and taker_identification != '':
                 try:
                     taker = Taker.objects.get(identification=taker_identification)

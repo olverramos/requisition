@@ -35,6 +35,11 @@
                                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Ramo" onclick="load_data('delete', '{{ramo.id}}');">
                                     <i class="fa fa-trash text-sm"></i>
                                 </button>
+                                <a href="{{ramo.id}}/ramofields/">
+                                    <button type="button" class="btn">
+                                        <i class="fa fa-trash text-sm"></i>
+                                    </button>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

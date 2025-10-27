@@ -1,7 +1,7 @@
 from .models import Applicant, Taker, DocumentType
 from django.contrib.auth.decorators import login_required
 from .forms import CreateApplicantForm, ApplicantFilterForm, CreateTakerForm, \
-    TakerFilterForm
+    TakerFilterForm, EditApplicantForm
 from modules.authentication.models import Account
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -92,17 +92,15 @@ def edit_applicant_view(request, applicant_id):
         applicant = None
 
     if error is None and request.method == 'POST':
-        form = CreateApplicantForm(request.POST)
+        form = EditApplicantForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
             state = form.cleaned_data['state']
             city = form.cleaned_data['city']
 
             if error is None:   
                 applicant.name = name
-                applicant.email = email
                 applicant.phone_number = phone_number
                 applicant.state = state
                 applicant.city = city

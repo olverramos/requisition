@@ -1,0 +1,64 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block form %}
+    {% include "applicants/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Identificacíon</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Nombre</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Email</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Teléfono</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Ciudad</th>
+                        <th class="text-secondary opacity-7" width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for applicant in paginator.data %}
+                        <tr>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{applicant.identification}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{applicant.name}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{applicant.email}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{applicant.phone_number}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">
+                                    {% if applicant.city %}
+                                        {{applicant.state.name}} - {{applicant.city.name}}
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{applicant.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Ramo" onclick="load_data('edit', '{{applicant.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Ramo" onclick="load_data('delete', '{{applicant.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
