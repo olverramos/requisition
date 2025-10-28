@@ -23,9 +23,13 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "DEVELOPMENT")
+APP_URL = 'http://localhost:8152/'
+if ENVIRONMENT == "PRODUCTION":
+    APP_URL = 'https://solicitudes.arvii.com.co/'
+
 from .project import *
 
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "DEVELOPMENT")
 DATABASE_NAME = os.getenv('DATABASE_NAME','requisitiondb')
 DATABASE_URL = os.getenv('DATABASE_URL','localhost')
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -35,10 +39,6 @@ try:
     from .settings_debug import *
 except:
     pass
-
-APP_URL = 'http://localhost:8152/'
-if ENVIRONMENT == "PRODUCTION":
-    APP_URL = 'https://solicitudes.arvii.com.co/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
