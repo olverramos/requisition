@@ -100,12 +100,12 @@ class CreateTakerForm(forms.Form):
         widget=forms.Select(
             attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Tipo de Persona', 'id': 'person_type_id'}),
     )
-    documento_type = forms.ModelChoiceField(
+    document_type = forms.ModelChoiceField(
         label=_("Tipo de Documento *"),
         required=True,
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Tipo de Documento', 'id': 'documento_type_id'}),
+            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Tipo de Documento', 'id': 'document_type_id'}),
     )
     identification = forms.CharField(
         label=_("Identificación *"),
@@ -176,6 +176,21 @@ class CreateTakerForm(forms.Form):
             attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'city_id'}),
     )
 
+    class Media:
+        js = ('js/takers/index.js', 'js/takers/form.js', )
+
+
+class EditTakerForm(CreateTakerForm):
+    identification = forms.CharField(
+        label=_("Identificación *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Identificación'
+            }
+        ),
+    )
     class Media:
         js = ('js/takers/index.js', 'js/takers/form.js', )
 

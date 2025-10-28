@@ -250,7 +250,6 @@ def get_ramo_view(request, ramo_id) -> JsonResponse:
 
     return JsonResponse(data=ramo_data)
 
-@login_required(login_url="/auth/login/")
 def ajax_getfields(request, ramo_id) -> JsonResponse:
     fields_data = []
     try:
@@ -278,7 +277,6 @@ def ajax_getfields(request, ramo_id) -> JsonResponse:
 
     return JsonResponse(data=fields_data, safe=False)
 
-@login_required(login_url="/auth/login/")
 def ajax_getdocuments(request, ramo_id) -> JsonResponse:
     fields_data = []
     try:

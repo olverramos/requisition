@@ -23,7 +23,9 @@
     <body {% block body %}{% endblock body %}>
 
         <script>
-            let ACCOUNT = JSON.parse('{{ ACCOUNT.to_json|escapejs }}');
+            {% if ACCOUNT %}
+                let ACCOUNT = JSON.parse('{{ ACCOUNT.to_json|escapejs }}');
+            {% endif %}
             let APP_URL = "{{ APP_URL|escapejs }}";
             let APP_NAME = "{{ APP_NAME }}";
             let ENTERPRISE = "{{ ENTERPRISE }}";

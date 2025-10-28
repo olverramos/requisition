@@ -1,7 +1,7 @@
 from .models import Applicant, Taker, DocumentType
 from django.contrib.auth.decorators import login_required
 from .forms import CreateApplicantForm, ApplicantFilterForm, CreateTakerForm, \
-    TakerFilterForm, EditApplicantForm
+    TakerFilterForm, EditApplicantForm, EditTakerForm
 from modules.authentication.models import Account
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -241,7 +241,7 @@ def edit_taker_view(request, taker_id):
         taker = None
 
     if error is None and request.method == 'POST':
-        form = CreateTakerForm(request.POST)
+        form = EditTakerForm(request.POST)
         if form.is_valid():
             person_type = form.cleaned_data['person_type']
             document_type = form.cleaned_data['document_type']
@@ -315,7 +315,6 @@ def get_taker_view(request, taker_id):
 
     return JsonResponse(data=taker_data, safe=False)
 
-@login_required(login_url="/auth/login/")
 def ajax_search_applicant(request):
     applicant_data = {}
 
@@ -340,7 +339,6 @@ def ajax_search_applicant(request):
         pass
     return JsonResponse(data=applicant_data, safe=False)
 
-@login_required(login_url="/auth/login/")
 def ajax_documenttypes(request, person_type_id):
     taker = None
     data_list = []
@@ -356,7 +354,6 @@ def ajax_documenttypes(request, person_type_id):
     return JsonResponse(data=data_list, safe=False)
 
 
-@login_required(login_url="/auth/login/")
 def ajax_search_taker(request):
     taker_data = {}
 
