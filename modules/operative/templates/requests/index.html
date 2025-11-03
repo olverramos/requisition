@@ -1,5 +1,7 @@
 {% extends 'core/table_index.html' %}
 {% load static %}
+{% load humanize %}
+{% load tools %}
 
 {% block data_table %}
     <div class="card">
@@ -32,7 +34,7 @@
                                 <span class="text-secondary text-xs font-weight-bold">{{operative_request.taker}}</span>
                             </td>
                             <td class="align-middle">
-                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.value}}</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{operative_request.value|currency}}</span>
                             </td>
                             <td class="align-middle">
                                 <span class="text-secondary text-xs font-weight-bold">{% if operative_request.assigned_by %}{{operative_request.assigned_by}}{% endif %}</span>

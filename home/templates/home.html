@@ -25,16 +25,15 @@
 
                     <form role="form" id="search-form" method="post" autocomplete="off" action="{% url 'operative_requests_search' %}">
                         {% csrf_token %}    
-                        <div class="row row-cols-lg-4 row-cols-md-4 row-cols-sm-8 row-cols-xs-12">
+                        <div class="row">
                             <div class="col col-lg-6 col-md-6">
-                                <label class="text-secondary align-self-center">Email Solicitante</label>
-                                <div class="input-group mb-2 w-100">
-                                    <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                                    <input class="form-control" placeholder="Correo Electrónico del Solicitante" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='search' id='search_id' >
+                                <div class="input-group w-100 col-lg-6 col-md-6">
+                                    <label class="text-secondary align-self-center">Teléfono Solicitante: &nbsp;</label>
+                                    <input class="form-control" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='applicant_phone_number' id='applicant_phone_number_id' >
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 justify-content-xs-end">
-                                <button type="submit" class="btn bg-gradient-primary w-100 ms-lg-1 mt-4 mb-2">Buscar</button>
+                            <div class="col-md-6 col-lg-2 justify-content-xs-end">
+                                <button type="submit" class="btn bg-gradient-primary w-100 ms-lg-1">Buscar</button>
                             </div>
                         </div> 
                     </form>

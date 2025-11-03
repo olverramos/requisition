@@ -172,13 +172,12 @@ class RequestFilterForm(forms.Form):
 
 
 class SearchRequestForm(forms.Form):
-    applicant_email = forms.CharField(
-        label=_("Email Solicitante"),
+    applicant_phone_number = forms.CharField(
+        label=_("Teléfono Solicitante"),
         required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Ingrese el email del solicitante'
             }
         ),
     )

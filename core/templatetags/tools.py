@@ -1,7 +1,7 @@
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.safestring import mark_safe
 # from modules.phrases.models import Phrase
 from django import template
-
 
 register = template.Library()
 
@@ -21,3 +21,8 @@ def getrange(number):
 def get_item(dictionary, key):
     if dictionary is not None:
         return dictionary.get(key)
+
+@register.filter
+def currency(dollars, decimal_places=2):
+    dollars = round(float(dollars), decimal_places)
+    return '$ ' + '{:,}'.format(dollars)

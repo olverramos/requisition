@@ -23,9 +23,6 @@ class HomeView(View):
             'segment': 'index',
             'form': form,
             'current_account': current_account,
-            # 'city_list': city_list,
-            # 'community_list': community_list,
-            # 'category_list': category_list,
         }
 
         html_template = loader.get_template('home.html')

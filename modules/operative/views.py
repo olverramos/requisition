@@ -76,12 +76,11 @@ def requests_search_view(request):
     if request.method == 'POST':
         filter_form = SearchRequestForm(request.POST)
         if filter_form.is_valid():
-            applicant_email = filter_form.cleaned_data['applicant_email']
-            filter_form.fields['applicant'].queryset = Applicant.objects.filter(email=applicant_email)
-
-            if applicant_email is not None:
+            applicant_phone_number = filter_form.cleaned_data['applicant_phone_number']
+            applicant_list = Applicant.objects.filter(phone_number=applicant_phone_number)
+            if applicant_phone_number is not None:
                 operative_request_list = operative_request_list.filter(
-                    applicant__email=applicant_email
+                    applicant__in=applicant_list
                 )
             else:
                 operative_request_list = OperativeRequest.objects.none()
