@@ -26,8 +26,8 @@
                     <form role="form" id="search-form" method="post" autocomplete="off" action="{% url 'operative_requests_search' %}">
                         {% csrf_token %}    
                         <div class="row">
-                            <div class="col col-lg-6 col-md-6">
-                                <div class="input-group w-100 col-lg-6 col-md-6">
+                            <div class="col col-lg-6 col-md-12">
+                                <div class="input-group w-100 col-lg-6 col-md-12">
                                     <label class="text-secondary align-self-center">Teléfono Solicitante: &nbsp;</label>
                                     <input class="form-control" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='applicant_phone_number' id='applicant_phone_number_id' >
                                 </div>
