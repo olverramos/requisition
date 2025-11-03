@@ -17,13 +17,12 @@ class CreateRequestForm(forms.Form):
             }
         ),
     )
-    applicant_email = forms.EmailField(
-        label=_("Email Solicitante *"),
+    applicant_phone_number = forms.EmailField(
+        label=_("Teléfono Solicitante *"),
         required=True,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Email Solicitante',
             }
         ),
     )
@@ -86,16 +85,6 @@ class CreateRequestForm(forms.Form):
             }
         ),
     )
-    taker_email = forms.CharField(
-        label=_("Email"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Email Tomador',
-            }
-        ),
-    )
     taker_phone_number = forms.CharField(
         label=_("Teléfono"),
         required=False,
@@ -116,30 +105,6 @@ class CreateRequestForm(forms.Form):
             }
         ),
     )
-    taker_address = forms.CharField(
-        label=_("Dirección"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Dirección',
-            }
-        ),
-    )
-    taker_state = forms.ModelChoiceField(
-        label=_("Departamento"),
-        required=False,
-        queryset=State.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Departamento', 'id': 'taker_state_id'}),
-    )
-    taker_city = forms.ModelChoiceField(
-        label=_("Ciudad"),
-        required=False,
-        queryset=City.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'taker_city_id'}),
-    )    
     ramo = forms.ModelChoiceField(
         label=_("Ramo *"),
         required=False,

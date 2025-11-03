@@ -318,12 +318,24 @@ def get_taker_view(request, taker_id):
 def ajax_search_applicant(request):
     applicant_data = {}
 
+    phone_number = None
+    if 'phone_number' in request.GET.keys() and request.GET['phone_number']:
+        phone_number = request.GET['phone_number']
+
     email = None
     if 'email' in request.GET.keys() and request.GET['email']:
         email = request.GET['email']
-
+    
+    applicant:Applicant = None
     try:
-        applicant:Applicant = Applicant.objects.get(email=email)
+        if phone_number is not None:
+            applicant:Applicant = Applicant.objects.get(phone_number=phone_number)
+        elif email is not None:
+            applicant:Applicant = Applicant.objects.get(email=email)
+    except Applicant.DoesNotExist:
+        pass
+    
+    if applicant is not None:
         applicant_data['id'] = str(applicant.id)
         applicant_data['identification'] = applicant.identification
         applicant_data['name'] = applicant.name
@@ -335,8 +347,7 @@ def ajax_search_applicant(request):
         if applicant.city is not None:
             applicant_data['city'] = str(applicant.city.id)
             applicant_data['city_name'] = applicant.city.name
-    except Applicant.DoesNotExist:
-        pass
+
     return JsonResponse(data=applicant_data, safe=False)
 
 def ajax_documenttypes(request, person_type_id):
