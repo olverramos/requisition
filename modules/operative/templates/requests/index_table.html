@@ -6,10 +6,11 @@
     <thead>
         <tr>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Número</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Tomador</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Solicitante</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Tomador</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Solicitante</th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Ramo</th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Valor</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Estado</th>
             <th class="text-secondary opacity-7" width="20%"></th>
         </tr>
     </thead>
@@ -31,6 +32,9 @@
                 </td>
                 <td class="align-middle text-end" >
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.value|currency}}</span>
+                </td>
+                <td class="align-middle">
+                    <span class="text-secondary text-xs font-weight-bold">{{operative_request.status}}</span>
                 </td>
                 <td class="align-middle">
                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">

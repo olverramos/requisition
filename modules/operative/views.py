@@ -396,10 +396,16 @@ def get_request_view(request, operative_request_id):
         request_data['fields'] = {}
         for request_field in operative_request.request_fields:
             request_data['fields'][str(request_field.field.name)] = request_field.value
-        request_data['documents'] = []
-        # request_documents = fields.ListField(
-        #     fields.EmbeddedDocumentField(RequestDocument), blank=True,
-        # )
+        request_data['documents'] = {}
+        
+        for document_field in operative_request.request_documents:
+            request_data['documents'][str(document_field.document_name)] = {
+                'document_name': document_field.document_name,
+                'document_title': document_field.document_title,
+                'filename': document_field.filename,
+                'file_type': document_field.file_type,
+                'content': document_field.content,
+            }
 
     except OperativeRequest.DoesNotExist:
         pass

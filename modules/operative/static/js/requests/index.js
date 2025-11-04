@@ -1,6 +1,6 @@
 
 
-function change_ramo ( ramo_id, field_value, action ) {
+function loadFieldsData ( ramo_id, fields_value, action ) {
     var request_url = APP_URL + 'parameters/ramo/' + ramo_id + '/fields/';
 
     var ajaxRequest = new XMLHttpRequest();
@@ -38,13 +38,14 @@ function change_ramo ( ramo_id, field_value, action ) {
                     field_code += field_data.name ;
                     field_code += '" ';
                     field_code += ' value="';
-                    field_code += field_value[field_data.name];
+                    field_code += fields_value[field_data.name];
                     field_code += '" ';
                     if ( action != 'edit') {
                         field_code += ' readonly';
                     }
-                    field_code += '>';
-
+                    if ( field_data.field_type == 'IN') {
+                        field_code += ' />';
+                    }
                     field_code += "</div>\n";
                     fields_code += field_code;
                 }
@@ -62,7 +63,73 @@ function change_ramo ( ramo_id, field_value, action ) {
     
     ajaxRequest.open("GET", request_url, true);
     ajaxRequest.send();
+
 }
+
+function downloadFile(fileName, data, fileFormat) {
+    const linkSource = 'data:'+fileFormat+';base64,'+data;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+}
+
+function loadDocumentsData ( ramo_id, documents_value ) {
+    
+    let document_request_url = APP_URL + 'parameters/ramo/' + ramo_id + '/documents/';
+
+    var ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4){
+            //the request is completed, now check its status
+            if(ajaxRequest.status == 200){
+                const docuiment_data_list = JSON.parse(ajaxRequest.responseText);
+                var documents_code = "";
+                for(var i=0; i<docuiment_data_list.length; i++){
+                    let document_data = docuiment_data_list[i];
+                    var document_code = '<div class="col-lg-6 col-md-12 mb-1">\n';
+                    document_code += '<label class="text-main align-self-center">';
+                    document_code += document_data.title ;  
+                    if ( document_data.mandatory )
+                    {
+                        document_code += ' *'     
+                    }
+                    document_code += '</label>&nbsp;&nbsp;';
+
+                    if ( document_data.name in documents_value ) {
+                        document_code += '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        document_code += documents_value[document_data.name].filename;
+                        document_code += "', '";
+                        document_code += documents_value[document_data.name].content;
+                        document_code += "', '";
+                        document_code += documents_value[document_data.name].file_type;
+                        document_code += '\')">';
+                        document_code += '<i class="fa-solid fa-download"></i>';
+                        document_code += '</button>'; 
+                    } else {
+                        document_code += '<input type="text" value="No importado" class="form-control form-control-sm" readonly />';
+                    }
+
+                    document_code += "</div>\n";
+                    documents_code += document_code;
+                }
+
+                document.getElementById("ramo_document_id").innerHTML = documents_code;
+            } 
+            else{
+                console.log("Status error: " + ajaxRequest.status);
+            }
+        }
+        else{
+            console.log("Ignored readyState: " + ajaxRequest.readyState);
+        }
+    }
+    
+    ajaxRequest.open("GET", document_request_url, true);
+    ajaxRequest.send();
+
+}
+
 
 function load_data( action, objectid ) {    
     var verbose_action = 'Edición de Solicitud';
@@ -135,7 +202,8 @@ function load_data( action, objectid ) {
                     document.getElementById('id_value').value = request_obj.value;
                     document.getElementById('id_observations').value = request_obj.observations;
                     document.getElementById('status_id').value = request_obj.status_id;
-                    change_ramo(request_obj.ramo_id, request_obj.fields, action);
+                    loadFieldsData(request_obj.ramo_id, request_obj.fields,action);
+                    loadDocumentsData(request_obj.ramo_id, request_obj.documents);
                 }
                 else{
                     console.log("Status error: " + ajaxRequest.status);
