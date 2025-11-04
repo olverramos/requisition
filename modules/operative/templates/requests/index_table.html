@@ -8,16 +8,15 @@
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Número</th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Tomador</th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="25%">Solicitante</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Ramo</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Ramo</th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Valor</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Asignado a</th>
-            <th class="text-secondary opacity-7" width="10%"></th>
+            <th class="text-secondary opacity-7" width="20%"></th>
         </tr>
     </thead>
     <tbody>
         {% for operative_request in paginator.data %}
             <tr>
-                <td class="align-middle">
+                <td class="align-middle text-end">
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.number}}</span>
                 </td>
                 <td class="align-middle">
@@ -30,22 +29,23 @@
                 <td class="align-middle">
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.ramo}}</span>
                 </td>
-                <td class="align-middle">
+                <td class="align-middle text-end" >
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.value|currency}}</span>
                 </td>
                 <td class="align-middle">
-                    <span class="text-secondary text-xs font-weight-bold">{% if operative_request.assigned_by %}{{operative_request.assigned_by}}{% endif %}</span>
-                </td>
-                <td class="align-middle">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{ramo.id}}');">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Ramo" onclick="load_data('edit', '{{ramo.id}}');">
-                        <i class="fa fa-pencil text-sm"></i>
-                    </button>
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Ramo" onclick="load_data('delete', '{{ramo.id}}');">
-                        <i class="fa fa-trash text-sm"></i>
-                    </button>
+                    {% if not disable_edit %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Solicitud" onclick="load_data('edit', '{{operative_request.id}}');">
+                            <i class="fa fa-pencil text-sm"></i>
+                        </button>
+                    {% endif %}
+                    {% if not disable_delete %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Solicitud" onclick="load_data('delete', '{{operative_request.id}}');">
+                            <i class="fa fa-trash text-sm"></i>
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
     {% endfor %}

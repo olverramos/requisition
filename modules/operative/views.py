@@ -1,11 +1,13 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent
-from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm
+from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
+    EditRequestForm
 from modules.parameters.models import RamoField, AvailableDocument
 from django.contrib.auth.decorators import login_required
 from modules.authentication.models import Account
 from modules.base.models import Applicant, Taker
 from django.shortcuts import render, redirect
+from core.templatetags.tools import currency
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from core.utils import getPaginator
@@ -23,7 +25,8 @@ def requests_index_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
+    operative_request_list = OperativeRequest.objects.filter(
+        status__ne='9')
     
     data['page'] = page
     filter_form = RequestFilterForm()
@@ -63,6 +66,9 @@ def requests_index_view(request):
 
 def requests_search_view(request):
     data = { }
+    
+    current_account = Account.getAccount(request.user)
+    
     page = 1
     if 'page' in request.GET.keys() and request.GET['page']:
         page = int(request.GET['page'])
@@ -73,6 +79,7 @@ def requests_search_view(request):
     
     data['page'] = page
     filter_form = SearchRequestForm()
+    form = EditRequestForm()
     if request.method == 'POST':
         filter_form = SearchRequestForm(request.POST)
         if filter_form.is_valid():
@@ -87,11 +94,21 @@ def requests_search_view(request):
 
     paginator = getPaginator(operative_request_list, page)
 
+    if current_account is None:
+        disable_edit = True
+        disable_delete = True
+    else:
+        disable_edit = False
+        disable_delete = False
+
     context = {
         'table_title': 'Solicitudes',
         'table_description': 'Administrador de Solicitudes',
         'filter_form': filter_form,
+        'form': form,
         'disable_add': True,
+        'disable_edit': disable_edit,
+        'disable_delete': disable_delete,
         'paginator': paginator,
         'segment': 'operative'
     }
@@ -132,7 +149,6 @@ def create_request_view(request):
                     error = 'No existe un solicitante con el email'
 
             taker = None
-            import pdb; pdb.set_trace()
             if taker_identification is not None and taker_identification != '':
                 try:
                     taker = Taker.objects.get(identification=taker_identification)
@@ -348,19 +364,32 @@ def delete_request_view(request, request_id):
     return redirect(reverse_lazy("base_requests"))
 
 
-@login_required(login_url="/auth/login/")
 def get_request_view(request, operative_request_id):
     operative_request = None
     request_data = {}
     try:
         operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
         request_data['id'] = str(operative_request.id)
-        request_data['applicant'] = str(operative_request.applicant)
-        request_data['taker'] = str(operative_request.taker)
-        request_data['ramo'] = str(operative_request.ramo)
         request_data['number'] = operative_request.number
-        request_data['value'] = operative_request.value
+
+        request_data['applicant_phone_number'] = str(operative_request.applicant.phone_number)
+        request_data['applicant_name'] = str(operative_request.applicant)
+
+        request_data['taker_person_type_id'] = str(operative_request.taker.person_type.id)
+        request_data['taker_person_type'] = str(operative_request.taker.person_type)
+        request_data['taker_document_type_id'] = str(operative_request.taker.document_type.id)
+        request_data['taker_document_type'] = str(operative_request.taker.document_type)
+        request_data['taker_identification'] = str(operative_request.taker.identification)
+        request_data['taker_name'] = str(operative_request.taker.name)
+        request_data['taker_phone_number'] = str(operative_request.taker.phone_number)
+        request_data['taker_contact_name'] = str(operative_request.taker.contact_name)
+        
+        request_data['ramo_id'] = str(operative_request.ramo.id)
+        request_data['ramo'] = str(operative_request.ramo)
+        
+        request_data['status_id'] = str(operative_request.status.id)
         request_data['status'] = str(operative_request.status)
+        request_data['value'] = currency(operative_request.value)
         request_data['assigned_to'] = operative_request.assigned_to if operative_request.assigned_to else ''
         request_data['assigned_at'] = operative_request.assigned_at.strftime("%Y-%m-%d %H:%M") if operative_request.assigned_at else ''
         request_data['observations'] = operative_request.observations if operative_request.observations else ''

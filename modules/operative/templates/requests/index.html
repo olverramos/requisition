@@ -3,17 +3,20 @@
 {% load humanize %}
 {% load tools %}
 
+{% block form %} 
+    {% include "requests/form_modal.html" %}
+{% endblock %}
+
 {% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <div class="d-none d-sm-block">
+                {% include "requests/index_table.html" %}
+            </div>
 
-<div class="card">
-    <div class="table-responsive">
-        <div class="d-none d-sm-block">
-            {% include "requests/index_table.html" %}
-        </div>
-
-        <div class="d-sm-block d-md-none">
-            {% include "requests/index_table_sm.html" %}
+            <div class="d-sm-block d-md-none">
+                {% include "requests/index_table_sm.html" %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

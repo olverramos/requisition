@@ -1,9 +1,29 @@
 $(document).ready(function() {
-    
-    
+
+    $("#id_applicant_phone_number").change(function() {
+        let applicant_phone_number = $(this).val();
+        let request_url = APP_URL + 'base/applicant/search/?phone_number=' + applicant_phone_number;
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: request_url,
+            dataType: "json",
+            success: function(data, textStatus) {
+                if ("name" in data) {
+                    $('#id_applicant_name').val(data.name);
+                    $('#id_applicant_id').val(data.id);
+                } else {
+                    alert ("El solicitante no está registrado.")
+                }
+            },
+            error: function(msg) {
+                alert('Error en la transacción: ' + JSON.stringify(msg));
+            }
+        });
+    });
+
     $("#ramo_id").change(function() {
         let ramo_id = $(this).val();
-        alert("Hola " + ramo_id );
         var request_url = APP_URL + 'parameters/ramo/' + ramo_id + '/fields/';
         $.ajax({
             type: "GET",
