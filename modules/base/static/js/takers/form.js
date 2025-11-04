@@ -22,22 +22,16 @@ function load_data( action, objectid ) {
         document.getElementById('id_name').disabled = true;
         document.getElementById('id_email').disabled = true;
         document.getElementById('id_phone_number').disabled = true;
-        document.getElementById('state_id').disabled = true;
-        document.getElementById('city_id').disabled = true;
     } else if ( action == 'edit' ) {
         document.getElementById('id_identification').disabled = false;
         document.getElementById('id_name').disabled = false;
         document.getElementById('id_email').disabled = true;
         document.getElementById('id_phone_number').disabled = false;
-        document.getElementById('state_id').disabled = false;
-        document.getElementById('city_id').disabled = false;
     } else {
         document.getElementById('id_identification').disabled = false;
         document.getElementById('id_name').disabled = false;
         document.getElementById('id_email').disabled = false;
         document.getElementById('id_phone_number').disabled = false;
-        document.getElementById('state_id').disabled = false;
-        document.getElementById('city_id').disabled = false;
     }
 
     document.getElementById('title_formModal').innerText = verbose_action;
@@ -58,8 +52,6 @@ function load_data( action, objectid ) {
                     document.getElementById('id_name').value = takers_obj.name;
                     document.getElementById('id_email').value = takers_obj.email;
                     document.getElementById('id_phone_number').value = takers_obj.phone_number;
-                    document.getElementById('state_id').value = takers_obj.state;
-                    document.getElementById('city_id').value = takers_obj.city;
                 }
                 else{
                     console.log("Status error: " + ajaxRequest.status);

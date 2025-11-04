@@ -23,17 +23,8 @@ class CreateApplicantForm(forms.Form):
             }
         ),
     )
-    email = forms.CharField(
-        label=_("Email *"),
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Email'
-            }
-        ),
-    )
     phone_number = forms.CharField(
-        label=_("Teléfono"),
+        label=_("Teléfono *"),
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
@@ -41,19 +32,14 @@ class CreateApplicantForm(forms.Form):
             }
         ),
     )
-    state = forms.ModelChoiceField(
-        label=_("Departamento"),
-        required=False,
-        queryset=State.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Departamento', 'id': 'state_id'}),
-    )
-    city = forms.ModelChoiceField(
-        label=_("Ciudad"),
-        required=False,
-        queryset=City.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'city_id'}),
+    email = forms.CharField(
+        label=_("Email *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Email'
+            }
+        ),
     )
 
     class Media:
@@ -61,13 +47,13 @@ class CreateApplicantForm(forms.Form):
 
 
 class EditApplicantForm(CreateApplicantForm):
-    email = forms.CharField(
-        label=_("Email *"),
+    phone_number = forms.CharField(
+        label=_("Teléfono *"),
         required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Email'
+                'placeholder': 'Teléfono'
             }
         ),
     )
@@ -152,30 +138,6 @@ class CreateTakerForm(forms.Form):
             }
         ),
     )
-    address = forms.CharField(
-        label=_("Dirección"),
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Dirección'
-            }
-        ),
-    )
-    state = forms.ModelChoiceField(
-        label=_("Departamento"),
-        required=False,
-        queryset=State.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Departamento', 'id': 'state_id'}),
-    )
-    city = forms.ModelChoiceField(
-        label=_("Ciudad"),
-        required=False,
-        queryset=City.objects.all(),
-        widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ciudad', 'id': 'city_id'}),
-    )
-
     class Media:
         js = ('js/takers/index.js', 'js/takers/form.js', )
 

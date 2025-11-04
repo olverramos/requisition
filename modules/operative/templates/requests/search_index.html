@@ -1,0 +1,22 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+{% load humanize %}
+{% load tools %}
+
+{% block form %} 
+    {% include "requests/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <div class="d-none d-sm-block">
+                {% include "requests/search_index_table.html" %}
+            </div>
+
+            <div class="d-sm-block d-md-none">
+                {% include "requests/index_table_sm.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

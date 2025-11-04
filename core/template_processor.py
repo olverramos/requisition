@@ -25,7 +25,13 @@ def generic_variables(request):
                 'url': 'base_takers',
                 'title': 'Tomadores'
             },
-        ]
+        ],
+        'operative': [
+            {
+                'url': 'operative_requests',
+                'title': 'Solicitudes'
+            },
+        ],
     }
 
     return {    

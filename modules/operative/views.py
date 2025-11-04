@@ -103,7 +103,7 @@ def requests_search_view(request):
 
     context = {
         'table_title': 'Solicitudes',
-        'table_description': 'Administrador de Solicitudes',
+        'table_description': 'Búsqueda de Solicitudes',
         'filter_form': filter_form,
         'form': form,
         'disable_add': True,
@@ -113,7 +113,7 @@ def requests_search_view(request):
         'segment': 'operative'
     }
 
-    return render(request, 'requests/index.html', context)
+    return render(request, 'requests/search_index.html', context)
 
 
 def create_request_view(request):

@@ -58,8 +58,6 @@ def create_applicant_view(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
-            state = form.cleaned_data['state']
-            city = form.cleaned_data['city']
 
             if error is None:
                 applicant:Applicant = Applicant()
@@ -67,8 +65,6 @@ def create_applicant_view(request):
                 applicant.name = name
                 applicant.email = email
                 applicant.phone_number = phone_number
-                applicant.state = state
-                applicant.city = city
                 applicant.created_at = datetime.datetime.now()
                 applicant.created_by = current_account.username
                 applicant.save()
@@ -95,15 +91,11 @@ def edit_applicant_view(request, applicant_id):
         form = EditApplicantForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
-            phone_number = form.cleaned_data['phone_number']
-            state = form.cleaned_data['state']
-            city = form.cleaned_data['city']
+            email = form.cleaned_data['email']
 
             if error is None:   
                 applicant.name = name
-                applicant.phone_number = phone_number
-                applicant.state = state
-                applicant.city = city
+                applicant.email = email
                 applicant.updated_at = datetime.datetime.now()
                 applicant.updated_by = current_account.username
                 applicant.save()
@@ -202,9 +194,6 @@ def create_taker_view(request):
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
             contact_name = form.cleaned_data['contact_name']
-            address = form.cleaned_data['address']
-            state = form.cleaned_data['state']
-            city = form.cleaned_data['city']
 
             if error is None:
                 taker:Taker = Taker()
@@ -215,9 +204,6 @@ def create_taker_view(request):
                 taker.email = email
                 taker.phone_number = phone_number
                 taker.contact_name = contact_name
-                taker.address = address
-                taker.state = state
-                taker.city = city
                 taker.created_at = datetime.datetime.now()
                 taker.created_by = current_account.username
                 taker.save()
@@ -249,9 +235,6 @@ def edit_taker_view(request, taker_id):
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
             contact_name = form.cleaned_data['contact_name']
-            address = form.cleaned_data['address']
-            state = form.cleaned_data['state']
-            city = form.cleaned_data['city']
 
             if error is None:   
                 taker.person_type = person_type
@@ -260,9 +243,6 @@ def edit_taker_view(request, taker_id):
                 taker.email = email
                 taker.phone_number = phone_number
                 taker.contact_name = contact_name
-                taker.address = address
-                taker.state = state
-                taker.city = city
                 taker.updated_at = datetime.datetime.now()
                 taker.updated_by = current_account.username
                 taker.save()
@@ -305,11 +285,6 @@ def get_taker_view(request, taker_id):
         taker_data['email'] = taker.email
         taker_data['phone_number'] = taker.phone_number
         taker_data['contact_name'] = taker.contact_name
-        taker_data['address'] = taker.address
-        if taker.state is not None:
-            taker_data['state'] = str(taker.state.id)
-        if taker.city is not None:
-            taker_data['city'] = str(taker.city.id)
     except Taker.DoesNotExist:
         pass
 
@@ -341,12 +316,6 @@ def ajax_search_applicant(request):
         applicant_data['name'] = applicant.name
         applicant_data['email'] = applicant.email
         applicant_data['phone_number'] = applicant.phone_number
-        if applicant.state is not None:
-            applicant_data['state'] = str(applicant.state.id)
-            applicant_data['state_name'] = applicant.state.name
-        if applicant.city is not None:
-            applicant_data['city'] = str(applicant.city.id)
-            applicant_data['city_name'] = applicant.city.name
 
     return JsonResponse(data=applicant_data, safe=False)
 
@@ -381,13 +350,6 @@ def ajax_search_taker(request):
         taker_data['email'] = taker.email
         taker_data['phone_number'] = taker.phone_number
         taker_data['contact_name'] = taker.contact_name
-        taker_data['address'] = taker.address
-        if taker.state is not None:
-            taker_data['state'] = str(taker.state.id)
-            taker_data['state_name'] = taker.state.name
-        if taker.city is not None:
-            taker_data['city'] = str(taker.city.id)
-            taker_data['city_name'] = taker.city.name
     except Taker.DoesNotExist:
         pass
 
