@@ -1,6 +1,5 @@
 $(document).ready(function() {
     
-    
     $("#ramo_id").change(function() {
         let ramo_id = $(this).val();
         alert("Hola " + ramo_id );

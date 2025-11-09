@@ -40,6 +40,11 @@
                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
+                    {% if can_register_payment and operative_request.status.id == '3' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Pago" onclick="load_data('paymentregister', '{{operative_request.id}}');">
+                            <i class="fa fa-credit-card text-sm"></i>
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
     {% endfor %}

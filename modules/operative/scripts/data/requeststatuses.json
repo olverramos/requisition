@@ -5,15 +5,19 @@
     },
     {
         "id": "2",
-        "name": "En proceso"
+        "name": "Asignado"
     },
     {
         "id": "3",
-        "name": "Realizado"
+        "name": "Generado"
     },
     {
         "id": "4",
-        "name": "Entregado"
+        "name": "Pagado"
+    },
+    {
+        "id": "5",
+        "name": "Finalizado"
     },
     {
         "id": "9",

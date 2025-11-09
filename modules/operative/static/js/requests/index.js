@@ -83,20 +83,20 @@ function loadDocumentsData ( ramo_id, documents_value ) {
         if(ajaxRequest.readyState == 4){
             //the request is completed, now check its status
             if(ajaxRequest.status == 200){
-                const docuiment_data_list = JSON.parse(ajaxRequest.responseText);
+                const document_data_list = JSON.parse(ajaxRequest.responseText);
                 var documents_code = "";
-                for(var i=0; i<docuiment_data_list.length; i++){
-                    let document_data = docuiment_data_list[i];
-                    var document_code = '<div class="col-lg-6 col-md-12 mb-1">\n';
-                    document_code += '<label class="text-main align-self-center">';
-                    document_code += document_data.title ;  
-                    if ( document_data.mandatory )
-                    {
-                        document_code += ' *'     
-                    }
-                    document_code += '</label>&nbsp;&nbsp;';
-
+                for(var i=0; i<document_data_list.length; i++){
+                    let document_data = document_data_list[i];
                     if ( document_data.name in documents_value ) {
+                        var document_code = '<div class="col-lg-6 col-md-12 mb-1">\n';
+                        document_code += '<label class="text-main align-self-center">';
+                        document_code += document_data.title ;  
+                        if ( document_data.mandatory )
+                        {
+                            document_code += ' *'     
+                        }
+                        document_code += '</label>&nbsp;&nbsp;';
+
                         document_code += '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
                         document_code += documents_value[document_data.name].filename;
                         document_code += "', '";
@@ -106,12 +106,10 @@ function loadDocumentsData ( ramo_id, documents_value ) {
                         document_code += '\')">';
                         document_code += '<i class="fa-solid fa-download"></i>';
                         document_code += '</button>'; 
-                    } else {
-                        document_code += '<input type="text" value="No importado" class="form-control form-control-sm" readonly />';
-                    }
+                        document_code += "</div>\n";
 
-                    document_code += "</div>\n";
-                    documents_code += document_code;
+                        documents_code += document_code;
+                    }
                 }
 
                 document.getElementById("ramo_document_id").innerHTML = documents_code;
@@ -130,50 +128,119 @@ function loadDocumentsData ( ramo_id, documents_value ) {
 
 }
 
-
 function load_data( action, objectid ) {    
     var verbose_action = 'Edición de Solicitud';
-
     document.getElementById("id_form_button").hidden = false;
     document.getElementById('ramo_id').removeAttribute("readonly");
 
     if ( action == 'edit') {
-        document.getElementById('ramo_id').setAttribute("readonly", "readonly");
+        document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_police').hidden = false;
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('assigned_to_id').removeAttribute("disabled");
+        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
     }
 
     if ( action == 'delete') {
         verbose_action = 'Eliminación de Solicitud';
         document.getElementById("id_form_button").innerText = 'Eliminar';
         document.getElementById("request-form").action = objectid + '/delete/'; 
-        document.getElementById('ramo_id').setAttribute("readonly", "readonly");
     }
     if ( action == 'view') {
         verbose_action = 'Consulta de Solicitud';
         document.getElementById("id_form_button").hidden = true;
         document.getElementById("request-form").action = '.';
-        document.getElementById('ramo_id').setAttribute("readonly", "readonly");
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
+    }
+    if ( action == 'assign') {
+        verbose_action = 'Asignación de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Asignar';
+        document.getElementById("request-form").action = objectid + '/assign/'; 
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('assigned_to_id').removeAttribute("disabled");
+        document.getElementById('id_request_receipt').hidden = true;
+        document.getElementById('id_request_police').hidden = true;
+        document.getElementById('label_id_request_receipt').hidden = true;
+        document.getElementById('label_id_request_police').hidden = true;
+    }
+    if ( action == 'loaddocuments') {
+        verbose_action = 'Cargue de Documentos de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Guardar';
+        document.getElementById("request-form").action = objectid + '/loaddocuments/'; 
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_police').hidden = false;
+        document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('label_id_request_receipt').hidden = false;
+        document.getElementById('label_id_request_police').hidden = false;
+    }
+    if ( action == 'valide') {
+        verbose_action = 'Validación de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Validar';
+        document.getElementById("request-form").action = objectid + '/valide/'; 
     }
 
-    if ( action == 'view' || action == 'delete' ) {
-        document.getElementById('id_taker_name').disabled = true;
-        document.getElementById('id_taker_phone_number').disabled = true;
-        document.getElementById('id_taker_contact_name').disabled = true;
-        document.getElementById('id_value').disabled = true;
-        document.getElementById('id_observations').disabled = true;
+    if ( action == 'view' || action == 'delete' || action == 'valide' ) {
         document.getElementById('ramo_id').setAttribute("disabled", "disabled");
         document.getElementById('taker_person_type_id').setAttribute("disabled", "disabled");
         document.getElementById('taker_document_type_id').setAttribute("disabled", "disabled");
-        document.getElementById('status_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_taker_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_phone_number').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_contact_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_value').setAttribute("readonly", "readonly");
+        document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('id_observations').setAttribute("readonly", "readonly");
+        document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_police').hidden = false;
+        document.getElementById('label_id_request_receipt').hidden = false;
+        document.getElementById('label_id_request_police').hidden = false;
+    } else if ( action == 'assign' ) {
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('taker_person_type_id').setAttribute("disabled", "disabled");
+        document.getElementById('taker_document_type_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_taker_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_phone_number').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_contact_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_value').setAttribute("readonly", "readonly");
+        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('assigned_to_id').removeAttribute("disabled");
+        document.getElementById('id_observations').setAttribute("readonly", "readonly");
+    } else if ( action == 'loaddocuments' ) {
+        document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('taker_person_type_id').setAttribute("disabled", "disabled");
+        document.getElementById('taker_document_type_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_taker_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_phone_number').setAttribute("readonly", "readonly");
+        document.getElementById('id_taker_contact_name').setAttribute("readonly", "readonly");
+        document.getElementById('id_value').setAttribute("readonly", "readonly");
+        document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_observations').setAttribute("readonly", "readonly");
     } else {
-        document.getElementById('id_taker_name').disabled = false;
-        document.getElementById('id_taker_phone_number').disabled = false;
-        document.getElementById('id_taker_contact_name').disabled = false;
-        document.getElementById('id_value').disabled = false;
-        document.getElementById('id_observations').disabled = false;
+        document.getElementById('id_taker_name').removeAttribute("readonly");
+        document.getElementById('id_taker_phone_number').removeAttribute("readonly");
+        document.getElementById('id_taker_contact_name').removeAttribute("readonly");
+        document.getElementById('id_value').removeAttribute("readonly");
+        document.getElementById('id_observations').removeAttribute("readonly");
         document.getElementById('ramo_id').removeAttribute("disabled");
         document.getElementById('taker_person_type_id').removeAttribute("disabled");
         document.getElementById('taker_document_type_id').removeAttribute("disabled");
         document.getElementById('status_id').removeAttribute("disabled");
+        document.getElementById('assigned_to_id').removeAttribute("disabled");
+        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_police').hidden = false;
+        document.getElementById('label_id_request_receipt').hidden = false;
+        document.getElementById('label_id_request_police').hidden = false;
     }
 
     document.getElementById('title_formModal').innerText = verbose_action;
@@ -199,9 +266,41 @@ function load_data( action, objectid ) {
                     document.getElementById('id_taker_phone_number').value = request_obj.taker_phone_number;
                     document.getElementById('id_taker_contact_name').value = request_obj.taker_contact_name;
                     document.getElementById('ramo_id').value = request_obj.ramo_id;
+                    document.getElementById('assigned_to_id').value = request_obj.assigned_to_id;
                     document.getElementById('id_value').value = request_obj.value;
                     document.getElementById('id_observations').value = request_obj.observations;
                     document.getElementById('status_id').value = request_obj.status_id;
+                    document.getElementById('id_created_at').value = request_obj.created_at;
+                    document.getElementById('id_updated_at').value = request_obj.updated_at;
+                    document.getElementById('id_updated_by').value = request_obj.updated_by;
+                    document.getElementById('id_valided_at').value = request_obj.valided_at;
+                    document.getElementById('id_valided_by').value = request_obj.valided_by;
+
+                    if ( request_obj.request_receipt ) {
+                        var request_receipt_code = '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        request_receipt_code += request_obj.request_receipt.filename;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.request_receipt.content;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.request_receipt.file_type;
+                        request_receipt_code += '\')">';
+                        request_receipt_code += '<i class="fa-solid fa-download"></i>';
+                        request_receipt_code += '</button>'; 
+                        document.getElementById("id_request_receipt").innerHTML = request_receipt_code;
+                    }
+
+                    if ( request_obj.request_police ) {
+                        var request_police_code = '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        request_police_code += request_obj.request_police.filename;
+                        request_police_code += "', '";
+                        request_police_code += request_obj.request_police.content;
+                        request_police_code += "', '";
+                        request_police_code += request_obj.request_police.file_type;
+                        request_police_code += '\')">';
+                        request_police_code += '<i class="fa-solid fa-download"></i>';
+                        request_police_code += '</button>'; 
+                        document.getElementById("id_request_police").innerHTML = request_police_code;
+                    }
                     loadFieldsData(request_obj.ramo_id, request_obj.fields,action);
                     loadDocumentsData(request_obj.ramo_id, request_obj.documents);
                 }

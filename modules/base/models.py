@@ -116,7 +116,6 @@ class Applicant(Document):
             with open(f'{module_folder}/scripts/data/applicants.json') as data_fp:
                 data_list = json.load(data_fp)
                 for data in data_list:
-                    import pdb; pdb.set_trace()
                     state = None
                     if 'state_code' in data.keys():
                         try:

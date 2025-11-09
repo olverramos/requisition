@@ -57,8 +57,17 @@ class RequestDocument(EmbeddedDocument):
     content = fields.StringField(verbose_name='Contenido Base64')
 
     def __str__(self):
-        return f"{self.field} - {self.value}"
+        return f"{self.document_name} - {self.filename}"
     
+
+class RequestFile(EmbeddedDocument):
+    filename = fields.StringField(verbose_name='Nombre Archivo')
+    file_type = fields.StringField(verbose_name='Tipo Archivo')
+    content = fields.StringField(verbose_name='Contenido Base64')
+
+    def __str__(self):
+        return f"{self.filename}"
+
 
 class OperativeRequest(Document):
     applicant = fields.ReferenceField('base.Applicant', verbose_name="Solicitante")
@@ -77,10 +86,14 @@ class OperativeRequest(Document):
     request_documents = fields.ListField(
         fields.EmbeddedDocumentField(RequestDocument), blank=True,
     )
+    request_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
+    request_police = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
     created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
-    updated_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_by = fields.StringField(verbose_name='Actualizado por', max_length=50, null=True, blank=True)
+    valided_at = fields.DateTimeField(verbose_name="Fecha Validación", null=True, blank=True)
+    valided_by = fields.StringField(verbose_name='Validado por', max_length=50, null=True, blank=True)
 
     meta = {
         'collection': 'operative_requests',

@@ -14,8 +14,12 @@
                         {% for field in form %}
                             {% if field.name != "observations" %}
                                 <div class="col-lg-3 col-md-12 mb-1">
-                                    {{ field.label_tag }}
-                                    {{ field }}
+                                    <label for="{{ field.id_for_label }}" id="label_{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {% if field.name == "request_receipt" or field.name == "request_police" %}
+                                        <span id="section_{{field.id_for_label}}">{{field}}</span>
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
                                 </div>
                             {% endif%}
                         {% endfor %}

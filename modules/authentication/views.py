@@ -86,12 +86,6 @@ def register_view(request):
             last_name = form.data['last_name']
             data['last_name'] = last_name
 
-            accept_conditions = False
-            if form.data['accept_conditions'] == 'on':
-                accept_conditions = True
-            else:
-                error = "No se ha aceptado las condiciones de manejo de datos."
-
             try:
                 user = User.objects.get(username=username)
                 error = 'Hay un usuario registrado con el usuario'
@@ -111,8 +105,7 @@ def register_view(request):
     
                 account = Account()
                 account.user = user
-                account.role = Role.objects.get(pk=RoleEnum.MEMBER) 
-                account.accept_conditions = accept_conditions
+                account.role = Role.objects.get(pk=RoleEnum.ASSISTANT) 
                 account.created_at = datetime.datetime.now()
                 account.created_by = username
                 account.save()
@@ -405,7 +398,7 @@ def create_account_view(request):
             try:
                 role = Role.objects.get(pk=role_id)
             except Role.DoesNotExist:
-                role = Role.objects.get(pk=RoleEnum.MEMBER)
+                role = Role.objects.get(pk=RoleEnum.ASSISTANT)
 
             try:
                 user = User.objects.get(username=username)
@@ -494,7 +487,7 @@ def edit_account_view(request, account_id):
             try:
                 role = Role.objects.get(pk=role_id)
             except Role.DoesNotExist:
-                role = Role.objects.get(pk=RoleEnum.MEMBER)
+                role = Role.objects.get(pk=RoleEnum.ASSISTANT)
 
             if error is None:
                 user.first_name = first_name

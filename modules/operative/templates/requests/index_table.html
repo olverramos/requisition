@@ -40,12 +40,33 @@
                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
-                    {% if not disable_edit %}
+                    {% if can_assign %}
+                        {% if operative_request.status.id == '1' %}
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Asignar Solicitud" onclick="load_data('assign', '{{operative_request.id}}');">
+                                <i class="fa fa-hand-o-right text-sm"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                    {% if can_load_documents %}
+                        {% if operative_request.status.id == '2' %}
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Documentos" onclick="load_data('loaddocuments', '{{operative_request.id}}');">
+                                <i class="fa fa-file-text text-sm"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                    {% if can_valide %}
+                        {% if operative_request.status.id == '4' %}
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Validar Pago" onclick="load_data('valide', '{{operative_request.id}}');">
+                                <i class="fa fa-check-circle-o text-sm"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                    {% if can_edit %}
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Solicitud" onclick="load_data('edit', '{{operative_request.id}}');">
                             <i class="fa fa-pencil text-sm"></i>
                         </button>
                     {% endif %}
-                    {% if not disable_delete %}
+                    {% if can_delete %}
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Solicitud" onclick="load_data('delete', '{{operative_request.id}}');">
                             <i class="fa fa-trash text-sm"></i>
                         </button>

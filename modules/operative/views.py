@@ -1,9 +1,10 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
-    EditRequestForm
+    TakerRequestForm, EditRequestForm
 from modules.parameters.models import RamoField, AvailableDocument
 from django.contrib.auth.decorators import login_required
+from django_mongoengine.mongo_auth.models import User
 from modules.authentication.models import Account
 from modules.base.models import Applicant, Taker
 from django.shortcuts import render, redirect
@@ -18,6 +19,8 @@ import base64
 
 @login_required(login_url="/auth/login/")
 def requests_index_view(request):
+    current_account:Account = Account.getAccount(request.user)
+
     data = { }
     page = 1
     if 'page' in request.GET.keys() and request.GET['page']:
@@ -30,6 +33,7 @@ def requests_index_view(request):
     
     data['page'] = page
     filter_form = RequestFilterForm()
+    form = EditRequestForm()
     if request.method == 'POST':
         filter_form = RequestFilterForm(request.POST)
         if filter_form.is_valid():
@@ -52,11 +56,32 @@ def requests_index_view(request):
 
     paginator = getPaginator(operative_request_list, page)
 
+    user_list = User.objects.filter(is_active=True)
+    form.fields['assigned_to'].queryset = Account.objects.filter(
+        user__in=user_list,
+        role__in=('assitant', 'admin',)
+    )
+
+    can_assign = True
+    can_load_documents = True
+    can_valide = True
+    can_edit = False
+    can_delete = False
+    if current_account and current_account.role.id == "admin":
+        can_edit = True
+        can_delete = True
+
     context = {
         'table_title': 'Solicitudes',
         'table_description': 'Administrador de Solicitudes',
         'filter_form': filter_form,
+        'form': form,
         'disable_add': True,
+        'can_assign': can_assign,
+        'can_load_documents': can_load_documents,
+        'can_valide': can_valide,
+        'can_edit': can_edit,
+        'can_delete': can_delete,
         'paginator': paginator,
         'segment': 'operative'
     }
@@ -79,7 +104,7 @@ def requests_search_view(request):
     
     data['page'] = page
     filter_form = SearchRequestForm()
-    form = EditRequestForm()
+    form = TakerRequestForm()
     if request.method == 'POST':
         filter_form = SearchRequestForm(request.POST)
         if filter_form.is_valid():
@@ -253,90 +278,129 @@ def create_request_view(request):
     return render(request, 'requests/create.html', context)
 
 
-# @login_required(login_url="/auth/login/")
-# def edit_request_view(request, request_id):
-#     current_account = Account.getAccount(request.user)
-#     error = None
-#     try:
-#         request:Request = Request.objects.get(pk=request_id)
-#     except Request.DoesNotExist:
-#         error = 'No existe una request con el id'
-#         request = None
+@login_required(login_url="/auth/login/")
+def edit_request_view(request, request_id):
+    current_account = Account.getAccount(request.user)
+    error = None
+    try:
+        request:Request = Request.objects.get(pk=request_id)
+    except Request.DoesNotExist:
+        error = 'No existe una request con el id'
+        request = None
 
-#     if error is None and request.method == 'POST':
-#         form = CreateRequestForm(request.POST)
-#         if form.is_valid():
-#             name = form.cleaned_data['name']
+    if error is None and request.method == 'POST':
+        form = EditRequestForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
 
-#             fields_data = []
-#             if 'fields' in request.POST.keys():
-#                 fields_data = request.POST['fields']
+            fields_data = []
+            if 'fields' in request.POST.keys():
+                fields_data = request.POST['fields']
 
-#             available_documents_data = []
-#             if 'available_documents' in request.POST.keys():
-#                 available_documents_data = request.POST['available_documents']
+            available_documents_data = []
+            if 'available_documents' in request.POST.keys():
+                available_documents_data = request.POST['available_documents']
 
-#             fields = []
-#             for field_data in fields_data:
-#                 if 'field_type' in field_data.keys():
-#                     field_type_id = field_data["field_type"]
-#                     try:
-#                         field_type = FieldType.objects.get(pk=field_type_id)
-#                     except FieldType.DoesNotExist:
-#                         print (f"Tipo de Campo {field_type} no Existe")
-#                         field_type = None
+            fields = []
+            for field_data in fields_data:
+                if 'field_type' in field_data.keys():
+                    field_type_id = field_data["field_type"]
+                    try:
+                        field_type = FieldType.objects.get(pk=field_type_id)
+                    except FieldType.DoesNotExist:
+                        print (f"Tipo de Campo {field_type} no Existe")
+                        field_type = None
 
-#                 if field_type is not None and 'name' in field_data.keys():
-#                     name = field_data["name"]
-#                     mandatory = False
-#                     if 'mandatory' in field_data.keys():
-#                         mandatory = field_data["mandatory"]
+                if field_type is not None and 'name' in field_data.keys():
+                    name = field_data["name"]
+                    mandatory = False
+                    if 'mandatory' in field_data.keys():
+                        mandatory = field_data["mandatory"]
                     
-#                     field = RequestField()
-#                     field.field_type = field_type
-#                     field.name = name
-#                     field.mandatory = mandatory
-#                     options = []
-#                     if 'options' in field_data.keys():
-#                         options = field_data["options"]
-#                     field.options = options
+                    field = RequestField()
+                    field.field_type = field_type
+                    field.name = name
+                    field.mandatory = mandatory
+                    options = []
+                    if 'options' in field_data.keys():
+                        options = field_data["options"]
+                    field.options = options
 
-#                     fields.append(field)
+                    fields.append(field)
 
-#             available_documents = []
-#             for available_document_data in available_documents_data:
-#                 if 'name' in available_document_data.keys():
-#                     name = available_document_data["name"]
-#                     mandatory = False
-#                     if 'mandatory' in available_document_data.keys():
-#                         mandatory = available_document_data["mandatory"]
+            available_documents = []
+            for available_document_data in available_documents_data:
+                if 'name' in available_document_data.keys():
+                    name = available_document_data["name"]
+                    mandatory = False
+                    if 'mandatory' in available_document_data.keys():
+                        mandatory = available_document_data["mandatory"]
                     
-#                     available_document = AvailableDocument()
-#                     available_document.name = name
-#                     available_document.mandatory = mandatory
-#                     available_documents.append(available_document)
+                    available_document = AvailableDocument()
+                    available_document.name = name
+                    available_document.mandatory = mandatory
+                    available_documents.append(available_document)
 
-#             if error is None:   
-#                 request.name = name
-#                 request.request_fields = fields
-#                 request.available_documents = available_documents
-#                 request.updated_at = datetime.datetime.now()
-#                 request.updated_by = current_account.username
-#                 request.save()
-#                 messages.success (request, f'Request {request} actualizado satisfactoriamente!')
-#         else:
-#             error = "¡Error en la actualización del Request!"
-#         if error is not None:
-#             messages.error (request, error)
-#     return redirect(reverse_lazy("base_requests"))
-
+            if error is None:   
+                request.name = name
+                request.request_fields = fields
+                request.available_documents = available_documents
+                request.updated_at = datetime.datetime.now()
+                request.updated_by = current_account.username
+                request.save()
+                messages.success (request, f'Request {request} actualizado satisfactoriamente!')
+        else:
+            error = "¡Error en la actualización del Request!"
+        if error is not None:
+            messages.error (request, error)
+    return redirect(reverse_lazy("operative_requests"))
 
 @login_required(login_url="/auth/login/")
-def delete_request_view(request, request_id):
+def assign_request_view(request, operative_request_id):
     error = None
     current_account = Account.getAccount(request.user)
     try:
-        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=request_id)
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    if error is None and request.method == 'POST':
+        form = EditRequestForm(request.POST)
+        if form.is_valid():
+            assigned_to = form.cleaned_data['assigned_to']
+
+            request_status = RequestStatus.objects.get(id='2') 
+            operative_request.status = request_status
+            operative_request.assigned_to = assigned_to
+            operative_request.assigned_at = datetime.datetime.now()
+            operative_request.assigned_by = current_account.username
+            operative_request.updated_at = datetime.datetime.now()
+            operative_request.updated_by = current_account.username
+            operative_request.save()
+
+            request_event = RequestEvent()
+            request_event.operative_request = operative_request
+            request_event.status = request_status
+            request_event.observations = "Asignación de la Solicitud"
+            request_event.created_at = datetime.datetime.now()
+            request_event.created_by = current_account.username
+            request_event.save()
+
+            messages.success (request, f'Solicitud {operative_request} asignada satisfactoriamente!')
+        else: 
+            error = 'Error en el formulario'
+    if error is not None:
+        messages.error (request, error)
+
+    return redirect(reverse_lazy("operative_requests"))
+
+@login_required(login_url="/auth/login/")
+def delete_request_view(request, operative_request_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
     except OperativeRequest.DoesNotExist:
         error = 'No existe una request con el id'
         operative_request = None
@@ -361,7 +425,7 @@ def delete_request_view(request, request_id):
     else:
         messages.error (request, error)
 
-    return redirect(reverse_lazy("base_requests"))
+    return redirect(reverse_lazy("operative_requests"))
 
 
 def get_request_view(request, operative_request_id):
@@ -390,9 +454,32 @@ def get_request_view(request, operative_request_id):
         request_data['status_id'] = str(operative_request.status.id)
         request_data['status'] = str(operative_request.status)
         request_data['value'] = currency(operative_request.value)
-        request_data['assigned_to'] = operative_request.assigned_to if operative_request.assigned_to else ''
+        request_data['assigned_to'] = str(operative_request.assigned_to) if operative_request.assigned_to else ''
+        request_data['assigned_to_id'] = str(operative_request.assigned_to.id) if operative_request.assigned_to else ''
         request_data['assigned_at'] = operative_request.assigned_at.strftime("%Y-%m-%d %H:%M") if operative_request.assigned_at else ''
+        request_data['created_at'] = operative_request.created_at.strftime("%Y-%m-%d %H:%M") if operative_request.created_at else ''
+        request_data['created_by'] = operative_request.created_by if operative_request.created_by else ''
+        request_data['updated_at'] = operative_request.updated_at.strftime("%Y-%m-%d %H:%M") if operative_request.updated_at else ''
+        request_data['updated_by'] = operative_request.updated_by if operative_request.updated_by else ''
+        request_data['valided_at'] = operative_request.valided_at.strftime("%Y-%m-%d %H:%M") if operative_request.valided_at else ''
+        request_data['valided_by'] = operative_request.valided_by if operative_request.valided_by else ''
+        request_data['request_receipt'] = None
+        if operative_request.request_receipt is not None:
+            request_data['request_receipt'] = {
+                'filename': operative_request.request_receipt.filename,
+                'file_type': operative_request.request_receipt.file_type,
+                'content': operative_request.request_receipt.content,
+            }
+        request_data['request_police'] = None
+        if operative_request.request_police is not None:
+            request_data['request_police'] = {
+                'filename': operative_request.request_police.filename,
+                'file_type': operative_request.request_police.file_type,
+                'content': operative_request.request_police.content,
+            }
+
         request_data['observations'] = operative_request.observations if operative_request.observations else ''
+
         request_data['fields'] = {}
         for request_field in operative_request.request_fields:
             request_data['fields'][str(request_field.field.name)] = request_field.value
