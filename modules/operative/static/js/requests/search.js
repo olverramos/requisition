@@ -97,14 +97,15 @@ function loadDocumentsData ( ramo_id, documents_value ) {
                     document_code += '</label>&nbsp;&nbsp;';
 
                     if ( document_data.name in documents_value ) {
-                        document_code += '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        document_code += '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         document_code += documents_value[document_data.name].filename;
                         document_code += "', '";
                         document_code += documents_value[document_data.name].content;
                         document_code += "', '";
                         document_code += documents_value[document_data.name].file_type;
                         document_code += '\')">';
-                        document_code += '<i class="fa-solid fa-download"></i>';
+                        document_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        document_code += documents_value[document_data.name].filename;
                         document_code += '</button>'; 
                     } else {
                         document_code += '<input type="text" value="No importado" class="form-control form-control-sm" readonly />';

@@ -87,29 +87,43 @@ function loadDocumentsData ( ramo_id, documents_value ) {
                 var documents_code = "";
                 for(var i=0; i<document_data_list.length; i++){
                     let document_data = document_data_list[i];
-                    if ( document_data.name in documents_value ) {
-                        var document_code = '<div class="col-lg-6 col-md-12 mb-1">\n';
-                        document_code += '<label class="text-main align-self-center">';
-                        document_code += document_data.title ;  
-                        if ( document_data.mandatory )
+                    var document_code = '<div class="col-lg-6 col-md-12 mb-1">\n';
+                    document_code += '<label class="text-main align-self-center">';
+                    
+                    document_code += document_data.title ;  
+                    if ( document_data.mandatory )
                         {
                             document_code += ' *'     
                         }
-                        document_code += '</label>&nbsp;&nbsp;';
+                    document_code += '</label>&nbsp;&nbsp;';
 
-                        document_code += '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                    if ( document_data.name in documents_value ) {
+                        document_code += '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         document_code += documents_value[document_data.name].filename;
                         document_code += "', '";
                         document_code += documents_value[document_data.name].content;
                         document_code += "', '";
                         document_code += documents_value[document_data.name].file_type;
                         document_code += '\')">';
-                        document_code += '<i class="fa-solid fa-download"></i>';
+                        document_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        document_code += documents_value[document_data.name].filename;                        
                         document_code += '</button>'; 
-                        document_code += "</div>\n";
-
-                        documents_code += document_code;
+                    } else {
+                        document_code += '<input type="file" '
+                        document_code += 'class="form-control form-control-lg" ';
+                        if ( document_data.mandatory )
+                        {
+                            document_code += ' required '
+                        }
+                        document_code += 'name="document_';
+                        document_code += document_data.name ;
+                        document_code += '" ';
+                        document_code += 'id="id_document_';
+                        document_code += document_data.name ;
+                        document_code += '">';
                     }
+                    document_code += "</div>\n";
+                    documents_code += document_code;
                 }
 
                 document.getElementById("ramo_document_id").innerHTML = documents_code;
@@ -132,14 +146,18 @@ function load_data( action, objectid ) {
     var verbose_action = 'Edición de Solicitud';
     document.getElementById("id_form_button").hidden = false;
     document.getElementById('ramo_id').removeAttribute("readonly");
+    document.getElementById('status_id').removeAttribute("readonly");
 
     if ( action == 'edit') {
+        document.getElementById("request-form").action = objectid + '/edit/'; 
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
         document.getElementById('ramo_id').setAttribute("disabled", "disabled");
         document.getElementById('assigned_to_id').removeAttribute("disabled");
-        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
-        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_request_receipt').removeAttribute("readonly");
+        document.getElementById('id_request_police').removeAttribute("readonly");
     }
 
     if ( action == 'delete') {
@@ -186,6 +204,7 @@ function load_data( action, objectid ) {
 
     if ( action == 'view' || action == 'delete' || action == 'valide' ) {
         document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+        document.getElementById('status_id').setAttribute("disabled", "disabled");
         document.getElementById('taker_person_type_id').setAttribute("disabled", "disabled");
         document.getElementById('taker_document_type_id').setAttribute("disabled", "disabled");
         document.getElementById('id_taker_name').setAttribute("readonly", "readonly");
@@ -235,8 +254,10 @@ function load_data( action, objectid ) {
         document.getElementById('taker_document_type_id').removeAttribute("disabled");
         document.getElementById('status_id').removeAttribute("disabled");
         document.getElementById('assigned_to_id').removeAttribute("disabled");
-        document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
-        document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_request_receipt').removeAttribute("readonly");
+        document.getElementById('id_request_police').removeAttribute("readonly");
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
@@ -277,29 +298,31 @@ function load_data( action, objectid ) {
                     document.getElementById('id_valided_by').value = request_obj.valided_by;
 
                     if ( request_obj.request_receipt ) {
-                        var request_receipt_code = '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        var request_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         request_receipt_code += request_obj.request_receipt.filename;
                         request_receipt_code += "', '";
                         request_receipt_code += request_obj.request_receipt.content;
                         request_receipt_code += "', '";
                         request_receipt_code += request_obj.request_receipt.file_type;
                         request_receipt_code += '\')">';
-                        request_receipt_code += '<i class="fa-solid fa-download"></i>';
+                        request_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_receipt_code += request_obj.request_receipt.filename;
                         request_receipt_code += '</button>'; 
-                        document.getElementById("id_request_receipt").innerHTML = request_receipt_code;
+                        document.getElementById("section_id_request_receipt").innerHTML = request_receipt_code;
                     }
 
                     if ( request_obj.request_police ) {
-                        var request_police_code = '<button type="button" class="btn bg-gradient-secondary" onclick="downloadFile(\'';
+                        var request_police_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         request_police_code += request_obj.request_police.filename;
                         request_police_code += "', '";
                         request_police_code += request_obj.request_police.content;
                         request_police_code += "', '";
                         request_police_code += request_obj.request_police.file_type;
                         request_police_code += '\')">';
-                        request_police_code += '<i class="fa-solid fa-download"></i>';
+                        request_police_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_police_code += request_obj.request_police.filename;
                         request_police_code += '</button>'; 
-                        document.getElementById("id_request_police").innerHTML = request_police_code;
+                        document.getElementById("section_id_request_police").innerHTML = request_police_code;
                     }
                     loadFieldsData(request_obj.ramo_id, request_obj.fields,action);
                     loadDocumentsData(request_obj.ramo_id, request_obj.documents);

@@ -153,28 +153,24 @@ def create_request_view(request):
     if request.method == 'POST':
         form = CreateRequestForm(request.POST, request.FILES)
         if form.is_valid():
-            applicant_email = form.cleaned_data['applicant_email']
+            applicant_phone_number = form.cleaned_data['applicant_phone_number']
             applicant_id = form.cleaned_data['applicant_id']
             taker_person_type = form.cleaned_data['taker_person_type']
             taker_document_type = form.cleaned_data['taker_document_type']
             taker_identification = form.cleaned_data['taker_identification']
             taker_name = form.cleaned_data['taker_name']
-            taker_email = form.cleaned_data['taker_email']
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
-            taker_address = form.cleaned_data['taker_address']
-            taker_state = form.cleaned_data['taker_state']
-            taker_city = form.cleaned_data['taker_city']
             ramo = form.cleaned_data['ramo']
             value = form.cleaned_data['value']
             observations = form.cleaned_data['observations']
             
             applicant = None
-            if applicant_email is not None and applicant_email != '':
+            if applicant_phone_number is not None and applicant_phone_number != '':
                 try:
-                    applicant = Applicant.objects.get(email=applicant_email)
+                    applicant = Applicant.objects.get(phone_number=applicant_phone_number)
                 except Applicant.DoesNotExist:
-                    error = 'No existe un solicitante con el email'
+                    error = 'No existe un solicitante con el teléfono'
 
             taker = None
             if taker_identification is not None and taker_identification != '':
@@ -188,12 +184,8 @@ def create_request_view(request):
                     taker.created_at = datetime.datetime.now()
                     taker.created_by = applicant.email 
                 taker.name = taker_name
-                taker.email = taker_email
                 taker.phone_number = taker_phone_number
                 taker.contact_name = taker_contact_name
-                taker.address = taker_address
-                taker.state = taker_state
-                taker.city = taker_city
                 taker.updated_at = datetime.datetime.now()
                 taker.updated_by = applicant.email
                 taker.save()
@@ -282,76 +274,141 @@ def create_request_view(request):
 
 
 @login_required(login_url="/auth/login/")
-def edit_request_view(request, request_id):
-    current_account = Account.getAccount(request.user)
+def edit_request_view(request, operative_request_id):
     error = None
+    current_account = Account.getAccount(request.user)
     try:
-        request:Request = Request.objects.get(pk=request_id)
-    except Request.DoesNotExist:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
         error = 'No existe una request con el id'
-        request = None
+        operative_request = None
 
     if error is None and request.method == 'POST':
-        form = EditRequestForm(request.POST)
+        form = EditRequestForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            name = form.cleaned_data['name']
+            taker_person_type = form.cleaned_data['taker_person_type']
+            taker_document_type = form.cleaned_data['taker_document_type']
+            taker_identification = form.cleaned_data['taker_identification']
+            taker_name = form.cleaned_data['taker_name']
+            taker_phone_number = form.cleaned_data['taker_phone_number']
+            taker_contact_name = form.cleaned_data['taker_contact_name']
+            ramo = form.cleaned_data['ramo']
+            try:
+                value = int(form.cleaned_data['value'].replace('$ ', '').replace(',', '').replace('.0', ''))
+            except: 
+                value = operative_request.value
+            request_status = form.cleaned_data['status']
+            observations = form.cleaned_data['observations']
+            assigned_to = form.cleaned_data['assigned_to']
+            request_receipt = None
+            request_police = None
 
-            fields_data = []
-            if 'fields' in request.POST.keys():
-                fields_data = request.POST['fields']
+            if 'request_receipt' in request.FILES.keys():
+                request_receipt_file = request.FILES['request_receipt']
+                if request_receipt_file is not None:
+                    request_receipt = RequestFile()
 
-            available_documents_data = []
-            if 'available_documents' in request.POST.keys():
-                available_documents_data = request.POST['available_documents']
+                    filename = request_receipt_file.name
+                    file_type = request_receipt_file.content_type
+                    content = base64.b64encode(request_receipt_file.read()).decode('utf-8')
 
-            fields = []
-            for field_data in fields_data:
-                if 'field_type' in field_data.keys():
-                    field_type_id = field_data["field_type"]
-                    try:
-                        field_type = FieldType.objects.get(pk=field_type_id)
-                    except FieldType.DoesNotExist:
-                        print (f"Tipo de Campo {field_type} no Existe")
-                        field_type = None
+                    request_receipt.filename = filename
+                    request_receipt.file_type = file_type
+                    request_receipt.content = content
 
-                if field_type is not None and 'name' in field_data.keys():
-                    name = field_data["name"]
-                    mandatory = False
-                    if 'mandatory' in field_data.keys():
-                        mandatory = field_data["mandatory"]
-                    
-                    field = RequestField()
-                    field.field_type = field_type
-                    field.name = name
-                    field.mandatory = mandatory
-                    options = []
-                    if 'options' in field_data.keys():
-                        options = field_data["options"]
-                    field.options = options
+            if 'request_police' in request.FILES.keys():
+                request_police_file = request.FILES['request_police']
+                if request_police_file is not None:
+                    request_police = RequestFile()
 
-                    fields.append(field)
+                    filename = request_police_file.name
+                    file_type = request_police_file.content_type
+                    content = base64.b64encode(request_police_file.read()).decode('utf-8')
 
-            available_documents = []
-            for available_document_data in available_documents_data:
-                if 'name' in available_document_data.keys():
-                    name = available_document_data["name"]
-                    mandatory = False
-                    if 'mandatory' in available_document_data.keys():
-                        mandatory = available_document_data["mandatory"]
-                    
-                    available_document = AvailableDocument()
-                    available_document.name = name
-                    available_document.mandatory = mandatory
-                    available_documents.append(available_document)
+                    request_police.filename = filename
+                    request_police.file_type = file_type
+                    request_police.content = content
+            
+            request_fields = []
+
+            for ramo_field in ramo.ramo_fields:
+                ramo_field_value = None
+                if ramo_field.name in request.POST.keys():
+                    ramo_field_value = request.POST[ramo_field.name]
+
+                if ramo_field is not None and ramo_field_value is not None:
+                    request_field = RequestField()
+                    request_field.field = ramo_field
+                    request_field.value = ramo_field_value
+                    request_fields.append(request_field)
+
+            request_documents = []
+            for document_field in ramo.available_documents:
+                document_file = None
+                document_field_name = 'document_' + document_field.name
+                if document_field_name in request.FILES.keys():
+                    document_file = request.FILES[document_field_name]
+
+                if document_field is not None and document_file is not None:
+                    request_document = RequestDocument()
+                    request_document.document_name = document_field.name
+                    request_document.document_title = document_field.title
+
+                    filename = document_file.name
+                    file_type = document_file.content_type
+                    content = base64.b64encode(document_file.read()).decode('utf-8')
+
+                    request_document.filename = filename
+                    request_document.file_type = file_type
+                    request_document.content = content
+
+                    request_documents.append(request_document)
+
+            taker = None
+            if taker_identification is not None and taker_identification != '':
+                try:
+                    taker = Taker.objects.get(identification=taker_identification)
+                except Taker.DoesNotExist:
+                    taker = Taker()
+                    taker.person_type = taker_person_type
+                    taker.document_type = taker_document_type
+                    taker.identification = taker_identification
+                    taker.created_at = datetime.datetime.now()
+                    taker.created_by = current_account.username 
+                taker.name = taker_name
+                taker.phone_number = taker_phone_number
+                taker.contact_name = taker_contact_name
+                taker.updated_at = datetime.datetime.now()
+                taker.updated_by = current_account.username 
+                taker.save()
 
             if error is None:   
-                request.name = name
-                request.request_fields = fields
-                request.available_documents = available_documents
-                request.updated_at = datetime.datetime.now()
-                request.updated_by = current_account.username
-                request.save()
-                messages.success (request, f'Request {request} actualizado satisfactoriamente!')
+                operative_request.taker = taker
+                operative_request.ramo = ramo
+                operative_request.value = value
+                operative_request.status = request_status
+                operative_request.request_fields = request_fields
+                operative_request.request_documents = request_documents
+                operative_request.observations = observations
+                operative_request.request_receipt = request_receipt
+                operative_request.request_police = request_police
+                operative_request.assigned_to = assigned_to
+                operative_request.assigned_at = datetime.datetime.now()
+                operative_request.assigned_by = current_account.username
+                operative_request.updated_at = datetime.datetime.now()
+                operative_request.updated_by = current_account.username 
+                operative_request.save()
+
+                request_event = RequestEvent()
+                request_event.operative_request = operative_request
+                request_event.status = request_status
+                request_event.observations = "Edición de la Solicitud"
+                request_event.created_at = datetime.datetime.now()
+                request_event.created_by = current_account.username 
+                request_event.save()
+                
+                messages.success (request, f'Solicitud {operative_request} actualizado satisfactoriamente!')
         else:
             error = "¡Error en la actualización del Request!"
         if error is not None:

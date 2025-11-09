@@ -16,6 +16,7 @@
 .text-primary {
     color: #124e78 !important;
 }
+
 gradient-primary:hover {
     background-color: #124e78 !important;
     border-color: #caf0f8 !important;
