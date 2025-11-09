@@ -323,7 +323,7 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
-    value = forms.IntegerField(
+    value = forms.CharField(
         label=_("Valor *"),
         required=False,
         widget=forms.TextInput(

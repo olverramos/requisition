@@ -1,11 +1,11 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
-    RequestStatus, RequestEvent
+    RequestStatus, RequestEvent, RequestFile
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm
 from modules.parameters.models import RamoField, AvailableDocument
+from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
-from modules.authentication.models import Account
 from modules.base.models import Applicant, Taker
 from django.shortcuts import render, redirect
 from core.templatetags.tools import currency
@@ -29,7 +29,10 @@ def requests_index_view(request):
         page = int(request.POST['page'])
     
     operative_request_list = OperativeRequest.objects.filter(
-        status__ne='9')
+        status__ne='9'
+    )
+    if current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
+        operative_request_list = operative_request_list.filter(assigned_to=current_account)
     
     data['page'] = page
     filter_form = RequestFilterForm()
@@ -394,6 +397,79 @@ def assign_request_view(request, operative_request_id):
         messages.error (request, error)
 
     return redirect(reverse_lazy("operative_requests"))
+
+
+@login_required(login_url="/auth/login/")
+def load_documents_request_view(request, operative_request_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    if error is None and request.method == 'POST':
+        form = EditRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            request_receipt = None
+            request_police = None
+
+            if 'request_receipt' in request.FILES.keys():
+                request_receipt_file = request.FILES['request_receipt']
+                if request_receipt_file is not None:
+                    request_receipt = RequestFile()
+
+                    filename = request_receipt_file.name
+                    file_type = request_receipt_file.content_type
+                    content = base64.b64encode(request_receipt_file.read()).decode('utf-8')
+
+                    request_receipt.filename = filename
+                    request_receipt.file_type = file_type
+                    request_receipt.content = content
+
+            if 'request_police' in request.FILES.keys():
+                request_police_file = request.FILES['request_police']
+                if request_police_file is not None:
+                    request_police = RequestFile()
+
+                    filename = request_police_file.name
+                    file_type = request_police_file.content_type
+                    content = base64.b64encode(request_police_file.read()).decode('utf-8')
+
+                    request_police.filename = filename
+                    request_police.file_type = file_type
+                    request_police.content = content
+
+            if request_receipt is not None and request_police is not None:
+                request_status = RequestStatus.objects.get(id='3') 
+                operative_request.status = request_status
+            operative_request.request_receipt = request_receipt
+            operative_request.request_police = request_police
+            operative_request.updated_at = datetime.datetime.now()
+            operative_request.updated_by = current_account.username
+            operative_request.save()
+
+            request_event = RequestEvent()
+            request_event.operative_request = operative_request
+            request_event.status = request_status
+            request_event.observations = "Cargue de Documentación a la Solicitud"
+            if request_receipt is not None:
+                request_event.observations += ' Recibo de Pago cargado.'
+            if request_police is not None:
+                request_event.observations += ' Póliza cargada.'
+            request_event.created_at = datetime.datetime.now()
+            request_event.created_by = current_account.username
+            request_event.save()
+
+            messages.success (request, f'Solicitud {operative_request} documentada satisfactoriamente!')
+        else: 
+            error = 'Error en el formulario'
+    if error is not None:
+        messages.error (request, error)
+
+    return redirect(reverse_lazy("operative_requests"))
+
 
 @login_required(login_url="/auth/login/")
 def delete_request_view(request, operative_request_id):
