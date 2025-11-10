@@ -27,7 +27,12 @@
                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
-                    {% if can_register_payment and operative_request.status.id == '3' %}
+                    {% if operative_request.status.id == '3' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
+                            <i class="fa fa-cloud-download text-sm"></i>
+                        </button>
+                    {% endif %}
+                    {% if can_payment_register and operative_request.status.id == '3' %}
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Pago" onclick="load_data('paymentregister', '{{operative_request.id}}');">
                             <i class="fa fa-credit-card text-sm"></i>
                         </button>

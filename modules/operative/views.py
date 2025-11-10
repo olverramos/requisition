@@ -30,7 +30,7 @@ def requests_index_view(request):
     
     operative_request_list = OperativeRequest.objects.filter(
         status__ne='9'
-    )
+    ).order_by('-created')
     if current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
         operative_request_list = operative_request_list.filter(assigned_to=current_account)
     
@@ -46,7 +46,7 @@ def requests_index_view(request):
 
             if search is not None and search != '':
                 operative_request_list = operative_request_list.filter(
-                    name__icontains=search
+                    number__icontains=search
                 )
             if applicant is not None:
                 operative_request_list = operative_request_list.filter(
@@ -112,22 +112,46 @@ def requests_search_view(request):
         filter_form = SearchRequestForm(request.POST)
         if filter_form.is_valid():
             applicant_phone_number = filter_form.cleaned_data['applicant_phone_number']
-            applicant_list = Applicant.objects.filter(phone_number=applicant_phone_number)
-            if applicant_phone_number is not None:
+            taker_phone_number = filter_form.cleaned_data['taker_phone_number']
+            search = filter_form.cleaned_data['search']
+            import pdb; pdb.set_trace()
+
+            applicant = None
+            taker = None
+
+            if applicant_phone_number:
+                try:
+                    applicant = Applicant.objects.get(phone_number=applicant_phone_number)
+                except Applicant.DoesNotExist:
+                    applicant = None
+            if taker_phone_number:
+                try:
+                    taker = Taker.objects.get(phone_number=taker_phone_number)
+                except Taker.DoesNotExist:
+                    taker = None
+        
+            if applicant:
                 operative_request_list = operative_request_list.filter(
-                    applicant__in=applicant_list
+                    applicant=applicant
                 )
-            else:
+            if taker:
+                operative_request_list = operative_request_list.filter(
+                    taker=taker
+                )
+            if search:
+                operative_request_list = operative_request_list.filter(
+                    request_fields__value=search
+                )
+                
+            if applicant is None and taker is None and search is None:
                 operative_request_list = OperativeRequest.objects.none()
 
     paginator = getPaginator(operative_request_list, page)
 
     if current_account is None:
-        disable_edit = True
-        disable_delete = True
+        can_register_payment = True
     else:
-        disable_edit = False
-        disable_delete = False
+        can_register_payment = False
 
     context = {
         'table_title': 'Solicitudes',
@@ -135,8 +159,7 @@ def requests_search_view(request):
         'filter_form': filter_form,
         'form': form,
         'disable_add': True,
-        'disable_edit': disable_edit,
-        'disable_delete': disable_delete,
+        'can_register_payment': can_register_payment,
         'paginator': paginator,
         'segment': 'operative'
     }

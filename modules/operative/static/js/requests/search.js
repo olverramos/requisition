@@ -185,6 +185,20 @@ function load_data( action, objectid ) {
                     document.getElementById('status_id').value = request_obj.status_id;
                     loadFieldsData(request_obj.ramo_id, request_obj.fields,action);
                     loadDocumentsData(request_obj.ramo_id, request_obj.documents);
+                
+                    if ( request_obj.request_receipt ) {
+                        var request_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        request_receipt_code += request_obj.request_receipt.filename;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.request_receipt.content;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.request_receipt.file_type;
+                        request_receipt_code += '\')">';
+                        request_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_receipt_code += request_obj.request_receipt.filename;
+                        request_receipt_code += '</button>'; 
+                        document.getElementById("section_id_request_receipt").innerHTML = request_receipt_code;
+                    }
                 }
                 else{
                     console.log("Status error: " + ajaxRequest.status);

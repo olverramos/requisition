@@ -572,6 +572,16 @@ class RequestFilterForm(forms.Form):
 
 
 class SearchRequestForm(forms.Form):
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'id': 'filter_search_id'
+            }
+        ),
+    )
     applicant_phone_number = forms.CharField(
         label=_("Teléfono Solicitante"),
         required=False,
@@ -582,6 +592,17 @@ class SearchRequestForm(forms.Form):
             }
         ),
     )
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono Tomador"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'id': 'filter_taker_phone_number_id'
+            }
+        ),
+    )
+
     class Media:
         js = ('js/requests/index.js',  )
 
