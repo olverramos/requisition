@@ -114,7 +114,6 @@ def requests_search_view(request):
             applicant_phone_number = filter_form.cleaned_data['applicant_phone_number']
             taker_phone_number = filter_form.cleaned_data['taker_phone_number']
             search = filter_form.cleaned_data['search']
-            import pdb; pdb.set_trace()
 
             applicant = None
             taker = None
