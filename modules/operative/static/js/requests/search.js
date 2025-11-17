@@ -202,15 +202,15 @@ function load_data( action, objectid ) {
                     }
                     if ( request_obj.payment_receipt ) {
                         var payment_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
-                        request_receipt_code += request_obj.payment_receipt.filename;
-                        request_receipt_code += "', '";
-                        request_receipt_code += request_obj.payment_receipt.content;
-                        request_receipt_code += "', '";
-                        request_receipt_code += request_obj.payment_receipt.file_type;
-                        request_receipt_code += '\')">';
-                        request_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
-                        request_receipt_code += request_obj.payment_receipt.filename;
-                        request_receipt_code += '</button>'; 
+                        payment_receipt_code += request_obj.payment_receipt.filename;
+                        payment_receipt_code += "', '";
+                        payment_receipt_code += request_obj.payment_receipt.content;
+                        payment_receipt_code += "', '";
+                        payment_receipt_code += request_obj.payment_receipt.file_type;
+                        payment_receipt_code += '\')">';
+                        payment_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        payment_receipt_code += request_obj.payment_receipt.filename;
+                        payment_receipt_code += '</button>'; 
                         document.getElementById("section_id_payment_receipt").innerHTML = payment_receipt_code;
                     }
                 }

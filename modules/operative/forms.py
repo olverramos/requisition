@@ -522,6 +522,17 @@ class TakerRequestForm(forms.Form):
             }
         ),
     )
+    request_receipt = forms.FileField(
+        label=_("Recibo de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )    
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
         required=False,

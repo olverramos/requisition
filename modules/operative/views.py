@@ -701,6 +701,14 @@ def get_request_view(request, operative_request_id):
                 'content': operative_request.request_police.content,
             }
 
+        request_data['payment_receipt'] = None
+        if operative_request.payment_receipt is not None:
+            request_data['payment_receipt'] = {
+                'filename': operative_request.payment_receipt.filename,
+                'file_type': operative_request.payment_receipt.file_type,
+                'content': operative_request.payment_receipt.content,
+            }
+
         request_data['observations'] = operative_request.observations if operative_request.observations else ''
 
         request_data['fields'] = {}

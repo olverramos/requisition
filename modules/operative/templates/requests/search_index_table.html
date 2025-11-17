@@ -49,7 +49,7 @@
 
                     {% if operative_request.status.id == '4' or operative_request.status.id == '5' %}
                         <button type="button" class="btn" data-original-title="Descargar Poliza" onclick="downloadFile('{{operative_request.request_police.filename}}', '{{operative_request.request_police.contentfilename}}', '{{operative_request.request_police.file_type}}');">
-                            <i class="fa fa-cloud-download text-sm"></i>
+                            <i class="fa fa-download text-sm"></i>
                         </button>
                     {% endif %}
 
