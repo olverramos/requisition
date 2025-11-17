@@ -352,6 +352,19 @@ def edit_request_view(request, operative_request_id):
                     request_police.file_type = file_type
                     request_police.content = content
             
+            if 'payment_receipt' in request.FILES.keys():
+                payment_receipt_file = request.FILES['payment_receipt']
+                if payment_receipt_file is not None:
+                    payment_receipt = RequestFile()
+
+                    filename = payment_receipt_file.name
+                    file_type = payment_receipt_file.content_type
+                    content = base64.b64encode(payment_receipt_file.read()).decode('utf-8')
+
+                    payment_receipt.filename = filename
+                    payment_receipt.file_type = file_type
+                    payment_receipt.content = content
+            
             request_fields = []
 
             for ramo_field in ramo.ramo_fields:
@@ -415,6 +428,7 @@ def edit_request_view(request, operative_request_id):
                 operative_request.observations = observations
                 operative_request.request_receipt = request_receipt
                 operative_request.request_police = request_police
+                operative_request.payment_receipt = payment_receipt
                 operative_request.assigned_to = assigned_to
                 operative_request.assigned_at = datetime.datetime.now()
                 operative_request.assigned_by = current_account.username
@@ -548,6 +562,60 @@ def load_documents_request_view(request, operative_request_id):
         messages.error (request, error)
 
     return redirect(reverse_lazy("operative_requests"))
+
+
+def payment_register_request_view(request, operative_request_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    if error is None and request.method == 'POST':
+        form = EditRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            payment_receipt = None
+
+            if 'payment_receipt' in request.FILES.keys():
+                payment_receipt_file = request.FILES['payment_receipt']
+                if payment_receipt_file is not None:
+                    payment_receipt = RequestFile()
+
+                    filename = payment_receipt_file.name
+                    file_type = payment_receipt_file.content_type
+                    content = base64.b64encode(payment_receipt_file.read()).decode('utf-8')
+
+                    payment_receipt.filename = filename
+                    payment_receipt.file_type = file_type
+                    payment_receipt.content = content
+
+            if payment_receipt is not None:
+                request_status = RequestStatus.objects.get(id='4') 
+                operative_request.status = request_status
+            operative_request.payment_receipt = payment_receipt
+            operative_request.updated_at = datetime.datetime.now()
+            # operative_request.updated_by = current_account.username
+            operative_request.save()
+
+            request_event = RequestEvent()
+            request_event.operative_request = operative_request
+            request_event.status = request_status
+            request_event.observations = "Cargue de Comprobante de Pago de la solicitud"
+            if payment_receipt is not None:
+                request_event.observations += ' Comprobante de Pago cargado.'
+            request_event.created_at = datetime.datetime.now()
+            # request_event.created_by = current_account.username
+            request_event.save()
+
+            messages.success (request, f'Solicitud {operative_request} pagada satisfactoriamente!')
+        else: 
+            error = 'Error en el formulario'
+    if error is not None:
+        messages.error (request, error)
+
+    return redirect(reverse_lazy("operative_requests_search"))
 
 
 @login_required(login_url="/auth/login/")

@@ -88,6 +88,7 @@ class OperativeRequest(Document):
     )
     request_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     request_police = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
+    payment_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
     created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
