@@ -426,7 +426,7 @@ def create_account_view(request):
                 account.created_by = current_account.username
                 account.save()
 
-                account.send_register_message()
+                # account.send_register_message()
 
                 messages.success(request, f'Cuenta {account} creada satisfactoriamente!')
                 return redirect(reverse_lazy("auth_accounts"))

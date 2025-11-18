@@ -140,9 +140,10 @@ function load_data( action, objectid ) {
 
     if ( action == 'paymentregister') {
         verbose_action = 'Registro de Comprobante de Pago';
-        document.getElementById("id_form_button").innerText = 'Eliminar';
-        document.getElementById("request-form").action = objectid + '/delete/'; 
+        document.getElementById("id_form_button").innerText = 'Registrar';
+        document.getElementById("request-form").action = '../' + objectid + '/paymentregister/'; 
         document.getElementById('ramo_id').setAttribute("readonly", "readonly");
+        // document.getElementById('id_payment_receipt').setAttribute("readonly", "readonly");   
     }
     if ( action == 'view') {
         verbose_action = 'Consulta de Solicitud';
@@ -198,6 +199,19 @@ function load_data( action, objectid ) {
                         request_receipt_code += request_obj.request_receipt.filename;
                         request_receipt_code += '</button>'; 
                         document.getElementById("section_id_request_receipt").innerHTML = request_receipt_code;
+                    }
+                    if ( request_obj.payment_receipt ) {
+                        var payment_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        payment_receipt_code += request_obj.payment_receipt.filename;
+                        payment_receipt_code += "', '";
+                        payment_receipt_code += request_obj.payment_receipt.content;
+                        payment_receipt_code += "', '";
+                        payment_receipt_code += request_obj.payment_receipt.file_type;
+                        payment_receipt_code += '\')">';
+                        payment_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        payment_receipt_code += request_obj.payment_receipt.filename;
+                        payment_receipt_code += '</button>'; 
+                        document.getElementById("section_id_payment_receipt").innerHTML = payment_receipt_code;
                     }
                 }
                 else{

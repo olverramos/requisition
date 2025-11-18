@@ -152,12 +152,15 @@ function load_data( action, objectid ) {
         document.getElementById("request-form").action = objectid + '/edit/'; 
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
+        document.getElementById('id_payment_receipt').hidden = false;
         document.getElementById('ramo_id').setAttribute("disabled", "disabled");
         document.getElementById('assigned_to_id').removeAttribute("disabled");
         document.getElementById('id_request_receipt').removeAttribute("disabled");
         document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_payment_receipt').removeAttribute("disabled");
         document.getElementById('id_request_receipt').removeAttribute("readonly");
         document.getElementById('id_request_police').removeAttribute("readonly");
+        document.getElementById('id_payment_receipt').removeAttribute("readonly");
     }
 
     if ( action == 'delete') {
@@ -260,8 +263,10 @@ function load_data( action, objectid ) {
         document.getElementById('id_request_police').removeAttribute("readonly");
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
+        document.getElementById('id_payment_receipt').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
         document.getElementById('label_id_request_police').hidden = false;
+        document.getElementById('label_id_payment_receipt').hidden = false;
     }
 
     document.getElementById('title_formModal').innerText = verbose_action;
@@ -323,6 +328,19 @@ function load_data( action, objectid ) {
                         request_police_code += request_obj.request_police.filename;
                         request_police_code += '</button>'; 
                         document.getElementById("section_id_request_police").innerHTML = request_police_code;
+                    }
+                    if ( request_obj.payment_receipt ) {
+                        var payment_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        request_receipt_code += request_obj.payment_receipt.filename;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.payment_receipt.content;
+                        request_receipt_code += "', '";
+                        request_receipt_code += request_obj.payment_receipt.file_type;
+                        request_receipt_code += '\')">';
+                        request_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_receipt_code += request_obj.payment_receipt.filename;
+                        request_receipt_code += '</button>'; 
+                        document.getElementById("section_id_payment_receipt").innerHTML = payment_receipt_code;
                     }
                     loadFieldsData(request_obj.ramo_id, request_obj.fields,action);
                     loadDocumentsData(request_obj.ramo_id, request_obj.documents);
