@@ -213,7 +213,7 @@ def create_request_view(request):
                 taker.save()
 
             request_fields = []
-
+            values_fields = ''
             for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
                 if ramo_field.name in request.POST.keys():
@@ -224,6 +224,8 @@ def create_request_view(request):
                     request_field.field = ramo_field
                     request_field.value = ramo_field_value
                     request_fields.append(request_field)
+                    values_fields += ramo_field_value
+                    values_fields += ' '
 
             request_documents = []
             for document_field in ramo.available_documents:
@@ -366,7 +368,7 @@ def edit_request_view(request, operative_request_id):
                     payment_receipt.content = content
             
             request_fields = []
-
+            values_fields = ''
             for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
                 if ramo_field.name in request.POST.keys():
@@ -377,6 +379,8 @@ def edit_request_view(request, operative_request_id):
                     request_field.field = ramo_field
                     request_field.value = ramo_field_value
                     request_fields.append(request_field)
+                    values_fields += ramo_field_value
+                    values_fields += ' '
 
             request_documents = []
             for document_field in ramo.available_documents:
