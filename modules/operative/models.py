@@ -83,6 +83,7 @@ class OperativeRequest(Document):
     request_fields = fields.ListField(
         fields.EmbeddedDocumentField(RequestField), blank=True,
     )
+    values_fields = fields.StringField(verbose_name='Valores de Campos', max_length=50, null=True, blank=True)
     request_documents = fields.ListField(
         fields.EmbeddedDocumentField(RequestDocument), blank=True,
     )

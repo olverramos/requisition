@@ -2,7 +2,6 @@ from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent, RequestFile
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm
-from modules.parameters.models import RamoField, AvailableDocument
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
@@ -46,7 +45,8 @@ def requests_index_view(request):
 
             if search is not None and search != '':
                 operative_request_list = operative_request_list.filter(
-                    number__icontains=search
+                    Q(number__icontains=search) |
+                    Q(values_fields__icontains=search)
                 )
             if applicant is not None:
                 operative_request_list = operative_request_list.filter(
