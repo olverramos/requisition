@@ -133,7 +133,19 @@ function load_data(action, objectid) {
     var verbose_action = 'Consulta de Solicitud';
 
     document.getElementById("id_form_button").hidden = false;
-    document.getElementById('ramo_id').removeAttribute("readonly");
+
+    document.getElementById('ramo_id').setAttribute("disabled", "disabled");
+    document.getElementById('ramo_id').setAttribute("readonly", "readonly");
+
+    document.getElementById('taker_person_type_id').setAttribute("disabled", "disabled");
+    document.getElementById('taker_person_type_id').setAttribute("readonly", "readonly");
+
+    document.getElementById('taker_document_type_id').setAttribute("disabled", "disabled");
+    document.getElementById('taker_document_type_id').setAttribute("readonly", "readonly");
+
+    document.getElementById('status_id').setAttribute("disabled", "disabled");
+    document.getElementById('status_id').setAttribute("readonly", "readonly");
+
     document.getElementById("section_id_request_receipt").hidden = false;
     document.getElementById("label_id_request_receipt").hidden = false;
     document.getElementById("section_id_payment_receipt").hidden = false;
@@ -143,20 +155,12 @@ function load_data(action, objectid) {
         verbose_action = 'Registro de Comprobante de Pago';
         document.getElementById("id_form_button").innerText = 'Registrar';
         document.getElementById("request-form").action = '../' + objectid + '/paymentregister/';
-        document.getElementById('ramo_id').setAttribute("readonly", "readonly");
         // document.getElementById('id_payment_receipt').setAttribute("readonly", "readonly");   
     }
     if (action == 'view') {
         verbose_action = 'Consulta de Solicitud';
         document.getElementById("id_form_button").hidden = true;
         document.getElementById("request-form").action = '.';
-        document.getElementById('ramo_id').setAttribute("readonly", "readonly");
-    }
-
-    if (action == 'view') {
-        document.getElementById('status_id').setAttribute("disabled", "disabled");
-    } else {
-        document.getElementById('status_id').removeAttribute("disabled");
     }
 
     document.getElementById('title_formModal').innerText = verbose_action;

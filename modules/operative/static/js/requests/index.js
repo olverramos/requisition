@@ -134,31 +134,42 @@ function load_data(action, objectid) {
     document.getElementById("id_form_button").hidden = false;
     document.getElementById('ramo_id').removeAttribute("disabled");
     document.getElementById('status_id').removeAttribute("disabled");
-    document.getElementById('label_id_updated_at').hidden = false;
-    document.getElementById('id_updated_at').hidden = false;
-    document.getElementById('label_id_updated_by').hidden = false;
-    document.getElementById('id_updated_by').hidden = false;
     document.getElementById('label_id_validated_at').hidden = false;
     document.getElementById('id_validated_at').hidden = false;
     document.getElementById('label_id_validated_by').hidden = false;
     document.getElementById('id_validated_by').hidden = false;
 
-    if (action == 'assign') {
-        verbose_action = 'Asignación de Solicitud';
-        document.getElementById("id_form_button").hidden = false;
-        document.getElementById("id_form_button").innerText = 'Asignar';
-        document.getElementById("request-form").action = objectid + '/assign/';
+    if (action == 'view') {
+        verbose_action = 'Consulta de Solicitud';
+        document.getElementById("id_form_button").hidden = true;
+        document.getElementById("request-form").action = '.';
     }
     if (action == 'delete') {
         verbose_action = 'Eliminación de Solicitud';
         document.getElementById("id_form_button").innerText = 'Eliminar';
         document.getElementById("request-form").action = objectid + '/delete/';
     }
-    if (action == 'view') {
-        verbose_action = 'Consulta de Solicitud';
-        document.getElementById("id_form_button").hidden = true;
-        document.getElementById("request-form").action = '.';
+    if (action == 'edit') {
+        verbose_action = 'Edición de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Guardar';
+        document.getElementById("request-form").action = objectid + '/edit/';
     }
+    if (action == 'assign') {
+        verbose_action = 'Asignación de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Asignar';
+        document.getElementById("request-form").action = objectid + '/assign/';
+    }
+    if (action == 'loaddocuments') {
+        verbose_action = 'Cargue de Documentos Solicitud';
+        document.getElementById("id_form_button").innerText = 'Cargar';
+        document.getElementById("request-form").action = objectid + '/loaddocuments/';
+    }
+    if (action == 'validate') {
+        verbose_action = 'Validación de Solicitud';
+        document.getElementById("id_form_button").innerText = 'Validar';
+        document.getElementById("request-form").action = objectid + '/validate/';
+    }
+
     if (action == 'edit') {
         document.getElementById('ramo_id').removeAttribute("disabled");
         document.getElementById('status_id').removeAttribute("disabled");
@@ -197,10 +208,22 @@ function load_data(action, objectid) {
 
     if (action == 'assign') {
         document.getElementById('assigned_to_id').removeAttribute("disabled");
-        document.getElementById('label_id_updated_at').hidden = true;
-        document.getElementById('id_updated_at').hidden = true;
-        document.getElementById('label_id_updated_by').hidden = true;
-        document.getElementById('id_updated_by').hidden = true;
+        document.getElementById('label_id_validated_at').hidden = true;
+        document.getElementById('id_validated_at').hidden = true;
+        document.getElementById('label_id_validated_by').hidden = true;
+        document.getElementById('id_validated_by').hidden = true;
+    }
+
+    if (action == 'loaddocuments') {
+        document.getElementById('label_id_validated_at').hidden = true;
+        document.getElementById('id_validated_at').hidden = true;
+        document.getElementById('label_id_validated_by').hidden = true;
+        document.getElementById('id_validated_by').hidden = true;
+        document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_police').removeAttribute("disabled");
+    }
+
+    if (action == 'validate') {
         document.getElementById('label_id_validated_at').hidden = true;
         document.getElementById('id_validated_at').hidden = true;
         document.getElementById('label_id_validated_by').hidden = true;
@@ -235,8 +258,6 @@ function load_data(action, objectid) {
                     document.getElementById('id_observations').value = request_obj.observations;
                     document.getElementById('status_id').value = request_obj.status_id;
                     document.getElementById('id_created_at').value = request_obj.created_at;
-                    document.getElementById('id_updated_at').value = request_obj.updated_at;
-                    document.getElementById('id_updated_by').value = request_obj.updated_by;
                     document.getElementById('id_validated_at').value = request_obj.validated_at;
                     document.getElementById('id_validated_by').value = request_obj.validated_by;
 
@@ -254,7 +275,7 @@ function load_data(action, objectid) {
                         document.getElementById("section_id_request_receipt").innerHTML = request_receipt_code;
                         document.getElementById("section_id_request_receipt").hidden = false;
                         document.getElementById("label_id_request_receipt").hidden = false;
-                    } else {
+                    } else if (action != 'loaddocuments') {
                         document.getElementById("section_id_request_receipt").hidden = true;
                         document.getElementById("label_id_request_receipt").hidden = true;
                     }
@@ -273,7 +294,7 @@ function load_data(action, objectid) {
                         document.getElementById("section_id_request_police").innerHTML = request_police_code;
                         document.getElementById("section_id_request_police").hidden = false;
                         document.getElementById("label_id_request_police").hidden = false;
-                    } else {
+                    } else if (action != 'loaddocuments') {
                         document.getElementById("section_id_request_police").hidden = true;
                         document.getElementById("label_id_request_police").hidden = true;
                     }

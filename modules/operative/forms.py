@@ -261,28 +261,29 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
+    value = forms.CharField(
+        label=_("Valor *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Valor'
+            }
+        ),
+    )
+    assigned_to = forms.ModelChoiceField(
+        label=_("Asignado a:"),
+        required=False,
+        queryset=Account.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'id': 'assigned_to_id'
+            }
+        ),
+    )
     created_at = forms.CharField(
         label=_("Fecha Creación"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'readonly': True
-            }
-        ),
-    )
-    updated_at = forms.CharField(
-        label=_("Fecha Actualización"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'readonly': True
-            }
-        ),
-    )
-    updated_by = forms.CharField(
-        label=_("Actualizado por"),
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -311,28 +312,27 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
-
-    assigned_to = forms.ModelChoiceField(
-        label=_("Asignado a:"),
+    observations = forms.CharField(
+        label=_("Observaciones"),
         required=False,
-        queryset=Account.objects.all(),
-        widget=forms.Select(
-            attrs={
-                'class': 'form-control form-control-lg form-select', 
-                'id': 'assigned_to_id'
-            }
-        ),
-    )
-    value = forms.CharField(
-        label=_("Valor *"),
-        required=False,
-        widget=forms.TextInput(
+        widget=forms.Textarea(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Valor'
+                'placeholder': 'Observaciones',
+                'rows': 4,
             }
         ),
     )
+
+    class Media:
+        js = (
+            'js/requests/form.js', 
+            'js/requests/index.js', 
+            'js/localization.js', 
+        )
+
+
+class EditRequestFilesForm(forms.Form):
     request_receipt = forms.FileField(
         label=_("Recibo de Pago"),
         required=False,
@@ -366,17 +366,6 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
-    observations = forms.CharField(
-        label=_("Observaciones"),
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Observaciones',
-                'rows': 4,
-            }
-        ),
-    )
 
     class Media:
         js = (
@@ -384,6 +373,7 @@ class EditRequestForm(forms.Form):
             'js/requests/index.js', 
             'js/localization.js', 
         )
+
 
 
 
@@ -682,6 +672,7 @@ class TakerRequestForm(forms.Form):
             attrs={
                 'class': 'form-control form-control-lg',
                 'placeholder': 'Nombre Contacto',
+                'readonly': True
             }
         ),
     )
@@ -695,6 +686,27 @@ class TakerRequestForm(forms.Form):
             }
         ),
     )
+    observations = forms.CharField(
+        label=_("Observaciones"),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Observaciones',
+                'rows': 4,
+                'readonly': True
+            }
+        ),
+    )
+    class Media:
+        js = (
+            'js/requests/search_form.js', 
+            'js/requests/search.js', 
+            'js/localization.js', 
+        )
+
+
+class TakerRequestFilesForm(forms.Form):
     request_receipt = forms.FileField(
         label=_("Recibo de Pago"),
         required=False,
@@ -717,24 +729,14 @@ class TakerRequestForm(forms.Form):
             }
         ),
     )    
-    observations = forms.CharField(
-        label=_("Observaciones"),
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Observaciones',
-                'rows': 4,
-                'readonly': True
-            }
-        ),
-    )
     class Media:
         js = (
             'js/requests/search_form.js', 
             'js/requests/search.js', 
             'js/localization.js', 
         )
+
+
 
 
 class RequestFilterForm(forms.Form):

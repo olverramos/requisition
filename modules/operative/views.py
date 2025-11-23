@@ -1,7 +1,8 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent, RequestFile
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
-    TakerRequestForm, EditRequestForm
+    TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
+    EditRequestFilesForm
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
@@ -36,6 +37,7 @@ def requests_index_view(request):
     data['page'] = page
     filter_form = RequestFilterForm()
     form = EditRequestForm()
+    files_form = EditRequestFilesForm()
     if request.method == 'POST':
         filter_form = RequestFilterForm(request.POST)
         if filter_form.is_valid():
@@ -79,6 +81,7 @@ def requests_index_view(request):
         'table_description': 'Administrador de Solicitudes',
         'filter_form': filter_form,
         'form': form,
+        'files_form': files_form,
         'disable_add': True,
         'can_assign': can_assign,
         'can_load_documents': can_load_documents,
@@ -108,6 +111,7 @@ def requests_search_view(request):
     data['page'] = page
     filter_form = SearchRequestForm()
     form = TakerRequestForm()
+    files_form = TakerRequestFilesForm()
     if request.method == 'POST':
         filter_form = SearchRequestForm(request.POST)
         if filter_form.is_valid():
@@ -157,6 +161,7 @@ def requests_search_view(request):
         'table_description': 'Búsqueda de Solicitudes',
         'filter_form': filter_form,
         'form': form,
+        'files_form': files_form,
         'disable_add': True,
         'can_register_payment': can_register_payment,
         'paginator': paginator,
@@ -308,9 +313,10 @@ def edit_request_view(request, operative_request_id):
         operative_request = None
 
     if error is None and request.method == 'POST':
-        form = EditRequestForm(request.POST, request.FILES)
+        form = EditRequestForm(request.POST)
+        files_form = EditRequestFilesForm(request.POST, request.FILES)
         
-        if form.is_valid():
+        if form.is_valid() and files_form.is_valid():
             taker_person_type = form.cleaned_data['taker_person_type']
             taker_document_type = form.cleaned_data['taker_document_type']
             taker_identification = form.cleaned_data['taker_identification']
@@ -507,7 +513,7 @@ def load_documents_request_view(request, operative_request_id):
         operative_request = None
 
     if error is None and request.method == 'POST':
-        form = EditRequestForm(request.POST, request.FILES)
+        form = EditRequestFilesForm(request.POST, request.FILES)
         if form.is_valid():
             request_receipt = None
             request_police = None
@@ -576,14 +582,14 @@ def payment_register_request_view(request, operative_request_id):
     except OperativeRequest.DoesNotExist:
         error = 'No existe una request con el id'
         operative_request = None
-
+    import pdb; pdb.set_trace()
     if error is None and request.method == 'POST':
-        form = EditRequestForm(request.POST, request.FILES)
+        form = TakerRequestFilesForm(request.POST, request.FILES)
         if form.is_valid():
             payment_receipt = None
 
-            if 'payment_receipt' in request.FILES.keys():
-                payment_receipt_file = request.FILES['payment_receipt']
+            if 'payment_receipt' in form.cleaned_data.keys():
+                payment_receipt_file = form.cleaned_data['payment_receipt']
                 if payment_receipt_file is not None:
                     payment_receipt = RequestFile()
 
@@ -615,7 +621,12 @@ def payment_register_request_view(request, operative_request_id):
 
             messages.success (request, f'Solicitud {operative_request} pagada satisfactoriamente!')
         else: 
-            error = 'Error en el formulario'
+            error = f''
+            if 'payment_receipt' in form.errors:
+                error += f' Comprobante de pago: {form.errors["payment_receipt"]}'
+            if 'request_receipt' in form.errors:
+                error += f' Recibo de pago: {form.errors["request_receipt"]}'   
+
     if error is not None:
         messages.error (request, error)
 
@@ -635,12 +646,8 @@ def validate_request_view(request, operative_request_id):
     if error is None and request.method == 'POST':
         form = EditRequestForm(request.POST, request.FILES)
         if form.is_valid():
-            validate_comments = form.cleaned_data['validate_comments']
-            is_validate = form.cleaned_data['is_validate']
-            if is_validate:
-                request_status = RequestStatus.objects.get(id='5') 
-                operative_request.status = request_status
-            operative_request.validate_comments = validate_comments
+            request_status = RequestStatus.objects.get(id='5') 
+            operative_request.status = request_status
             operative_request.validated_at = datetime.datetime.now()
             operative_request.validated_by = current_account.username
             operative_request.updated_at = datetime.datetime.now()
@@ -651,12 +658,6 @@ def validate_request_view(request, operative_request_id):
             request_event.operative_request = operative_request
             request_event.status = request_status
             request_event.observations = "Validación de la Solicitud"
-            if is_validate is not None:
-                request_event.observations += ' Correcta.'
-            else:
-                request_event.observations += ' Incorrecta.'
-            if validate_comments is not None:
-                request_event.observations += f' Comentarios: {validate_comments}' 
             request_event.created_at = datetime.datetime.now()
             request_event.created_by = current_account.username
             request_event.save()
