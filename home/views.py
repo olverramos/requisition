@@ -17,11 +17,11 @@ class HomeView(View):
 
         current_account = Account.getAccount(request.user)
 
-        form = SearchRequestForm()
+        filter_form = SearchRequestForm()
         
         context = {
             'segment': 'index',
-            'form': form,
+            'filter_form': filter_form,
             'current_account': current_account,
         }
 

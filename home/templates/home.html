@@ -25,29 +25,25 @@
 
                     <form role="form" id="search-form" method="post" autocomplete="off" action="{% url 'operative_requests_search' %}">
                         {% csrf_token %}    
-                        <div class="row">
-                            <div class="col col-lg-4 col-md-12">
-                                <div class="input-group w-100 col-lg-4 col-md-12">
-                                    <label class="text-secondary align-self-center">Buscar: &nbsp;</label>
-                                    <input class="form-control" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='search' id='search_id' >
+
+                        {% if filter_form %}
+                            <form role="form" id="filter_form" name="filter_form" method="post" autocomplete="off" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="page" id="page_id">
+                                <div class="row">
+                                    {% for field in filter_form %}
+                                        <div class="col-lg-3 col-md-12 mb-1">
+                                            {{field.label}}
+                                            {{ field }}
+                                            <span class="text-danger">{{ field.errors }} </span>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="col col-lg-12 col-md-6 ms-lg-auto">
+                                        <button type="submit" class="btn btn-primary">Buscar</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col col-lg-3 col-md-12">
-                                <div class="input-group w-100 col-lg-3 col-md-12">
-                                    <label class="text-secondary align-self-center">Teléfono Solicitante: &nbsp;</label>
-                                    <input class="form-control" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='applicant_phone_number' id='applicant_phone_number_id' >
-                                </div>
-                            </div>
-                            <div class="col col-lg-3 col-md-12">
-                                <div class="input-group w-100 col-lg-3 col-md-12">
-                                    <label class="text-secondary align-self-center">Teléfono Tomador: &nbsp;</label>
-                                    <input class="form-control" aria-label="Escribe palabras para facilitar la búsqueda" type="text" name='taker_phone_number' id='taker_phone_number_id' >
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-2 justify-content-xs-end">
-                                <button type="submit" class="btn bg-gradient-primary w-100 ms-lg-1">Buscar</button>
-                            </div>
-                        </div> 
+                            </form>
+                        {% endif %}
                     </form>
                 </div> 
             </div>
