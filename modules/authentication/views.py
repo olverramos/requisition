@@ -410,7 +410,7 @@ def create_account_view(request):
                 user = User.create_user(username, '', username)
                 user.first_name = first_name
                 user.last_name = last_name
-                user.is_active = False
+                user.is_active = True
                 user.save()
     
                 account = Account()

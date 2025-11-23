@@ -623,6 +623,53 @@ def payment_register_request_view(request, operative_request_id):
 
 
 @login_required(login_url="/auth/login/")
+def validate_request_view(request, operative_request_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    if error is None and request.method == 'POST':
+        form = EditRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            validate_comments = form.cleaned_data['validate_comments']
+            is_validate = form.cleaned_data['is_validate']
+            if is_validate:
+                request_status = RequestStatus.objects.get(id='5') 
+                operative_request.status = request_status
+            operative_request.validate_comments = validate_comments
+            operative_request.validated_at = datetime.datetime.now()
+            operative_request.validated_by = current_account.username
+            operative_request.updated_at = datetime.datetime.now()
+            operative_request.updated_by = current_account.username
+            operative_request.save()
+
+            request_event = RequestEvent()
+            request_event.operative_request = operative_request
+            request_event.status = request_status
+            request_event.observations = "Validación de la Solicitud"
+            if is_validate is not None:
+                request_event.observations += ' Correcta.'
+            else:
+                request_event.observations += ' Incorrecta.'
+            if validate_comments is not None:
+                request_event.observations += f' Comentarios: {validate_comments}' 
+            request_event.created_at = datetime.datetime.now()
+            request_event.created_by = current_account.username
+            request_event.save()
+
+            messages.success (request, f'Solicitud {operative_request} validada satisfactoriamente!')
+        else: 
+            error = 'Error en el formulario'
+    if error is not None:
+        messages.error (request, error)
+
+    return redirect(reverse_lazy("operative_requests"))
+
+@login_required(login_url="/auth/login/")
 def delete_request_view(request, operative_request_id):
     error = None
     current_account = Account.getAccount(request.user)
@@ -688,8 +735,8 @@ def get_request_view(request, operative_request_id):
         request_data['created_by'] = operative_request.created_by if operative_request.created_by else ''
         request_data['updated_at'] = operative_request.updated_at.strftime("%Y-%m-%d %H:%M") if operative_request.updated_at else ''
         request_data['updated_by'] = operative_request.updated_by if operative_request.updated_by else ''
-        request_data['valided_at'] = operative_request.valided_at.strftime("%Y-%m-%d %H:%M") if operative_request.valided_at else ''
-        request_data['valided_by'] = operative_request.valided_by if operative_request.valided_by else ''
+        request_data['validated_at'] = operative_request.validated_at.strftime("%Y-%m-%d %H:%M") if operative_request.validated_at else ''
+        request_data['validated_by'] = operative_request.validated_by if operative_request.validated_by else ''
         request_data['request_receipt'] = None
         if operative_request.request_receipt is not None:
             request_data['request_receipt'] = {

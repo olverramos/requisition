@@ -291,7 +291,7 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
-    valided_at = forms.CharField(
+    validated_at = forms.CharField(
         label=_("Fecha Validación"),
         required=False,
         widget=forms.TextInput(
@@ -301,7 +301,7 @@ class EditRequestForm(forms.Form):
             }
         ),
     )
-    valided_by = forms.CharField(
+    validated_by = forms.CharField(
         label=_("Validado por"),
         required=False,
         widget=forms.TextInput(
@@ -384,6 +384,179 @@ class EditRequestForm(forms.Form):
             'js/requests/index.js', 
             'js/localization.js', 
         )
+
+
+
+class AssignRequestForm(forms.Form):
+    number = forms.IntegerField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Número',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_phone_number = forms.CharField(
+        label=_("Teléfono Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_name = forms.CharField(
+        label=_("Nombre Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg readonly',
+                'placeholder': 'Nombre Solicitante',
+                'readonly': True
+            }
+        ),
+    )
+    status = forms.ModelChoiceField(
+        label=_("Estado *"),
+        required=False,
+        queryset=RequestStatus.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'id': 'status_id',
+                'readonly': True
+            }
+        ),
+    )
+    ramo = forms.ModelChoiceField(
+        label=_("Ramo *"),
+        required=False,
+        queryset=Ramo.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'id': 'ramo_id'
+            }
+        ),
+    )
+    taker_person_type = forms.ModelChoiceField(
+        label=_("Tipo de Persona *"),
+        required=False,
+        queryset=PersonType.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'placeholder': 'Tipo de Persona', 
+                'id': 'taker_person_type_id'
+            }
+        ),
+    )
+    taker_document_type = forms.ModelChoiceField(
+        label=_("Tipo de Documento *"),
+        required=False,
+        queryset=DocumentType.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'placeholder': 'Tipo de Documento', 
+                'id': 'taker_document_type_id'
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Identificación',
+                'readonly': True
+            }
+        ),
+    )
+    taker_name = forms.CharField(
+        label=_("Nombre *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre',
+            }
+        ),
+    )
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Teléfono Tomador',
+            }
+        ),
+    )
+    taker_contact_name = forms.CharField(
+        label=_("Nombre Contacto"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre Contacto',
+            }
+        ),
+    )
+    created_at = forms.CharField(
+        label=_("Fecha Creación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'readonly': True
+            }
+        ),
+    )
+    value = forms.CharField(
+        label=_("Valor *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Valor'
+            }
+        ),
+    )
+    assigned_to = forms.ModelChoiceField(
+        label=_("Asignado a:"),
+        required=False,
+        queryset=Account.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg form-select', 
+                'id': 'assigned_to_id'
+            }
+        ),
+    )
+    observations = forms.CharField(
+        label=_("Observaciones"),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Observaciones',
+                'rows': 4,
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/requests/form.js', 
+            'js/requests/index.js', 
+        )
+
 
 class TakerRequestForm(forms.Form):
     number = forms.IntegerField(

@@ -94,8 +94,9 @@ class OperativeRequest(Document):
     created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
     updated_by = fields.StringField(verbose_name='Actualizado por', max_length=50, null=True, blank=True)
-    valided_at = fields.DateTimeField(verbose_name="Fecha Validación", null=True, blank=True)
-    valided_by = fields.StringField(verbose_name='Validado por', max_length=50, null=True, blank=True)
+    validate_comments = fields.StringField(verbose_name='Comentarios Validación', null=True, blank=True)
+    validated_at = fields.DateTimeField(verbose_name="Fecha Validación", null=True, blank=True)
+    validated_by = fields.StringField(verbose_name='Validado por', max_length=50, null=True, blank=True)
 
     meta = {
         'collection': 'operative_requests',

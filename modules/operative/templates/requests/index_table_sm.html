@@ -24,10 +24,17 @@
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.status}}</span>
                 </td>
                 <td class="align-middle">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{operative_request.id}}');">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
                 </td>
+                {% if can_assign %}
+                    {% if operative_request.status.id == '1' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Asignar Solicitud" onclick="load_data('assign', '{{operative_request.id}}');">
+                            <i class="fa fa-hand-o-right text-sm"></i>
+                        </button>
+                    {% endif %}
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody> 
