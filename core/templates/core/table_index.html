@@ -31,20 +31,14 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="page" id="page_id">
                                 <div class="row">
-                                    <div class="col input-group">
-                                        {% for field in filter_form %}
-                                            <div class="col col-sm-1 text-secondary align-self-center text-right">
-                                                &nbsp; {{field.label_tag}}
-                                            </div>
-                                            <div class="col col-sm-3 mb-2">
-                                                {{ field }}
-                                            </div>
+                                    {% for field in filter_form %}
+                                        <div class="col-lg-3 col-md-12 mb-1">
+                                            {{field.label}}
+                                            {{ field }}
                                             <span class="text-danger">{{ field.errors }} </span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col col-sm-1 ms-lg-auto">
+                                        </div>
+                                    {% endfor %}
+                                    <div class="col col-lg-12 col-md-6 ms-lg-auto">
                                         <button type="submit" class="btn btn-primary">Filtrar</button>
                                     </div>
                                 </div>
@@ -59,7 +53,7 @@
                                 <span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span>
                             </button>
                         </a>
-                    {% endif %}
+                        {% endif %}
                     {% if not disable_add %}
                         <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal" data-bs-target="#formModal"  onclick="load_data('add', '');">
                             <span aria-hidden="true"><i class="fa fa-plus" aria-hidden="true"></i></span>
@@ -82,7 +76,7 @@
                 {% endblock %}
                 {% include "core/paginator.html" %}
             </div>
-        </div>
+        </div> 
     </header>   
 {% endblock %}
 

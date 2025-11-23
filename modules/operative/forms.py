@@ -780,22 +780,12 @@ class RequestFilterForm(forms.Form):
 
 
 class SearchRequestForm(forms.Form):
-    search = forms.CharField(
-        label=_("Buscar"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-                'id': 'filter_search_id'
-            }
-        ),
-    )
     applicant_phone_number = forms.CharField(
         label=_("Teléfono Solicitante"),
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-xs',
                 'id': 'filter_applicant_phone_number_id'
             }
         ),
@@ -805,8 +795,28 @@ class SearchRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-xs',
                 'id': 'filter_taker_phone_number_id'
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_taker_identification_id'
+            }
+        ),
+    )
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_search_id'
             }
         ),
     )

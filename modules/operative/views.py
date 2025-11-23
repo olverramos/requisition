@@ -59,7 +59,7 @@ def requests_index_view(request):
                     ramo=ramo
                 )
 
-    paginator = getPaginator(operative_request_list, page)
+    paginator = getPaginator(operative_request_list, page, items_per_page=10)
 
     user_list = User.objects.filter(is_active=True)
     form.fields['assigned_to'].queryset = Account.objects.filter(
@@ -117,8 +117,9 @@ def requests_search_view(request):
         if filter_form.is_valid():
             applicant_phone_number = filter_form.cleaned_data['applicant_phone_number']
             taker_phone_number = filter_form.cleaned_data['taker_phone_number']
+            taker_identification = filter_form.cleaned_data['taker_identification']
             search = filter_form.cleaned_data['search']
-
+            
             applicant = None
             taker = None
 
@@ -132,7 +133,13 @@ def requests_search_view(request):
                     taker = Taker.objects.get(phone_number=taker_phone_number)
                 except Taker.DoesNotExist:
                     taker = None
-        
+
+            if taker_identification:
+                try:
+                    taker = Taker.objects.get(identification=taker_identification)
+                except Taker.DoesNotExist:
+                    taker = None
+
             if applicant:
                 operative_request_list = operative_request_list.filter(
                     applicant=applicant
@@ -149,7 +156,7 @@ def requests_search_view(request):
             if applicant is None and taker is None and search is None:
                 operative_request_list = OperativeRequest.objects.none()
 
-    paginator = getPaginator(operative_request_list, page)
+    paginator = getPaginator(operative_request_list, page, items_per_page=10)
 
     if current_account is None:
         can_register_payment = True
