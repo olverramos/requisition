@@ -779,6 +779,89 @@ class RequestFilterForm(forms.Form):
         js = ('js/requests/index.js',  )
 
 
+class ApplicantSearchRequestForm(forms.Form):
+    applicant_phone_number = forms.CharField(
+        label=_("Teléfono Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_applicant_phone_number_id'
+            }
+        ),
+    )
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono Tomador"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_taker_phone_number_id'
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_taker_identification_id'
+            }
+        ),
+    )
+    search = forms.CharField(
+        label=_("Campo de Búsqueda"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_search_id'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/requests/index.js',  )
+
+
+class TakerSearchRequestForm(forms.Form):
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono Tomador"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_taker_phone_number_id'
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_taker_identification_id'
+            }
+        ),
+    )
+    search = forms.CharField(
+        label=_("Campo de Búsqueda"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-xs',
+                'id': 'filter_search_id'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/requests/index.js',  )
+
+
+
 class SearchRequestForm(forms.Form):
     applicant_phone_number = forms.CharField(
         label=_("Teléfono Solicitante"),

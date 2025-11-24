@@ -2,7 +2,7 @@ from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent, RequestFile
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
-    EditRequestFilesForm
+    EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
@@ -94,8 +94,7 @@ def requests_index_view(request):
  
     return render(request, 'requests/index.html', context)
 
-
-def requests_search_view(request):
+def requests_applicant_search_view(request):
     data = { }
     
     current_account = Account.getAccount(request.user)
@@ -107,13 +106,13 @@ def requests_search_view(request):
         page = int(request.POST['page'])
     
     operative_request_list = OperativeRequest.objects.filter(status__ne='9').order_by('-created')
-    
+    applicant = None
     data['page'] = page
-    filter_form = SearchRequestForm()
+    filter_form = ApplicantSearchRequestForm()
     form = TakerRequestForm()
     files_form = TakerRequestFilesForm()
     if request.method == 'POST':
-        filter_form = SearchRequestForm(request.POST)
+        filter_form = ApplicantSearchRequestForm(request.POST)
         if filter_form.is_valid():
             applicant_phone_number = filter_form.cleaned_data['applicant_phone_number']
             taker_phone_number = filter_form.cleaned_data['taker_phone_number']
@@ -153,8 +152,8 @@ def requests_search_view(request):
                     request_fields__value=search
                 )
                 
-            if applicant is None and taker is None and search is None:
-                operative_request_list = OperativeRequest.objects.none()
+    if applicant is None:
+        operative_request_list = OperativeRequest.objects.none()
 
     paginator = getPaginator(operative_request_list, page, items_per_page=10)
 
@@ -165,14 +164,92 @@ def requests_search_view(request):
 
     context = {
         'table_title': 'Solicitudes',
-        'table_description': 'Búsqueda de Solicitudes',
+        'table_description': 'Búsqueda de Solicitudes por Solicitante',
         'filter_form': filter_form,
         'form': form,
         'files_form': files_form,
         'disable_add': True,
         'can_register_payment': can_register_payment,
         'paginator': paginator,
-        'segment': 'operative'
+        'segment': 'operative', 
+        'back_url': '/',
+        'filter_name': 'Buscar',
+    }
+
+    return render(request, 'requests/search_index.html', context)
+
+def requests_taker_search_view(request):
+    data = { }
+    
+    current_account = Account.getAccount(request.user)
+    
+    page = 1
+    if 'page' in request.GET.keys() and request.GET['page']:
+        page = int(request.GET['page'])
+    if 'page' in request.POST.keys() and request.POST['page']:
+        page = int(request.POST['page'])
+    
+    operative_request_list = OperativeRequest.objects.filter(status__ne='9').order_by('-created')
+    search_data = False
+    data['page'] = page
+    filter_form = TakerSearchRequestForm()
+    form = TakerRequestForm()
+    files_form = TakerRequestFilesForm()
+    if request.method == 'POST':
+        filter_form = TakerSearchRequestForm(request.POST)
+        if filter_form.is_valid():
+            taker_phone_number = filter_form.cleaned_data['taker_phone_number']
+            taker_identification = filter_form.cleaned_data['taker_identification']
+            search = filter_form.cleaned_data['search']
+            
+            taker = None
+
+            if taker_phone_number:
+                search_data = True
+                try:
+                    taker = Taker.objects.get(phone_number=taker_phone_number)
+                except Taker.DoesNotExist:
+                    taker = None
+
+            if taker_identification:
+                search_data = True
+                try:
+                    taker = Taker.objects.get(identification=taker_identification)
+                except Taker.DoesNotExist:
+                    taker = None
+
+            if taker:
+                operative_request_list = operative_request_list.filter(
+                    taker=taker
+                )
+            if search:
+                search_data = True
+                operative_request_list = operative_request_list.filter(
+                    request_fields__value=search
+                )
+                
+    if not search_data:
+        operative_request_list = OperativeRequest.objects.none()
+
+    paginator = getPaginator(operative_request_list, page, items_per_page=10)
+
+    if current_account is None:
+        can_register_payment = True
+    else:
+        can_register_payment = False
+
+    context = {
+        'table_title': 'Solicitudes',
+        'table_description': 'Búsqueda de Solicitudes para el Tomador',
+        'filter_form': filter_form,
+        'form': form,
+        'files_form': files_form,
+        'disable_add': True,
+        'can_register_payment': can_register_payment,
+        'paginator': paginator,
+        'segment': 'operative', 
+        'back_url': '/',
+        'filter_name': 'Buscar',
     }
 
     return render(request, 'requests/search_index.html', context)

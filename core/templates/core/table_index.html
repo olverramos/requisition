@@ -39,7 +39,7 @@
                                         </div>
                                     {% endfor %}
                                     <div class="col col-lg-12 col-md-6 ms-lg-auto">
-                                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                                        <button type="submit" class="btn btn-primary">{% if filter_name %}{{filter_name}}{% else %}Filtrar{% endif %}</button>
                                     </div>
                                 </div>
                             </form>
