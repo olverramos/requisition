@@ -35,6 +35,20 @@
                         </button>
                     {% endif %}
                 {% endif %}
+                {% if can_assign %}
+                    {% if operative_request.status.id == '1' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Asignar Solicitud" onclick="load_data('assign', '{{operative_request.id}}');">
+                            <i class="fa fa-hand-o-right text-sm"></i>
+                        </button>
+                    {% endif %}
+                {% endif %}
+                {% if can_valide %}
+                    {% if operative_request.status.id == '4' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Validar Pago" onclick="load_data('validate', '{{operative_request.id}}');">
+                            <i class="fa fa-check-circle-o text-sm"></i>
+                        </button>
+                    {% endif %}
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody> 
