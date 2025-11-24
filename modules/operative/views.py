@@ -338,27 +338,44 @@ def create_request_view(request):
 
                     request_documents.append(request_document)
 
+            request_status_id = '1'
+            assigned_to = None
+            assigned_at = None
+            assigned_by = None
+
+            assistants = Account.objects.filter(role=RoleEnum.ASSISTANT)
+            if assistants.count() == 1:
+                assistant = assistants[0]
+                assigned_to = assistant
+                assigned_at = datetime.datetime.now()
+                assigned_by = applicant.email
+                request_status_id = '2'
+            
             try:
-                request_status = RequestStatus.objects.get(id='1')
+                request_status = RequestStatus.objects.get(id=request_status_id)
             except RequestStatus.DoesNotExist:
                 error = 'Error de Parametrización: Estado de Solicitud Inicial no encontrado'
                 request_status = None
 
             if error is None:
                 number = OperativeRequest.getNextNumber()
-
+               
                 operative_request:OperativeRequest = OperativeRequest()
                 operative_request.applicant = applicant
                 operative_request.taker = taker
                 operative_request.ramo = ramo
                 operative_request.number = number
                 operative_request.value = value
-                operative_request.status = request_status
                 operative_request.request_fields = request_fields
                 operative_request.request_documents = request_documents
                 operative_request.observations = observations
                 operative_request.created_at = datetime.datetime.now()
                 operative_request.created_by = applicant.email
+                operative_request.assigned_to = assigned_to
+                operative_request.assigned_at = assigned_at
+                operative_request.assigned_by = assigned_by
+                operative_request.status = request_status
+
                 operative_request.save()
 
                 request_event = RequestEvent()
