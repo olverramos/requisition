@@ -30,7 +30,7 @@ def requests_index_view(request):
     
     operative_request_list = OperativeRequest.objects.filter(
         status__ne='9'
-    ).order_by('-created')
+    )
     if current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
         operative_request_list = operative_request_list.filter(assigned_to=current_account)
     
@@ -105,7 +105,7 @@ def requests_applicant_search_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    operative_request_list = OperativeRequest.objects.filter(status__ne='9').order_by('-created')
+    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
     applicant = None
     data['page'] = page
     filter_form = ApplicantSearchRequestForm()
@@ -189,7 +189,7 @@ def requests_taker_search_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    operative_request_list = OperativeRequest.objects.filter(status__ne='9').order_by('-created')
+    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
     search_data = False
     data['page'] = page
     filter_form = TakerSearchRequestForm()
