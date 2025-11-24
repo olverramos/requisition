@@ -417,6 +417,7 @@ def edit_request_view(request, operative_request_id):
             assigned_to = form.cleaned_data['assigned_to']
             request_receipt = None
             request_police = None
+            payment_receipt = None
 
             if 'request_receipt' in request.FILES.keys():
                 request_receipt_file = request.FILES['request_receipt']
@@ -520,9 +521,12 @@ def edit_request_view(request, operative_request_id):
                 operative_request.request_fields = request_fields
                 operative_request.request_documents = request_documents
                 operative_request.observations = observations
-                operative_request.request_receipt = request_receipt
-                operative_request.request_police = request_police
-                operative_request.payment_receipt = payment_receipt
+                if request_receipt is not None:
+                    operative_request.request_receipt = request_receipt
+                if request_police is not None:
+                    operative_request.request_police = request_police
+                if payment_receipt is not None:
+                    operative_request.payment_receipt = payment_receipt
                 operative_request.assigned_to = assigned_to
                 operative_request.assigned_at = datetime.datetime.now()
                 operative_request.assigned_by = current_account.username
