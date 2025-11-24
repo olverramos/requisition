@@ -113,7 +113,7 @@ class CreateRequestForm(forms.Form):
         widget=forms.Select(
             attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ramo', 'id': 'ramo_id'}),
     )
-    value = forms.IntegerField(
+    value = forms.CharField(
         label=_("Valor *"),
         widget=forms.TextInput(
             attrs={
@@ -676,7 +676,7 @@ class TakerRequestForm(forms.Form):
             }
         ),
     )
-    value = forms.IntegerField(
+    value = forms.CharField(
         label=_("Valor *"),
         widget=forms.TextInput(
             attrs={

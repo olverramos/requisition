@@ -273,7 +273,11 @@ def create_request_view(request):
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
             ramo = form.cleaned_data['ramo']
-            value = form.cleaned_data['value']
+            value = form.cleaned_data['value'].replace('.', '').replace('$ ', '').replace(',', '.')
+            try:
+                value = float(value)
+            except ValueError:
+                error = 'El valor debe ser un número'
             observations = form.cleaned_data['observations']
             
             applicant = None
@@ -389,7 +393,14 @@ def create_request_view(request):
                 messages.success (request, f'Solicitud {operative_request} creada satisfactoriamente!')
                 return redirect(reverse_lazy("home"))
         else:
-            error = "¡Error en el registro de la solicitud!"
+            error = "¡Error en el registro de la solicitud! "
+            for field, message_list in form.errors.items():
+                if field == 'value':
+                    error += 'Valor: '
+                else:
+                    error += field + ': '
+                error += ','.join(message_list)
+
         if error is not None:
             messages.error (request, error)
 
@@ -425,10 +436,11 @@ def edit_request_view(request, operative_request_id):
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
             ramo = form.cleaned_data['ramo']
+            value = form.cleaned_data['value'].replace('.', '').replace('$ ', '').replace(',', '.')
             try:
-                value = int(form.cleaned_data['value'].replace('$ ', '').replace(',', '').replace('.0', ''))
-            except: 
-                value = operative_request.value
+                value = float(value)
+            except ValueError:
+                error = 'El valor debe ser un número'
             request_status = form.cleaned_data['status']
             observations = form.cleaned_data['observations']
             assigned_to = form.cleaned_data['assigned_to']
