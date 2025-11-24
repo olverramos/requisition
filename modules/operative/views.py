@@ -387,7 +387,7 @@ def create_request_view(request):
                 request_event.save()
 
                 messages.success (request, f'Solicitud {operative_request} creada satisfactoriamente!')
-                return redirect(reverse_lazy("operative_requests"))
+                return redirect(reverse_lazy("home"))
         else:
             error = "¡Error en el registro de la solicitud!"
         if error is not None:
