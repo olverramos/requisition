@@ -172,14 +172,14 @@ $(document).ready(function () {
         });
     });
 
-    $("#id_value").inputmask('currency', {
-        radixPoint: ",",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: '$ ',
-        digits: 2,
-        autoUnmask: true, // Para obtener el valor sin máscara
-    });
+    // $("#id_value").inputmask('currency', {
+    //     radixPoint: ",",
+    //     groupSeparator: ".",
+    //     allowMinus: false,
+    //     prefix: '$ ',
+    //     digits: 2,
+    //     autoUnmask: true, // Para obtener el valor sin máscara
+    // });
 
 
 });
