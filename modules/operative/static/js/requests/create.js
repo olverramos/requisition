@@ -172,6 +172,6 @@ $(document).ready(function () {
         });
     });
 
-    //$("#id_value").mask("#.##0,00", { reverse: true });
+    $("#id_value").mask("#,##0.00", { reverse: true });
 
 });
