@@ -273,7 +273,7 @@ def create_request_view(request):
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
             ramo = form.cleaned_data['ramo']
-            value = form.cleaned_data['value'].replace('.', '').replace('$ ', '').replace(',', '.')
+            value = form.cleaned_data['value'].replace(',', '').replace('$ ', '')
             try:
                 value = float(value)
             except ValueError:
@@ -436,7 +436,7 @@ def edit_request_view(request, operative_request_id):
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
             ramo = form.cleaned_data['ramo']
-            value = form.cleaned_data['value'].replace('.', '').replace('$ ', '').replace(',', '.')
+            value = form.cleaned_data['value'].replace(',', '').replace('$ ', '')
             try:
                 value = float(value)
             except ValueError:
@@ -446,6 +446,7 @@ def edit_request_view(request, operative_request_id):
             assigned_to = form.cleaned_data['assigned_to']
             request_receipt = None
             request_police = None
+            request_rc_police = None
             payment_receipt = None
 
             if 'request_receipt' in request.FILES.keys():
@@ -473,6 +474,19 @@ def edit_request_view(request, operative_request_id):
                     request_police.filename = filename
                     request_police.file_type = file_type
                     request_police.content = content
+            
+            if 'request_rc_police' in request.FILES.keys():
+                request_rc_police_file = request.FILES['request_rc_police']
+                if request_rc_police_file is not None:
+                    request_rc_police = RequestFile()
+
+                    filename = request_rc_police_file.name
+                    file_type = request_rc_police_file.content_type
+                    content = base64.b64encode(request_rc_police_file.read()).decode('utf-8')
+
+                    request_rc_police.filename = filename
+                    request_rc_police.file_type = file_type
+                    request_rc_police.content = content
             
             if 'payment_receipt' in request.FILES.keys():
                 payment_receipt_file = request.FILES['payment_receipt']
@@ -554,6 +568,8 @@ def edit_request_view(request, operative_request_id):
                     operative_request.request_receipt = request_receipt
                 if request_police is not None:
                     operative_request.request_police = request_police
+                if request_rc_police is not None:
+                    operative_request.request_rc_police = request_rc_police
                 if payment_receipt is not None:
                     operative_request.payment_receipt = payment_receipt
                 operative_request.assigned_to = assigned_to
@@ -634,6 +650,7 @@ def load_documents_request_view(request, operative_request_id):
         if form.is_valid():
             request_receipt = None
             request_police = None
+            request_rc_police = None
 
             if 'request_receipt' in request.FILES.keys():
                 request_receipt_file = request.FILES['request_receipt']
@@ -661,11 +678,25 @@ def load_documents_request_view(request, operative_request_id):
                     request_police.file_type = file_type
                     request_police.content = content
 
-            if request_receipt is not None and request_police is not None:
+            if 'request_rc_police' in request.FILES.keys():
+                request_rc_police_file = request.FILES['request_rc_police']
+                if request_rc_police_file is not None:
+                    request_rc_police = RequestFile()
+
+                    filename = request_rc_police_file.name
+                    file_type = request_rc_police_file.content_type
+                    content = base64.b64encode(request_rc_police_file.read()).decode('utf-8')
+
+                    request_rc_police.filename = filename
+                    request_rc_police.file_type = file_type
+                    request_rc_police.content = content
+
+            if request_receipt is not None and request_police is not None and request_rc_police is not None:
                 request_status = RequestStatus.objects.get(id='3') 
                 operative_request.status = request_status
             operative_request.request_receipt = request_receipt
             operative_request.request_police = request_police
+            operative_request.request_rc_police = request_rc_police
             operative_request.updated_at = datetime.datetime.now()
             operative_request.updated_by = current_account.username
             operative_request.save()
@@ -678,6 +709,8 @@ def load_documents_request_view(request, operative_request_id):
                 request_event.observations += ' Recibo de Pago cargado.'
             if request_police is not None:
                 request_event.observations += ' Póliza cargada.'
+            if request_rc_police is not None:
+                request_event.observations += ' Póliza RC cargada.'
             request_event.created_at = datetime.datetime.now()
             request_event.created_by = current_account.username
             request_event.save()
@@ -690,7 +723,6 @@ def load_documents_request_view(request, operative_request_id):
 
     return redirect(reverse_lazy("operative_requests"))
 
-
 def payment_register_request_view(request, operative_request_id):
     error = None
     current_account = Account.getAccount(request.user)
@@ -699,7 +731,7 @@ def payment_register_request_view(request, operative_request_id):
     except OperativeRequest.DoesNotExist:
         error = 'No existe una request con el id'
         operative_request = None
-    import pdb; pdb.set_trace()
+    
     if error is None and request.method == 'POST':
         form = TakerRequestFilesForm(request.POST, request.FILES)
         if form.is_valid():
@@ -747,7 +779,7 @@ def payment_register_request_view(request, operative_request_id):
     if error is not None:
         messages.error (request, error)
 
-    return redirect(reverse_lazy("operative_requests_search"))
+    return redirect(reverse_lazy("operative_requests_taker_search"))
 
 
 @login_required(login_url="/auth/login/")
@@ -869,7 +901,13 @@ def get_request_view(request, operative_request_id):
                 'file_type': operative_request.request_police.file_type,
                 'content': operative_request.request_police.content,
             }
-
+        request_data['request_rc_police'] = None
+        if operative_request.request_rc_police is not None:
+            request_data['request_rc_police'] = {
+                'filename': operative_request.request_rc_police.filename,
+                'file_type': operative_request.request_rc_police.file_type,
+                'content': operative_request.request_rc_police.content,
+            }
         request_data['payment_receipt'] = None
         if operative_request.payment_receipt is not None:
             request_data['payment_receipt'] = {

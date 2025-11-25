@@ -1,4 +1,5 @@
 from django.utils.translation import gettext_lazy as _
+from .models import RamoField
 from django import forms
 
 
@@ -20,6 +21,17 @@ class CreateRamoForm(forms.Form):
                 'placeholder': 'Nombre'
             }
         ),
+    )
+    fields = forms.ModelMultipleChoiceField(
+        queryset=RamoField.objects.all(),
+        widget=forms.SelectMultiple(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Campos'
+            }
+        ),
+        required=False,
+        label="Campos"
     )
 
     class Media:

@@ -38,6 +38,11 @@
                         <button type="button" class="btn" data-original-title="Descargar Poliza" onclick="downloadFile('{{operative_request.request_police.filename}}', '{{operative_request.request_police.contentfilename}}', '{{operative_request.request_police.file_type}}');">
                             <i class="fa fa-download text-sm"></i>
                         </button>
+                        {% if operative_request.request_rc_police %}
+                            <button type="button" class="btn" data-original-title="Descargar Poliza RC" onclick="downloadFile('{{operative_request.request_rc_police.filename}}', '{{operative_request.request_rc_police.contentfilename}}', '{{operative_request.request_rc_police.file_type}}');">
+                                <i class="fa fa-cloud-download text-sm"></i>
+                            </button>
+                        {% endif %}
                     {% endif %}
 
                     {% if can_payment_register and operative_request.status.id == '3' %}

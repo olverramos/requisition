@@ -69,6 +69,10 @@ def create_applicant_view(request):
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
 
+            account = Account.getAccount(email)
+            if account is not None and account.role.id != 'applicant':
+                error = 'El email debe pertenecer a un solicitante'
+
             try:
                 applicant = Applicant.objects.get(identification=identification)
                 error = 'Ya existe un solicitante con la identificación'
@@ -87,6 +91,7 @@ def create_applicant_view(request):
                 applicant.name = name
                 applicant.email = email
                 applicant.phone_number = phone_number
+                applicant.account = account
                 applicant.created_at = datetime.datetime.now()
                 applicant.created_by = current_account.username
                 applicant.save()
@@ -115,9 +120,14 @@ def edit_applicant_view(request, applicant_id):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
 
+            account = Account.getAccount(email)
+            if account is not None and account.role.id != 'applicant':
+                error = 'El email debe pertenecer a un solicitante'
+
             if error is None:   
                 applicant.name = name
                 applicant.email = email
+                applicant.account = account
                 applicant.updated_at = datetime.datetime.now()
                 applicant.updated_by = current_account.username
                 applicant.save()

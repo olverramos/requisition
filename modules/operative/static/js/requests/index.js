@@ -182,11 +182,14 @@ function load_data(action, objectid) {
         document.getElementById('assigned_to_id').removeAttribute("disabled");
         document.getElementById('id_request_receipt').removeAttribute("disabled");
         document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_request_rc_police').removeAttribute("disabled");
         document.getElementById('id_observations').removeAttribute("readonly");
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
+        document.getElementById('id_request_rc_police').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
         document.getElementById('label_id_request_police').hidden = false;
+        document.getElementById('label_id_request_rc_police').hidden = false;
     } else {
         document.getElementById('ramo_id').setAttribute("disabled", "disabled");
         document.getElementById('status_id').setAttribute("disabled", "disabled");
@@ -199,11 +202,14 @@ function load_data(action, objectid) {
         document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
         document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
         document.getElementById('id_request_police').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_rc_police').setAttribute("disabled", "disabled");
         document.getElementById('id_observations').setAttribute("readonly", "readonly");
         document.getElementById('id_request_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
+        document.getElementById('id_request_rc_police').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
         document.getElementById('label_id_request_police').hidden = false;
+        document.getElementById('label_id_request_rc_police').hidden = false;
     }
 
     if (action == 'assign') {
@@ -221,6 +227,7 @@ function load_data(action, objectid) {
         document.getElementById('id_validated_by').hidden = true;
         document.getElementById('id_request_receipt').removeAttribute("disabled");
         document.getElementById('id_request_police').removeAttribute("disabled");
+        document.getElementById('id_request_rc_police').removeAttribute("disabled");
     }
 
     if (action == 'validate') {
@@ -297,6 +304,25 @@ function load_data(action, objectid) {
                     } else if (action != 'loaddocuments') {
                         document.getElementById("section_id_request_police").hidden = true;
                         document.getElementById("label_id_request_police").hidden = true;
+                    }
+
+                    if (request_obj.request_rc_police) {
+                        var request_rc_police_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        request_rc_police_code += request_obj.request_rc_police.filename;
+                        request_rc_police_code += "', '";
+                        request_rc_police_code += request_obj.request_rc_police.content;
+                        request_rc_police_code += "', '";
+                        request_rc_police_code += request_obj.request_rc_police.file_type;
+                        request_rc_police_code += '\')">';
+                        request_rc_police_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_rc_police_code += request_obj.request_rc_police.filename;
+                        request_rc_police_code += '</button>';
+                        document.getElementById("section_id_request_rc_police").innerHTML = request_rc_police_code;
+                        document.getElementById("section_id_request_rc_police").hidden = false;
+                        document.getElementById("label_id_request_rc_police").hidden = false;
+                    } else if (action != 'loaddocuments') {
+                        document.getElementById("section_id_request_rc_police").hidden = true;
+                        document.getElementById("label_id_request_rc_police").hidden = true;
                     }
 
                     if (request_obj.payment_receipt) {

@@ -355,6 +355,17 @@ class EditRequestFilesForm(forms.Form):
             }
         ),
     )
+    request_rc_police = forms.FileField(
+        label=_("Póliza RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
         required=False,

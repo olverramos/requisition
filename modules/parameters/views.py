@@ -54,42 +54,13 @@ def create_ramo_view(request):
     if request.method == 'POST':
         form = CreateRamoForm(request.POST)
         if form.is_valid():
+            ramo_id = form.cleaned_data['id']
             name = form.cleaned_data['name']
-
-            fields_data = []
-            if 'fields' in request.POST.keys():
-                fields_data = request.POST['fields']
+            fields = form.cleaned_data['fields']
 
             available_documents_data = []
             if 'available_documents' in request.POST.keys():
                 available_documents_data = request.POST['available_documents']
-
-            fields = []
-            for field_data in fields_data:
-                if 'field_type' in field_data.keys():
-                    field_type_id = field_data["field_type"]
-                    try:
-                        field_type = FieldType.objects.get(pk=field_type_id)
-                    except FieldType.DoesNotExist:
-                        print (f"Tipo de Campo {field_type} no Existe")
-                        field_type = None
-
-                if field_type is not None and 'name' in field_data.keys():
-                    name = field_data["name"]
-                    mandatory = False
-                    if 'mandatory' in field_data.keys():
-                        mandatory = field_data["mandatory"]
-                    
-                    field = RamoField()
-                    field.field_type = field_type
-                    field.name = name
-                    field.mandatory = mandatory
-                    options = []
-                    if 'options' in field_data.keys():
-                        options = field_data["options"]
-                    field.options = options
-
-                    fields.append(field)
 
             available_documents = []
             for available_document_data in available_documents_data:
@@ -112,6 +83,7 @@ def create_ramo_view(request):
 
             if error is None:
                 ramo:Ramo = Ramo()
+                ramo.id = ramo_id
                 ramo.name = name
                 ramo.ramo_fields = fields
                 ramo.available_documents = available_documents
@@ -125,7 +97,7 @@ def create_ramo_view(request):
         if error is not None:
             messages.error (request, error)
 
-    return redirect(reverse_lazy("base_ramos"))
+    return redirect(reverse_lazy("parameters_ramos"))
 
 @login_required(login_url="/auth/login/")
 def edit_ramo_view(request, ramo_id):
@@ -141,41 +113,11 @@ def edit_ramo_view(request, ramo_id):
         form = CreateRamoForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
-
-            fields_data = []
-            if 'fields' in request.POST.keys():
-                fields_data = request.POST['fields']
+            fields = form.cleaned_data['fields']
 
             available_documents_data = []
             if 'available_documents' in request.POST.keys():
                 available_documents_data = request.POST['available_documents']
-
-            fields = []
-            for field_data in fields_data:
-                if 'field_type' in field_data.keys():
-                    field_type_id = field_data["field_type"]
-                    try:
-                        field_type = FieldType.objects.get(pk=field_type_id)
-                    except FieldType.DoesNotExist:
-                        print (f"Tipo de Campo {field_type} no Existe")
-                        field_type = None
-
-                if field_type is not None and 'name' in field_data.keys():
-                    name = field_data["name"]
-                    mandatory = False
-                    if 'mandatory' in field_data.keys():
-                        mandatory = field_data["mandatory"]
-                    
-                    field = RamoField()
-                    field.field_type = field_type
-                    field.name = name
-                    field.mandatory = mandatory
-                    options = []
-                    if 'options' in field_data.keys():
-                        options = field_data["options"]
-                    field.options = options
-
-                    fields.append(field)
 
             available_documents = []
             for available_document_data in available_documents_data:
@@ -202,7 +144,7 @@ def edit_ramo_view(request, ramo_id):
             error = "¡Error en la actualización del Ramo!"
         if error is not None:
             messages.error (request, error)
-    return redirect(reverse_lazy("base_ramos"))
+    return redirect(reverse_lazy("parameters_ramos"))
 
 
 @login_required(login_url="/auth/login/")
@@ -221,7 +163,7 @@ def delete_ramo_view(request, ramo_id):
     else:
         messages.error (request, error)
 
-    return redirect(reverse_lazy("base_ramos"))
+    return redirect(reverse_lazy("parameters_ramos"))
 
 
 @login_required(login_url="/auth/login/")
@@ -239,7 +181,7 @@ def get_ramo_view(request, ramo_id) -> JsonResponse:
                 'name': ramo_field.name,
                 'options': []
             }
-            for ramo_field_option in ramo_field.options:
+            for ramo_field_option in ramo_field['options']:
                 ramo_option_data = {
                     'value': ramo_field_option.value
                 }
