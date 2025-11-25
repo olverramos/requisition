@@ -29,9 +29,19 @@ def applicants_index_view(request):
         filter_form = ApplicantFilterForm(request.POST)
         if filter_form.is_valid():
             search = filter_form.cleaned_data['search']
+            identification = filter_form.cleaned_data['identification']
+            phone_number = filter_form.cleaned_data['phone_number']
             if search is not None and search != '':
                 applicant_list = applicant_list.filter(
                     name__icontains=search
+                )
+            if identification is not None and identification != '':
+                applicant_list = applicant_list.filter(
+                    identification__icontains=identification
+                )
+            if phone_number is not None and phone_number != '':
+                applicant_list = applicant_list.filter(
+                    phone_number__icontains=phone_number
                 )
 
     paginator = getPaginator(applicant_list, page)
@@ -58,6 +68,18 @@ def create_applicant_view(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
+
+            try:
+                applicant = Applicant.objects.get(identification=identification)
+                error = 'Ya existe un solicitante con la identificación'
+            except Applicant.DoesNotExist:
+                pass
+
+            try:
+                applicant = Applicant.objects.get(phone_number=phone_number)
+                error = 'Ya existe un solicitante con el número de teléfono'
+            except Applicant.DoesNotExist:
+                pass
 
             if error is None:
                 applicant:Applicant = Applicant()

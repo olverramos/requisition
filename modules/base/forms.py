@@ -63,6 +63,26 @@ class EditApplicantForm(CreateApplicantForm):
 
 
 class ApplicantFilterForm(forms.Form):
+    identification = forms.CharField(
+        label=_("Identificación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el número de identificación'
+            }
+        ),
+    )
+    phone_number = forms.CharField(
+        label=_("Teléfono"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el número de teléfono'
+            }
+        ),
+    )
     search = forms.CharField(
         label=_("Buscar"),
         required=False,
