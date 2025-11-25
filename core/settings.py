@@ -34,6 +34,7 @@ DATABASE_NAME = os.getenv('DATABASE_NAME','requisitiondb')
 DATABASE_URL = os.getenv('DATABASE_URL','localhost')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str2bool(os.environ.get('DEBUG'))
+DEBUG = True
 try:
     from .settings_debug import *
 except:
