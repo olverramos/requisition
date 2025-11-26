@@ -1,0 +1,188 @@
+
+<form role="form" id="request-form" method="post" autocomplete="off" action="." enctype="multipart/form-data">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div class="row">
+            {{form.applicant_id}}
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.applicant_phone_number.label}}</label>
+                {{form.applicant_phone_number}}
+            </div>
+            <div class="col-lg-3 col-md-12">
+                <label class="text-main align-self-center">{{form.applicant_name.label}}</label>
+                {{form.applicant_name}}
+            </div>
+            <div class="col-lg-3 col-md-12">
+                <label class="text-main align-self-center">{{form.ramo.label}}</label>
+                {{form.ramo}}
+            </div>
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.number.label}}</label>
+                {{form.number}}
+            </div>
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.status.label}}</label>
+                {{form.status}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>INFORMACIÓN DEL TOMADOR</center>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.taker_person_type.label}}</label>
+                {{form.taker_person_type}}
+            </div>
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.taker_document_type.label}}</label>
+                {{form.taker_document_type}}
+            </div>
+            <div class="col-lg-2 col-md-12">
+                <label class="text-main align-self-center">{{form.taker_identification.label}}</label>
+                {{form.taker_identification}}
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <label class="text-main align-self-center">{{form.taker_name.label}}</label>
+                {{form.taker_name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <label class="text-main align-self-center">{{form.taker_phone_number.label}}</label>
+                {{form.taker_phone_number}}
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <label class="text-main align-self-center" id="taker_contact_name_label">{{form.taker_contact_name.label}}</label>
+                {{form.taker_contact_name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>INFORMACIÓN DE LA SOLICITUD</center>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+                <label class="text-main align-self-center">{{form.value.label}}</label>
+                {{form.value}}
+            </div>
+            <div id="custom_field_id" class="col col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                {% for field_id, field_data in request_data.fields.items %}
+                    <div class="col-lg-3 col-md-12">
+                        <label class="text-main align-self-center">{{field_data.field}}</label>
+                        <input 
+                            type="text" 
+                            name="{{field_id}}" 
+                            value="{{field_data.value}}" 
+                            class="form-control" 
+                            placeholder="{{field_data.field}}" 
+                            readonly 
+                            id="id_{{field_id}}"
+                        >
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>DOCUMENTOS</center>
+                </h4>
+            </div>
+        </div>
+        <div class="row" id="ramo_document_id" >
+            {% if request_data.request_receipt %}
+                <div class="col-lg-6 col-md-12">
+                    <label class="text-main align-self-center">{{form.request_receipt.label}}</label>
+                    <button 
+                        type="button" 
+                        class="btn btn-link" 
+                        onclick="downloadFile('{{request_data.request_receipt.filename}}', '{{request_data.request_receipt.content}}', '{{request_data.request_receipt.file_type}}');"
+                    >
+                        <i class="fa-solid fa-download"></i>&nbsp;
+                        {{request_data.request_receipt.filename}}
+                    </button>
+                </div>
+            {% endif %}
+            {% if can_view_police  %}
+                {% if request_data.request_police  %}
+                    <div class="col-lg-6 col-md-12">
+                        <label class="text-main align-self-center">{{form.request_police.label}}</label>
+                        <button 
+                            type="button" 
+                            class="btn btn-link" 
+                            onclick="downloadFile('{{request_data.request_police.filename}}', '{{request_data.request_police.content}}', '{{request_data.request_police.file_type}}');"
+                        >
+                            <i class="fa-solid fa-download"></i>&nbsp;
+                            {{request_data.request_police.filename}}
+                        </button>
+                    </div>
+                {% endif %}
+
+                {% if request_data.request_rc_police  %}
+                    <div class="col-lg-6 col-md-12">
+                        <label class="text-main align-self-center">{{form.request_rc_police.label}}</label>
+                        <button 
+                            type="button" 
+                            class="btn btn-link" 
+                            onclick="downloadFile('{{request_data.request_rc_police.filename}}', '{{request_data.request_rc_police.content}}', '{{request_data.request_rc_police.file_type}}');"
+                        >
+                            <i class="fa-solid fa-download"></i>&nbsp;
+                            {{request_data.request_rc_police.filename}}
+                        </button>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if request_data.payment_receipt %}
+                <div class="col-lg-6 col-md-12">
+                    <label class="text-main align-self-center">{{form.payment_receipt.label}}</label>
+                    <button 
+                        type="button" 
+                        class="btn btn-link" 
+                        onclick="downloadFile('{{request_data.payment_receipt.filename}}', '{{request_data.payment_receipt.content}}', '{{request_data.payment_receipt.file_type}}');"
+                    >
+                        <i class="fa-solid fa-download"></i>&nbsp;
+                        {{request_data.payment_receipt.filename}}
+                    </button>
+                </div>
+            {% endif %}
+            {% for document_id, document_data in request_data.documents.items %}
+                <div class="col-lg-6 col-md-12">
+                    <label class="text-main align-self-center">{{document_data.document_title}}</label>
+                    <button 
+                        type="button" 
+                        class="btn btn-link" 
+                        onclick="downloadFile('{{document_data.filename}}', '{{document_data.content}}', '{{document_data.file_type}}');"
+                    >
+                        <i class="fa-solid fa-download"></i>&nbsp;
+                        {{document_data.filename}}
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <label class="text-main align-self-center">{{form.observations.label}}</label>
+                {{form.observations}}
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+            <div class="col-lg-12 col-md-12 mt-4">
+                <center>
+                    <a href="{{back_url}}">
+                        <button type="button" class="btn bg-gradient-secondary">Salir</button>
+                    </a>
+                </center>
+            </div>
+        </div>
+    </div>
+</form>

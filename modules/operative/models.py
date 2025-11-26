@@ -1,4 +1,5 @@
 from django_mongoengine import Document, fields, EmbeddedDocument
+from core.templatetags.tools import currency
 import datetime
 import json
 
@@ -225,6 +226,89 @@ class OperativeRequest(Document):
                             print (f'Solicitud {operative_request} creada')
         except FileNotFoundError:
             pass
+
+
+    def query(self):
+        request_data = {}
+        request_data['id'] = str(self.id)
+        request_data['number'] = self.number
+
+        request_data['applicant_phone_number'] = str(self.applicant.phone_number)
+        request_data['applicant_name'] = str(self.applicant)
+
+        request_data['taker_person_type_id'] = str(self.taker.person_type.id)
+        request_data['taker_person_type'] = str(self.taker.person_type)
+        request_data['taker_document_type_id'] = str(self.taker.document_type.id)
+        request_data['taker_document_type'] = str(self.taker.document_type)
+        request_data['taker_identification'] = str(self.taker.identification)
+        request_data['taker_name'] = str(self.taker.name)
+        request_data['taker_phone_number'] = str(self.taker.phone_number)
+        request_data['taker_contact_name'] = str(self.taker.contact_name)
+        
+        request_data['ramo_id'] = str(self.ramo.id)
+        request_data['ramo'] = str(self.ramo)
+        
+        request_data['status_id'] = str(self.status.id)
+        request_data['status'] = str(self.status)
+        request_data['value'] = currency(self.value)
+        request_data['assigned_to'] = str(self.assigned_to) if self.assigned_to else ''
+        request_data['assigned_to_id'] = str(self.assigned_to.id) if self.assigned_to else ''
+        request_data['assigned_at'] = self.assigned_at.strftime("%Y-%m-%d %H:%M") if self.assigned_at else ''
+        request_data['created_at'] = self.created_at.strftime("%Y-%m-%d %H:%M") if self.created_at else ''
+        request_data['created_by'] = self.created_by if self.created_by else ''
+        request_data['updated_at'] = self.updated_at.strftime("%Y-%m-%d %H:%M") if self.updated_at else ''
+        request_data['updated_by'] = self.updated_by if self.updated_by else ''
+        request_data['validated_at'] = self.validated_at.strftime("%Y-%m-%d %H:%M") if self.validated_at else ''
+        request_data['validated_by'] = self.validated_by if self.validated_by else ''
+        request_data['request_receipt'] = None
+        if self.request_receipt is not None:
+            request_data['request_receipt'] = {
+                'filename': self.request_receipt.filename,
+                'file_type': self.request_receipt.file_type,
+                'content': self.request_receipt.content,
+            }
+        request_data['request_police'] = None
+        if self.request_police is not None:
+            request_data['request_police'] = {
+                'filename': self.request_police.filename,
+                'file_type': self.request_police.file_type,
+                'content': self.request_police.content,
+            }
+        request_data['request_rc_police'] = None
+        if self.request_rc_police is not None:
+            request_data['request_rc_police'] = {
+                'filename': self.request_rc_police.filename,
+                'file_type': self.request_rc_police.file_type,
+                'content': self.request_rc_police.content,
+            }
+        request_data['payment_receipt'] = None
+        if self.payment_receipt is not None:
+            request_data['payment_receipt'] = {
+                'filename': self.payment_receipt.filename,
+                'file_type': self.payment_receipt.file_type,
+                'content': self.payment_receipt.content,
+            }
+
+        request_data['observations'] = self.observations if self.observations else ''
+
+        request_data['fields'] = {}
+        for request_field in self.request_fields:
+            request_data['fields'][str(request_field.field.name)] = {
+                'value': request_field.value,
+                'field': request_field.field,
+            }
+        request_data['documents'] = {}
+        
+        for document_field in self.request_documents:
+            request_data['documents'][str(document_field.document_name)] = {
+                'document_name': document_field.document_name,
+                'document_title': document_field.document_title,
+                'filename': document_field.filename,
+                'file_type': document_field.file_type,
+                'content': document_field.content,
+            }
+
+        return request_data
 
 class RequestEvent(Document):
     operative_request = fields.ReferenceField(OperativeRequest, verbose_name="Solicitud")

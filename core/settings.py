@@ -190,7 +190,7 @@ SESSION_ENGINE = "django_mongoengine.sessions"
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "es"
+LANGUAGE_CODE = "es-co"
 
 TIME_ZONE = "America/Bogota"
 COUNTRY = 'CO'
@@ -236,7 +236,7 @@ LOGGING = {
     },
 }
 
-ITEMS_PER_PAGE = 5
+ITEMS_PER_PAGE = 10
 
 JWT_ALGORITHM = 'HS256'
 
@@ -254,7 +254,7 @@ BOOTSTRAP_DATEPICKER_PLUS = {
     # Options for all input widgets
     # More options: https://getdatepicker.com/4/Options/
     "options": {
-        "locale": "es-mx",
+        "locale": "es-co",
         # "showClose": True,
         # "showClear": True,
         "showTodayButton": True,

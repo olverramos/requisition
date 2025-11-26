@@ -64,14 +64,6 @@ function loadFieldsData(ramo_id, fields_value, action) {
 
 }
 
-function downloadFile(fileName, data, fileFormat) {
-    const linkSource = 'data:' + fileFormat + ';base64,' + data;
-    const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
-}
-
 function loadDocumentsData(ramo_id, documents_value) {
 
     let document_request_url = APP_URL + 'parameters/ramo/' + ramo_id + '/documents/';
@@ -130,6 +122,9 @@ function loadDocumentsData(ramo_id, documents_value) {
 }
 
 function load_data(action, objectid) {
+
+    document.getElementById("formModal").reset();
+
     var verbose_action = 'Consulta de Solicitud';
     document.getElementById("id_form_button").hidden = false;
     document.getElementById('ramo_id').removeAttribute("disabled");

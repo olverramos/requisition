@@ -51,6 +51,7 @@ class Genre(Document):
 class RoleEnum(StrEnum):
     ADMIN = 'admin'
     ASSISTANT = 'assitant'
+    APPLICANT = 'applicant'
 
 
 class Role(Document):

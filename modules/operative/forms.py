@@ -1,4 +1,5 @@
 from modules.base.models import Applicant, PersonType, DocumentType
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django.utils.translation import gettext_lazy as _
 from modules.operative.models import RequestStatus
 from modules.authentication.models import Account
@@ -386,6 +387,243 @@ class EditRequestFilesForm(forms.Form):
         )
 
 
+class QueryRequestForm(forms.Form):
+    number = forms.IntegerField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Número',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_phone_number = forms.CharField(
+        label=_("Teléfono Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_name = forms.CharField(
+        label=_("Nombre Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control readonly',
+                'placeholder': 'Nombre Solicitante',
+                'readonly': True
+            }
+        ),
+    )
+    status = forms.CharField(
+        label=_("Estado *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control readonly',
+                'id': 'status_id',
+                'readonly': True
+            }
+        ),
+    )
+    ramo = forms.CharField(
+        label=_("Ramo"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control readonly', 
+                'id': 'ramo_id',
+                'readonly': True
+            }
+        ),
+    )
+    taker_person_type = forms.CharField(
+        label=_("Tipo de Persona"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'placeholder': 'Tipo de Persona', 
+                'id': 'taker_person_type_id',
+                'readonly': True
+            }
+        ),
+    )
+    taker_document_type = forms.CharField(
+        label=_("Tipo de Documento"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'placeholder': 'Tipo de Documento', 
+                'id': 'taker_document_type_id',
+                'readonly': True
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Identificación',
+                'readonly': True
+            }
+        ),
+    )
+    taker_name = forms.CharField(
+        label=_("Nombre"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre',
+                'readonly': True
+            }
+        ),
+    )
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Teléfono Tomador',
+                'readonly': True
+            }
+        ),
+    )
+    taker_contact_name = forms.CharField(
+        label=_("Nombre Contacto"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre Contacto',   
+                'readonly': True
+            }
+        ),
+    )
+    value = forms.CharField(
+        label=_("Valor"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Valor',
+                'readonly': True
+            }
+        ),
+    )
+    assigned_to = forms.ModelChoiceField(
+        label=_("Asignado a:"),
+        required=False,
+        queryset=Account.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-select', 
+                'id': 'assigned_to_id',
+                'readonly': True
+            }
+        ),
+    )
+    created_at = forms.CharField(
+        label=_("Fecha Creación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'readonly': True
+            }
+        ),
+    )
+    validated_at = forms.CharField(
+        label=_("Fecha Validación"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'readonly': True
+            }
+        ),
+    )
+    validated_by = forms.CharField(
+        label=_("Validado por"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'readonly': True
+            }
+        ),
+    )
+    request_receipt = forms.FileField(
+        label=_("Recibo de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Recibo de Pago',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+    request_police = forms.FileField(
+        label=_("Póliza"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+    request_rc_police = forms.FileField(
+        label=_("Póliza RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+    payment_receipt = forms.FileField(
+        label=_("Comprobante de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+    observations = forms.CharField(
+        label=_("Observaciones"),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Observaciones',
+                'rows': 4,
+                'readonly': True
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/requests/query.js', 
+        )
 
 
 class AssignRequestForm(forms.Form):
@@ -756,7 +994,7 @@ class RequestFilterForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Ingrese el texto para realizar la búsqueda'
             }
         ),
@@ -767,7 +1005,7 @@ class RequestFilterForm(forms.Form):
         queryset=Applicant.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Solicitante', 
                 'id': 'filter_applicant_id'
             }
@@ -779,9 +1017,20 @@ class RequestFilterForm(forms.Form):
         queryset=Ramo.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Ramo', 
                 'id': 'filter_ramo_id'
+            }
+        ),
+    )
+    date = forms.DateField(
+        label=_("Fecha Solicitud"),
+        required=False,
+        widget=DatePickerInput(
+            attrs={
+                'class': 'form-control text-end', 
+                'name': "date", 
+                'placeholder': 'AAAA-MM-DD'
             }
         ),
     )

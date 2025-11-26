@@ -2,7 +2,9 @@ from .models import OperativeRequest, RequestField, RequestDocument, \
     RequestStatus, RequestEvent, RequestFile
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
-    EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm
+    EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm, \
+    QueryRequestForm
+from django.contrib.humanize.templatetags.humanize import intcomma
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
@@ -31,8 +33,15 @@ def requests_index_view(request):
     operative_request_list = OperativeRequest.objects.filter(
         status__ne='9'
     )
+    
     if current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
         operative_request_list = operative_request_list.filter(assigned_to=current_account)
+    if current_account is not None and current_account.role.id == RoleEnum.APPLICANT:
+        try:
+            applicant = Applicant.objects.get(account=current_account)
+            operative_request_list = operative_request_list.filter(applicant=applicant)
+        except Applicant.DoesNotExist:
+            operative_request_list = OperativeRequest.objects.none()
     
     data['page'] = page
     filter_form = RequestFilterForm()
@@ -44,6 +53,7 @@ def requests_index_view(request):
             search = filter_form.cleaned_data['search']
             applicant = filter_form.cleaned_data['applicant']
             ramo = filter_form.cleaned_data['ramo']
+            date = filter_form.cleaned_data['date']
 
             if search is not None and search != '':
                 operative_request_list = operative_request_list.filter(
@@ -57,6 +67,13 @@ def requests_index_view(request):
             if ramo is not None:
                 operative_request_list = operative_request_list.filter(
                     ramo=ramo
+                )
+            if date is not None:
+                start_date_time = datetime.datetime.combine(date, datetime.time.min)
+                end_date_time = datetime.datetime.combine(date, datetime.time.max)
+                operative_request_list = operative_request_list.filter(
+                    created_at__gte=start_date_time,
+                    created_at__lte=end_date_time
                 )
 
     paginator = getPaginator(operative_request_list, page, items_per_page=10)
@@ -412,6 +429,50 @@ def create_request_view(request):
     }
 
     return render(request, 'requests/create.html', context)
+
+def query_request_view(request, operative_request_id):
+    error = None
+    current_account:Account = Account.getAccount(request.user)
+
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    can_view_police = False
+    if current_account is not None:
+        if current_account.role.id in ( RoleEnum.ASSISTANT, RoleEnum.ADMIN):
+            can_view_police = True
+        elif operative_request.status.id >= "4":
+            can_view_police = True
+
+    data = {}
+    if error is None:
+        data = operative_request.query()
+
+    form = QueryRequestForm(initial=data)
+
+    if 'back_url' in request.GET:
+        back_url = reverse_lazy(request.GET['back_url'])
+    else:
+        back_url = reverse_lazy("operative_requests")
+
+    if error is not None:
+        messages.error (request, error)
+
+    context = {
+        'table_title': 'Requests',
+        'table_description': 'Consultar Solicitud',
+        'form': form,
+        'request_data': data,
+        'can_view_police': can_view_police,
+        'operative_request': operative_request,
+        'back_url': back_url,
+        'segment': 'operative'
+    }
+
+    return render(request, 'requests/query.html', context)
 
 
 @login_required(login_url="/auth/login/")
