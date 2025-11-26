@@ -107,8 +107,7 @@ def requests_index_view(request):
     )
     if current_account.role.id == RoleEnum.APPLICANT:
         filter_form.fields['applicant'].queryset = Applicant.objects.filter(
-            account=current_account,
-            role=RoleEnum.APPLICANT
+            account=current_account
         )
     context = {
         'table_title': 'Solicitudes',
