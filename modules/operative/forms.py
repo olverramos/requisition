@@ -985,8 +985,7 @@ class TakerRequestFilesForm(forms.Form):
             'js/localization.js', 
         )
 
-
-class PaymentRegisterForm(forms.Form):
+class BaseRequestForm(forms.Form):
     number = forms.IntegerField(
         label=_("Número"),
         required=False,
@@ -1097,6 +1096,9 @@ class PaymentRegisterForm(forms.Form):
             }
         ),
     )
+
+
+class PaymentRegisterForm(BaseRequestForm):
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
         required=False,
@@ -1111,6 +1113,15 @@ class PaymentRegisterForm(forms.Form):
     class Media:
         js = (
             'js/requests/paymentregister.js', 
+            'js/requests/search.js', 
+            'js/localization.js', 
+        )
+
+class AttachmentDocumentForm(BaseRequestForm):
+
+    class Media:
+        js = (
+            'js/requests/attachmentdocument.js', 
             'js/requests/search.js', 
             'js/localization.js', 
         )

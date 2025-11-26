@@ -3,7 +3,7 @@ from .models import OperativeRequest, RequestField, RequestDocument, \
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
     EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm, \
-    QueryRequestForm, PaymentRegisterForm
+    QueryRequestForm, PaymentRegisterForm, AttachmentDocumentForm
 from django.contrib.humanize.templatetags.humanize import intcomma
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
@@ -41,6 +41,7 @@ def requests_index_view(request):
     can_add = False
     can_download_documents = False
     can_register_payment = False
+
     if current_account.role.id == RoleEnum.ADMIN:
         table_description = "Administrador de Solicitudes"
         can_load_documents = True
@@ -868,8 +869,6 @@ def payment_register_request_view(request, operative_request_id):
     if error is not None:
         messages.error (request, error)
 
-    if error is not None:
-        messages.error (request, error)
 
     context = {
         'table_title': 'Requests',
@@ -883,6 +882,89 @@ def payment_register_request_view(request, operative_request_id):
 
     return render(request, 'requests/paymentregister.html', context)
 
+def attachment_documents_request_view(request, operative_request_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+        ramo = operative_request.ramo
+        old_request_documents = operative_request.request_documents
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+    
+    if 'back_url' in request.GET:
+        back_url = request.GET['back_url'] 
+    else:
+        back_url = "operative_requests"
+    data = {} 
+
+    if error is None:
+        data = operative_request.query()
+    
+    form = AttachmentDocumentForm(initial=data)
+    if error is None and request.method == 'POST':
+        request_documents_dict = {}
+
+        for old_request_document in old_request_documents:
+            request_documents_dict[old_request_document.document_name] = old_request_document
+
+        for document_field in ramo.available_documents:
+            document_file = None
+            document_field_name = 'document_' + document_field.name
+            if document_field_name in request.FILES.keys():
+                document_file = request.FILES[document_field_name]
+
+            if document_field is not None and document_file is not None:
+                request_document = RequestDocument()
+                request_document.document_name = document_field.name
+                request_document.document_title = document_field.title
+
+                filename = document_file.name
+                file_type = document_file.content_type
+                content = base64.b64encode(document_file.read()).decode('utf-8')
+
+                request_document.filename = filename
+                request_document.file_type = file_type
+                request_document.content = content
+
+                request_documents_dict[document_field.name] = request_document
+
+        operative_request.request_documents = list(request_documents_dict.values())
+        operative_request.updated_at = datetime.datetime.now()
+        if current_account is not None:
+            operative_request.updated_by = current_account.username
+        operative_request.save()
+
+        request_event = RequestEvent()
+        request_event.operative_request = operative_request
+        request_event.status = operative_request.status
+        request_event.observations = "Cargue de Documentos de la solicitud"
+        request_event.created_at = datetime.datetime.now()
+        if current_account is not None:
+            request_event.created_by = current_account.username
+        request_event.save()
+        
+        messages.success (request, f'Registro de Documentos {operative_request} realizado satisfactoriamente!')
+        return redirect(back_url)
+
+    if error is not None:
+        messages.error (request, error)
+    
+    available_documents = ramo.available_documents
+
+    context = {
+        'table_title': 'Requests',
+        'table_description': 'Registro de Documentos de la Solicitud',
+        'form': form,
+        'request_data': data,
+        'operative_request': operative_request,
+        'available_documents': available_documents,
+        'back_url': reverse_lazy(back_url),
+        'segment': 'operative'
+    }
+
+    return render(request, 'requests/attachmentdocument.html', context)
 
 @login_required(login_url="/auth/login/")
 def validate_request_view(request, operative_request_id):
