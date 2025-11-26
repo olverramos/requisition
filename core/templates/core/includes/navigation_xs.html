@@ -38,7 +38,7 @@
                                             {% endwith %}
                                         {% endfor %}
                                     {% endif %}
-                                    {% if ACCOUNT.role.id == "assistant" or ACCOUNT.role.id == "admin" %}
+                                    {% if ACCOUNT.role.id == "assistant" or ACCOUNT.role.id == "admin" or ACCOUNT.role.id == "applicant" %}
                                         {% for menu in MENU.operative %}
                                             {% with menuurl=menu.url %}
                                                 <a href="{% url menuurl %}" class="dropdown-item border-radius-md">
