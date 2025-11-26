@@ -23,7 +23,7 @@ function load_data(action, objectid) {
         document.getElementById('id_email').setAttribute("readonly", "readonly");
         document.getElementById('id_phone_number').setAttribute("readonly", "readonly");
     } else if (action == 'edit') {
-        document.getElementById('id_email').setAttribute("readonly", "readonly");
+        document.getElementById('id_email').removeAttribute("readonly");
         document.getElementById('id_identification').removeAttribute("readonly");
         document.getElementById('id_name').removeAttribute("readonly");
         document.getElementById('id_phone_number').removeAttribute("readonly");
