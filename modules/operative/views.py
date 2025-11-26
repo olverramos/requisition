@@ -3,7 +3,7 @@ from .models import OperativeRequest, RequestField, RequestDocument, \
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
     EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm, \
-    QueryRequestForm
+    QueryRequestForm, PaymentRegisterForm
 from django.contrib.humanize.templatetags.humanize import intcomma
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
@@ -38,6 +38,9 @@ def requests_index_view(request):
     can_valide = False
     can_edit = False
     can_delete = False
+    can_add = False
+    can_download_documents = False
+    can_register_payment = False
     if current_account.role.id == RoleEnum.ADMIN:
         table_description = "Administrador de Solicitudes"
         can_load_documents = True
@@ -51,6 +54,9 @@ def requests_index_view(request):
         can_load_documents = True
         can_valide = True
     if current_account.role.id == RoleEnum.APPLICANT:
+        can_add = True
+        can_download_documents = True
+        can_register_payment = True
         table_description = "Solicitudes Creadas"
 
         try:
@@ -108,10 +114,13 @@ def requests_index_view(request):
         'files_form': files_form,
         'disable_add': True,
         'can_assign': can_assign,
+        'can_add': can_add,
         'can_load_documents': can_load_documents,
         'can_valide': can_valide,
         'can_edit': can_edit,
         'can_delete': can_delete,
+        'can_download_documents': can_download_documents,
+        'can_register_payment': can_register_payment,
         'paginator': paginator,
         'segment': 'operative'
     }
@@ -800,8 +809,18 @@ def payment_register_request_view(request, operative_request_id):
         error = 'No existe una request con el id'
         operative_request = None
     
+    if 'back_url' in request.GET:
+        back_url = request.GET['back_url'] 
+    else:
+        back_url = "operative_requests"
+    data = {} 
+
+    if error is None:
+        data = operative_request.query()
+    
+    form = PaymentRegisterForm(initial=data)
     if error is None and request.method == 'POST':
-        form = TakerRequestFilesForm(request.POST, request.FILES)
+        form = PaymentRegisterForm(request.POST, request.FILES)
         if form.is_valid():
             payment_receipt = None
 
@@ -833,10 +852,12 @@ def payment_register_request_view(request, operative_request_id):
             if payment_receipt is not None:
                 request_event.observations += ' Comprobante de Pago cargado.'
             request_event.created_at = datetime.datetime.now()
-            # request_event.created_by = current_account.username
+            if current_account is not None:
+                request_event.created_by = current_account.username
             request_event.save()
 
-            messages.success (request, f'Solicitud {operative_request} pagada satisfactoriamente!')
+            messages.success (request, f'Registro de Comprobante de Pago {operative_request} realizado satisfactoriamente!')
+            return reverse_lazy(back_url)
         else: 
             error = f''
             if 'payment_receipt' in form.errors:
@@ -847,7 +868,20 @@ def payment_register_request_view(request, operative_request_id):
     if error is not None:
         messages.error (request, error)
 
-    return redirect(reverse_lazy("operative_requests_taker_search"))
+    if error is not None:
+        messages.error (request, error)
+
+    context = {
+        'table_title': 'Requests',
+        'table_description': 'Registrar Pago de Solicitud',
+        'form': form,
+        'request_data': data,
+        'operative_request': operative_request,
+        'back_url': reverse_lazy(back_url),
+        'segment': 'operative'
+    }
+
+    return render(request, 'requests/paymentregister.html', context)
 
 
 @login_required(login_url="/auth/login/")

@@ -13,7 +13,7 @@ class CreateRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Número',
                 'readonly': True
             }
@@ -24,7 +24,7 @@ class CreateRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
             }
         ),
     )
@@ -33,7 +33,7 @@ class CreateRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg readonly',
+                'class': 'form-control readonly',
                 'placeholder': 'Nombre Solicitante',
                 'readonly': True
             }
@@ -49,7 +49,7 @@ class CreateRequestForm(forms.Form):
         queryset=PersonType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Persona', 
                 'id': 'taker_person_type_id'
             }
@@ -61,7 +61,7 @@ class CreateRequestForm(forms.Form):
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Documento', 
                 'id': 'taker_document_type_id'
             }
@@ -72,7 +72,7 @@ class CreateRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Identificación',
             }
         ),
@@ -82,7 +82,7 @@ class CreateRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre',
             }
         ),
@@ -92,7 +92,7 @@ class CreateRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Teléfono Tomador',
             }
         ),
@@ -102,7 +102,7 @@ class CreateRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre Contacto',
             }
         ),
@@ -112,13 +112,13 @@ class CreateRequestForm(forms.Form):
         required=False,
         queryset=Ramo.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Ramo', 'id': 'ramo_id'}),
+            attrs={'class': 'form-control form-select', 'placeholder': 'Ramo', 'id': 'ramo_id'}),
     )
     value = forms.CharField(
         label=_("Valor *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Valor'
             }
         ),
@@ -128,7 +128,7 @@ class CreateRequestForm(forms.Form):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Observaciones',
                 'rows': 4,
             }
@@ -147,7 +147,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Número',
                 'readonly': True
             }
@@ -158,7 +158,7 @@ class EditRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -168,7 +168,7 @@ class EditRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg readonly',
+                'class': 'form-control readonly',
                 'placeholder': 'Nombre Solicitante',
                 'readonly': True
             }
@@ -180,7 +180,7 @@ class EditRequestForm(forms.Form):
         queryset=RequestStatus.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'status_id',
                 'readonly': True
             }
@@ -192,7 +192,7 @@ class EditRequestForm(forms.Form):
         queryset=Ramo.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'ramo_id'
             }
         ),
@@ -203,7 +203,7 @@ class EditRequestForm(forms.Form):
         queryset=PersonType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Persona', 
                 'id': 'taker_person_type_id'
             }
@@ -215,7 +215,7 @@ class EditRequestForm(forms.Form):
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Documento', 
                 'id': 'taker_document_type_id'
             }
@@ -226,7 +226,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Identificación',
                 'readonly': True
             }
@@ -237,7 +237,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre',
             }
         ),
@@ -247,7 +247,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Teléfono Tomador',
             }
         ),
@@ -257,7 +257,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre Contacto',
             }
         ),
@@ -267,7 +267,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Valor'
             }
         ),
@@ -278,7 +278,7 @@ class EditRequestForm(forms.Form):
         queryset=Account.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'assigned_to_id'
             }
         ),
@@ -288,7 +288,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -298,7 +298,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -308,7 +308,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -318,7 +318,7 @@ class EditRequestForm(forms.Form):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Observaciones',
                 'rows': 4,
             }
@@ -632,7 +632,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Número',
                 'readonly': True
             }
@@ -643,7 +643,7 @@ class AssignRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -653,7 +653,7 @@ class AssignRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg readonly',
+                'class': 'form-control readonly',
                 'placeholder': 'Nombre Solicitante',
                 'readonly': True
             }
@@ -665,7 +665,7 @@ class AssignRequestForm(forms.Form):
         queryset=RequestStatus.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'status_id',
                 'readonly': True
             }
@@ -677,7 +677,7 @@ class AssignRequestForm(forms.Form):
         queryset=Ramo.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'ramo_id'
             }
         ),
@@ -688,7 +688,7 @@ class AssignRequestForm(forms.Form):
         queryset=PersonType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Persona', 
                 'id': 'taker_person_type_id'
             }
@@ -700,7 +700,7 @@ class AssignRequestForm(forms.Form):
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Documento', 
                 'id': 'taker_document_type_id'
             }
@@ -711,7 +711,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Identificación',
                 'readonly': True
             }
@@ -722,7 +722,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre',
             }
         ),
@@ -732,7 +732,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Teléfono Tomador',
             }
         ),
@@ -742,7 +742,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre Contacto',
             }
         ),
@@ -752,7 +752,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -762,7 +762,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Valor'
             }
         ),
@@ -773,7 +773,7 @@ class AssignRequestForm(forms.Form):
         queryset=Account.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'assigned_to_id'
             }
         ),
@@ -783,7 +783,7 @@ class AssignRequestForm(forms.Form):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Observaciones',
                 'rows': 4,
             }
@@ -803,7 +803,7 @@ class TakerRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Número',
                 'readonly': True
             }
@@ -814,7 +814,7 @@ class TakerRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'readonly': True
             }
         ),
@@ -824,7 +824,7 @@ class TakerRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg readonly',
+                'class': 'form-control readonly',
                 'placeholder': 'Nombre Solicitante',
                 'readonly': True
             }
@@ -836,7 +836,7 @@ class TakerRequestForm(forms.Form):
         queryset=RequestStatus.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'status_id',
                 'readonly': True,
             }
@@ -848,7 +848,7 @@ class TakerRequestForm(forms.Form):
         queryset=Ramo.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'id': 'ramo_id',
                 'readonly': True,
             }
@@ -860,7 +860,7 @@ class TakerRequestForm(forms.Form):
         queryset=PersonType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Persona', 
                 'id': 'taker_person_type_id',
                 'readonly': True
@@ -873,7 +873,7 @@ class TakerRequestForm(forms.Form):
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
             attrs={
-                'class': 'form-control form-control-lg form-select', 
+                'class': 'form-control form-select', 
                 'placeholder': 'Tipo de Documento', 
                 'id': 'taker_document_type_id',
                 'readonly': True
@@ -885,7 +885,7 @@ class TakerRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Identificación',
                 'readonly': True
             }
@@ -896,7 +896,7 @@ class TakerRequestForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre',
                 'readonly': True
             }
@@ -907,7 +907,7 @@ class TakerRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Teléfono Tomador',
                 'readonly': True
 
@@ -919,7 +919,7 @@ class TakerRequestForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Nombre Contacto',
                 'readonly': True
             }
@@ -929,7 +929,7 @@ class TakerRequestForm(forms.Form):
         label=_("Valor *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Valor',
                 'readonly': True
             }
@@ -940,7 +940,7 @@ class TakerRequestForm(forms.Form):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control',
                 'placeholder': 'Observaciones',
                 'rows': 4,
                 'readonly': True
@@ -986,7 +986,134 @@ class TakerRequestFilesForm(forms.Form):
         )
 
 
+class PaymentRegisterForm(forms.Form):
+    number = forms.IntegerField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Número',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_phone_number = forms.CharField(
+        label=_("Teléfono Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'readonly': True
+            }
+        ),
+    )
+    applicant_name = forms.CharField(
+        label=_("Nombre Solicitante *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control readonly',
+                'placeholder': 'Nombre Solicitante',
+                'readonly': True
+            }
+        ),
+    )
+    status = forms.CharField(
+        label=_("Estado *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'id': 'status_id',
+                'readonly': True,
+            }
+        ),
+    )
+    ramo = forms.CharField(
+        label=_("Ramo *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'id': 'ramo_id',
+                'readonly': True,
+            }
+        ),
+    )
+    taker_document_type = forms.CharField(
+        label=_("Tipo de Documento *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'placeholder': 'Tipo de Documento', 
+                'id': 'taker_document_type_id',
+                'readonly': True
+            }
+        ),
+    )
+    taker_identification = forms.CharField(
+        label=_("Identificación *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Identificación',
+                'readonly': True
+            }
+        ),
+    )
+    taker_name = forms.CharField(
+        label=_("Nombre *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre',
+                'readonly': True
+            }
+        ),
+    )
+    taker_phone_number = forms.CharField(
+        label=_("Teléfono"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Teléfono Tomador',
+                'readonly': True
 
+            }
+        ),
+    )
+    value = forms.CharField(
+        label=_("Valor *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Valor',
+                'readonly': True
+            }
+        ),
+    )
+    payment_receipt = forms.FileField(
+        label=_("Comprobante de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )    
+    class Media:
+        js = (
+            'js/requests/paymentregister.js', 
+            'js/requests/search.js', 
+            'js/localization.js', 
+        )
 
 class RequestFilterForm(forms.Form):
     search = forms.CharField(
