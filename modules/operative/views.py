@@ -80,8 +80,7 @@ def requests_index_view(request):
 
             if search is not None and search != '':
                 operative_request_list = operative_request_list.filter(
-                    Q(number__icontains=search) |
-                    Q(values_fields__icontains=search)
+                    values_fields__icontains=search
                 )
             if applicant is not None:
                 operative_request_list = operative_request_list.filter(
