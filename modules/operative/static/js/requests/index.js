@@ -123,8 +123,6 @@ function loadDocumentsData(ramo_id, documents_value) {
 
 function load_data(action, objectid) {
 
-    document.getElementById("formModal").reset();
-
     var verbose_action = 'Consulta de Solicitud';
     document.getElementById("id_form_button").hidden = false;
     document.getElementById('ramo_id').removeAttribute("disabled");

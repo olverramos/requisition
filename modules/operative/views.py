@@ -33,16 +33,32 @@ def requests_index_view(request):
     operative_request_list = OperativeRequest.objects.filter(
         status__ne='9'
     )
-    
-    if current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
+    can_load_documents = False
+    can_assign = False
+    can_valide = False
+    can_edit = False
+    can_delete = False
+    if current_account.role.id == RoleEnum.ADMIN:
+        table_description = "Administrador de Solicitudes"
+        can_load_documents = True
+        can_assign = True
+        can_valide = True
+        can_edit = True
+        can_delete = True
+    if current_account.role.id == RoleEnum.ASSISTANT:
+        table_description = "Administrador de Solicitudes"
         operative_request_list = operative_request_list.filter(assigned_to=current_account)
-    if current_account is not None and current_account.role.id == RoleEnum.APPLICANT:
+        can_load_documents = True
+        can_valide = True
+    if current_account.role.id == RoleEnum.APPLICANT:
+        table_description = "Solicitudes Creadas"
+
         try:
             applicant = Applicant.objects.get(account=current_account)
             operative_request_list = operative_request_list.filter(applicant=applicant)
         except Applicant.DoesNotExist:
             operative_request_list = OperativeRequest.objects.none()
-    
+
     data['page'] = page
     filter_form = RequestFilterForm()
     form = EditRequestForm()
@@ -84,18 +100,9 @@ def requests_index_view(request):
         role__in=('assitant', 'admin',)
     )
 
-    can_assign = True
-    can_load_documents = True
-    can_valide = True
-    can_edit = False
-    can_delete = False
-    if current_account and current_account.role.id == "admin":
-        can_edit = True
-        can_delete = True
-
     context = {
         'table_title': 'Solicitudes',
-        'table_description': 'Administrador de Solicitudes',
+        'table_description': table_description,
         'filter_form': filter_form,
         'form': form,
         'files_form': files_form,
