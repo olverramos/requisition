@@ -817,9 +817,9 @@ def load_documents_request_view(request, operative_request_id):
                     request_rc_police.file_type = file_type
                     request_rc_police.content = content
 
+            request_status = RequestStatus.objects.get(id='3') 
             if request_receipt is not None and request_rc_receipt is not None \
                 and request_police is not None and request_rc_police is not None:
-                request_status = RequestStatus.objects.get(id='3') 
                 operative_request.status = request_status
             operative_request.request_receipt = request_receipt
             operative_request.request_rc_receipt = request_rc_receipt
