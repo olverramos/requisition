@@ -89,9 +89,11 @@ class OperativeRequest(Document):
         fields.EmbeddedDocumentField(RequestDocument), blank=True,
     )
     request_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
+    request_rc_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     request_police = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     request_rc_police = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     payment_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
+    payment_rc_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
     created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
@@ -267,6 +269,13 @@ class OperativeRequest(Document):
                 'file_type': self.request_receipt.file_type,
                 'content': self.request_receipt.content,
             }
+        request_data['request_rc_receipt'] = None
+        if self.request_rc_receipt is not None:
+            request_data['request_rc_receipt'] = {
+                'filename': self.request_rc_receipt.filename,
+                'file_type': self.request_rc_receipt.file_type,
+                'content': self.request_rc_receipt.content,
+            }
         request_data['request_police'] = None
         if self.request_police is not None:
             request_data['request_police'] = {
@@ -287,6 +296,13 @@ class OperativeRequest(Document):
                 'filename': self.payment_receipt.filename,
                 'file_type': self.payment_receipt.file_type,
                 'content': self.payment_receipt.content,
+            }
+        request_data['payment_rc_receipt'] = None
+        if self.payment_rc_receipt is not None:
+            request_data['payment_rc_receipt'] = {
+                'filename': self.payment_rc_receipt.filename,
+                'file_type': self.payment_rc_receipt.file_type,
+                'content': self.payment_rc_receipt.content,
             }
 
         request_data['observations'] = self.observations if self.observations else ''

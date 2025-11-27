@@ -140,8 +140,12 @@ function load_data(action, objectid) {
 
     document.getElementById("section_id_request_receipt").hidden = false;
     document.getElementById("label_id_request_receipt").hidden = false;
+    document.getElementById("section_id_request_rc_receipt").hidden = false;
+    document.getElementById("label_id_request_rc_receipt").hidden = false;
     document.getElementById("section_id_payment_receipt").hidden = false;
     document.getElementById("label_id_payment_receipt").hidden = false;
+    document.getElementById("section_id_payment_rc_receipt").hidden = false;
+    document.getElementById("label_id_payment_rc_receipt").hidden = false;
 
     if (action == 'paymentregister') {
         verbose_action = 'Registro de Comprobante de Pago';
@@ -202,6 +206,26 @@ function load_data(action, objectid) {
                         document.getElementById("section_id_request_receipt").hidden = true;
                         document.getElementById("label_id_request_receipt").hidden = true;
                     }
+
+                    if (request_obj.request_rc_receipt) {
+                        var request_rc_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        request_rc_receipt_code += request_obj.request_rc_receipt.filename;
+                        request_rc_receipt_code += "', '";
+                        request_rc_receipt_code += request_obj.request_rc_receipt.content;
+                        request_rc_receipt_code += "', '";
+                        request_rc_receipt_code += request_obj.request_rc_receipt.file_type;
+                        request_rc_receipt_code += '\')">';
+                        request_rc_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_rc_receipt_code += request_obj.request_rc_receipt.filename;
+                        request_rc_receipt_code += '</button>';
+                        document.getElementById("section_id_request_rc_receipt").innerHTML = request_rc_receipt_code;
+                        document.getElementById("section_id_request_rc_receipt").hidden = false;
+                        document.getElementById("label_id_request_rc_receipt").hidden = false;
+                    } else if (action == 'view') {
+                        document.getElementById("section_id_request_rc_receipt").hidden = true;
+                        document.getElementById("label_id_request_rc_receipt").hidden = true;
+                    }
+
                     if (request_obj.payment_receipt) {
                         var payment_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         payment_receipt_code += request_obj.payment_receipt.filename;
@@ -219,6 +243,25 @@ function load_data(action, objectid) {
                     } else if (action == 'view') {
                         document.getElementById("section_id_payment_receipt").hidden = true;
                         document.getElementById("label_id_payment_receipt").hidden = true;
+                    }
+
+                    if (request_obj.payment_rc_receipt) {
+                        var payment_rc_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.filename;
+                        payment_rc_receipt_code += "', '";
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.content;
+                        payment_rc_receipt_code += "', '";
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.file_type;
+                        payment_rc_receipt_code += '\')">';
+                        payment_rc_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.filename;
+                        payment_rc_receipt_code += '</button>';
+                        document.getElementById("section_id_payment_rc_receipt").innerHTML = payment_rc_receipt_code;
+                        document.getElementById("section_id_payment_rc_receipt").hidden = false;
+                        document.getElementById("label_id_payment_rc_receipt").hidden = false;
+                    } else if (action == 'view') {
+                        document.getElementById("section_id_payment_rc_receipt").hidden = true;
+                        document.getElementById("label_id_payment_rc_receipt").hidden = true;
                     }
                 }
                 else {

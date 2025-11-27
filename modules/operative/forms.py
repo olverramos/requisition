@@ -345,8 +345,19 @@ class EditRequestFilesForm(forms.Form):
             }
         ),
     )
+    request_rc_receipt = forms.FileField(
+        label=_("Recibo de Pago RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Recibo de Pago RC',
+                'autocomplete': 'off'
+            }
+        ),
+    )
     request_police = forms.FileField(
-        label=_("Póliza"),
+        label=_("Póliza de Cumplimiento"),
         required=False,
         widget=forms.FileInput(
             attrs={
@@ -378,7 +389,17 @@ class EditRequestFilesForm(forms.Form):
             }
         ),
     )
-
+    payment_rc_receipt = forms.FileField(
+        label=_("Comprobante de Pago RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
     class Media:
         js = (
             'js/requests/form.js', 
@@ -574,8 +595,19 @@ class QueryRequestForm(forms.Form):
             }
         ),
     )
+    request_rc_receipt = forms.FileField(
+        label=_("Recibo de Pago RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Recibo de Pago',
+                'autocomplete': 'off'
+            }
+        ),
+    )
     request_police = forms.FileField(
-        label=_("Póliza"),
+        label=_("Póliza de Cumplimiento"),
         required=False,
         widget=forms.FileInput(
             attrs={
@@ -598,6 +630,17 @@ class QueryRequestForm(forms.Form):
     )
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+    payment_rc_receipt = forms.FileField(
+        label=_("Comprobante de Pago RC"),
         required=False,
         widget=forms.FileInput(
             attrs={
@@ -967,6 +1010,17 @@ class TakerRequestFilesForm(forms.Form):
             }
         ),
     )    
+    request_rc_receipt = forms.FileField(
+        label=_("Recibo de Pago RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )    
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
         required=False,
@@ -977,7 +1031,19 @@ class TakerRequestFilesForm(forms.Form):
                 'autocomplete': 'off'
             }
         ),
+    )        
+    payment_rc_receipt = forms.FileField(
+        label=_("Comprobante de Pago RC"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
     )    
+
     class Media:
         js = (
             'js/requests/search_form.js', 
@@ -1101,6 +1167,17 @@ class BaseRequestForm(forms.Form):
 class PaymentRegisterForm(BaseRequestForm):
     payment_receipt = forms.FileField(
         label=_("Comprobante de Pago"),
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Póliza',
+                'autocomplete': 'off'
+            }
+        ),
+    )    
+    payment_rc_receipt = forms.FileField(
+        label=_("Comprobante de Pago RC"),
         required=False,
         widget=forms.FileInput(
             attrs={

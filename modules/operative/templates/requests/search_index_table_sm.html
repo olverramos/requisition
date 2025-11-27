@@ -24,13 +24,22 @@
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.status}}</span>
                 </td>
                 <td class="align-middle">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Ramo" onclick="load_data('view', '{{operative_request.id}}');">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
                         <i class="fa fa-eye text-sm"></i>
                     </button>
-
+                    
                     {% if operative_request.status.id == '3' %}
-                        <button type="button" class="btn" data-original-title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
-                            <i class="fa fa-cloud-download text-sm"></i>
+                            <button type="button" class="btn" data-original-title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
+                                <i class="fa fa-ticket text-sm"></i>
+                            </button>
+                            <button type="button" class="btn" data-original-title="Descargar Recibo RC" onclick="downloadFile('{{operative_request.request_rc_receipt.filename}}', '{{operative_request.request_rc_receipt.contentfilename}}', '{{operative_request.request_rc_receipt.file_type}}');">
+                                <i class="fa fa-ticket-o text-sm"></i>
+                            </button>
+                    {% endif %}
+
+                    {% if can_register_payment and operative_request.status.id == '3' %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Pago" onclick="load_data('paymentregister', '{{operative_request.id}}');">
+                            <i class="fa fa-credit-card text-sm"></i>
                         </button>
                     {% endif %}
 
@@ -43,12 +52,6 @@
                                 <i class="fa fa-cloud-download text-sm"></i>
                             </button>
                         {% endif %}
-                    {% endif %}
-
-                    {% if can_payment_register and operative_request.status.id == '3' %}
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Pago" onclick="load_data('paymentregister', '{{operative_request.id}}');">
-                            <i class="fa fa-credit-card text-sm"></i>
-                        </button>
                     {% endif %}
                 </td>
             </tr>

@@ -525,9 +525,11 @@ def edit_request_view(request, operative_request_id):
             observations = form.cleaned_data['observations']
             assigned_to = form.cleaned_data['assigned_to']
             request_receipt = None
+            request_rc_receipt = None
             request_police = None
             request_rc_police = None
             payment_receipt = None
+            payment_rc_receipt = None
 
             if 'request_receipt' in request.FILES.keys():
                 request_receipt_file = request.FILES['request_receipt']
@@ -541,6 +543,19 @@ def edit_request_view(request, operative_request_id):
                     request_receipt.filename = filename
                     request_receipt.file_type = file_type
                     request_receipt.content = content
+
+            if 'request_rc_receipt' in request.FILES.keys():
+                request_rc_receipt_file = request.FILES['request_rc_receipt']
+                if request_rc_receipt_file is not None:
+                    request_rc_receipt = RequestFile()
+
+                    filename = request_rc_receipt_file.name
+                    file_type = request_rc_receipt_file.content_type
+                    content = base64.b64encode(request_rc_receipt_file.read()).decode('utf-8')
+
+                    request_rc_receipt.filename = filename
+                    request_rc_receipt.file_type = file_type
+                    request_rc_receipt.content = content
 
             if 'request_police' in request.FILES.keys():
                 request_police_file = request.FILES['request_police']
@@ -580,6 +595,19 @@ def edit_request_view(request, operative_request_id):
                     payment_receipt.filename = filename
                     payment_receipt.file_type = file_type
                     payment_receipt.content = content
+            
+            if 'payment_rc_receipt' in request.FILES.keys():
+                payment_rc_receipt_file = request.FILES['payment_rc_receipt']
+                if payment_rc_receipt_file is not None:
+                    payment_rc_receipt = RequestFile()
+
+                    filename = payment_rc_receipt_file.name
+                    file_type = payment_rc_receipt_file.content_type
+                    content = base64.b64encode(payment_rc_receipt_file.read()).decode('utf-8')
+
+                    payment_rc_receipt.filename = filename
+                    payment_rc_receipt.file_type = file_type
+                    payment_rc_receipt.content = content
             
             request_fields = []
             values_fields = ''
@@ -646,12 +674,16 @@ def edit_request_view(request, operative_request_id):
                 operative_request.observations = observations
                 if request_receipt is not None:
                     operative_request.request_receipt = request_receipt
+                if request_rc_receipt is not None:
+                    operative_request.request_rc_receipt = request_rc_receipt
                 if request_police is not None:
                     operative_request.request_police = request_police
                 if request_rc_police is not None:
                     operative_request.request_rc_police = request_rc_police
                 if payment_receipt is not None:
                     operative_request.payment_receipt = payment_receipt
+                if payment_rc_receipt is not None:
+                    operative_request.payment_rc_receipt = payment_rc_receipt
                 operative_request.assigned_to = assigned_to
                 operative_request.assigned_at = datetime.datetime.now()
                 operative_request.assigned_by = current_account.username
@@ -729,6 +761,7 @@ def load_documents_request_view(request, operative_request_id):
         form = EditRequestFilesForm(request.POST, request.FILES)
         if form.is_valid():
             request_receipt = None
+            request_rc_receipt = None
             request_police = None
             request_rc_police = None
 
@@ -744,6 +777,19 @@ def load_documents_request_view(request, operative_request_id):
                     request_receipt.filename = filename
                     request_receipt.file_type = file_type
                     request_receipt.content = content
+
+            if 'request_rc_receipt' in request.FILES.keys():
+                request_rc_receipt_file = request.FILES['request_rc_receipt']
+                if request_rc_receipt_file is not None:
+                    request_rc_receipt = RequestFile()
+
+                    filename = request_rc_receipt_file.name
+                    file_type = request_rc_receipt_file.content_type
+                    content = base64.b64encode(request_rc_receipt_file.read()).decode('utf-8')
+
+                    request_rc_receipt.filename = filename
+                    request_rc_receipt.file_type = file_type
+                    request_rc_receipt.content = content
 
             if 'request_police' in request.FILES.keys():
                 request_police_file = request.FILES['request_police']
@@ -771,10 +817,12 @@ def load_documents_request_view(request, operative_request_id):
                     request_rc_police.file_type = file_type
                     request_rc_police.content = content
 
-            if request_receipt is not None and request_police is not None and request_rc_police is not None:
+            if request_receipt is not None and request_rc_receipt is not None \
+                and request_police is not None and request_rc_police is not None:
                 request_status = RequestStatus.objects.get(id='3') 
                 operative_request.status = request_status
             operative_request.request_receipt = request_receipt
+            operative_request.request_rc_receipt = request_rc_receipt
             operative_request.request_police = request_police
             operative_request.request_rc_police = request_rc_police
             operative_request.updated_at = datetime.datetime.now()
@@ -787,6 +835,8 @@ def load_documents_request_view(request, operative_request_id):
             request_event.observations = "Cargue de Documentación a la Solicitud"
             if request_receipt is not None:
                 request_event.observations += ' Recibo de Pago cargado.'
+            if request_rc_receipt is not None:
+                request_event.observations += ' Recibo de Pago RC cargado.'
             if request_police is not None:
                 request_event.observations += ' Póliza cargada.'
             if request_rc_police is not None:
@@ -826,7 +876,8 @@ def payment_register_request_view(request, operative_request_id):
         form = PaymentRegisterForm(request.POST, request.FILES)
         if form.is_valid():
             payment_receipt = None
-
+            payment_rc_receipt = None
+            
             if 'payment_receipt' in form.cleaned_data.keys():
                 payment_receipt_file = form.cleaned_data['payment_receipt']
                 if payment_receipt_file is not None:
@@ -840,12 +891,27 @@ def payment_register_request_view(request, operative_request_id):
                     payment_receipt.file_type = file_type
                     payment_receipt.content = content
 
-            if payment_receipt is not None:
+            if 'payment_rc_receipt' in form.cleaned_data.keys():
+                payment_rc_receipt_file = form.cleaned_data['payment_rc_receipt']
+                if payment_rc_receipt_file is not None:
+                    payment_rc_receipt = RequestFile()
+
+                    filename = payment_rc_receipt_file.name
+                    file_type = payment_rc_receipt_file.content_type
+                    content = base64.b64encode(payment_rc_receipt_file.read()).decode('utf-8')
+
+                    payment_rc_receipt.filename = filename
+                    payment_rc_receipt.file_type = file_type
+                    payment_rc_receipt.content = content
+
+            if payment_receipt is not None and payment_rc_receipt is not None:
                 request_status = RequestStatus.objects.get(id='4') 
                 operative_request.status = request_status
             operative_request.payment_receipt = payment_receipt
+            operative_request.payment_rc_receipt = payment_rc_receipt
             operative_request.updated_at = datetime.datetime.now()
-            # operative_request.updated_by = current_account.username
+            if current_account is not None:
+                operative_request.updated_by = current_account.username
             operative_request.save()
 
             request_event = RequestEvent()
@@ -854,6 +920,8 @@ def payment_register_request_view(request, operative_request_id):
             request_event.observations = "Cargue de Comprobante de Pago de la solicitud"
             if payment_receipt is not None:
                 request_event.observations += ' Comprobante de Pago cargado.'
+            if payment_rc_receipt is not None:
+                request_event.observations += ' Comprobante de Pago RC cargado.'
             request_event.created_at = datetime.datetime.now()
             if current_account is not None:
                 request_event.created_by = current_account.username
@@ -867,10 +935,11 @@ def payment_register_request_view(request, operative_request_id):
                 error += f' Comprobante de pago: {form.errors["payment_receipt"]}'
             if 'request_receipt' in form.errors:
                 error += f' Recibo de pago: {form.errors["request_receipt"]}'   
+            if 'request_rc_receipt' in form.errors:
+                error += f' Recibo de pago RC: {form.errors["request_rc_receipt"]}'   
 
     if error is not None:
         messages.error (request, error)
-
 
     context = {
         'table_title': 'Requests',
@@ -1080,6 +1149,13 @@ def get_request_view(request, operative_request_id):
                 'file_type': operative_request.request_receipt.file_type,
                 'content': operative_request.request_receipt.content,
             }
+        request_data['request_rc_receipt'] = None
+        if operative_request.request_rc_receipt is not None:
+            request_data['request_rc_receipt'] = {
+                'filename': operative_request.request_rc_receipt.filename,
+                'file_type': operative_request.request_rc_receipt.file_type,
+                'content': operative_request.request_rc_receipt.content,
+            }
         request_data['request_police'] = None
         if operative_request.request_police is not None:
             request_data['request_police'] = {
@@ -1100,6 +1176,13 @@ def get_request_view(request, operative_request_id):
                 'filename': operative_request.payment_receipt.filename,
                 'file_type': operative_request.payment_receipt.file_type,
                 'content': operative_request.payment_receipt.content,
+            }
+        request_data['payment_rc_receipt'] = None
+        if operative_request.payment_rc_receipt is not None:
+            request_data['payment_rc_receipt'] = {
+                'filename': operative_request.payment_rc_receipt.filename,
+                'file_type': operative_request.payment_rc_receipt.file_type,
+                'content': operative_request.payment_rc_receipt.content,
             }
 
         request_data['observations'] = operative_request.observations if operative_request.observations else ''

@@ -174,13 +174,16 @@ function load_data(action, objectid) {
         document.getElementById('id_value').removeAttribute("readonly");
         document.getElementById('assigned_to_id').removeAttribute("disabled");
         document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_rc_receipt').removeAttribute("disabled");
         document.getElementById('id_request_police').removeAttribute("disabled");
         document.getElementById('id_request_rc_police').removeAttribute("disabled");
         document.getElementById('id_observations').removeAttribute("readonly");
         document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_rc_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
         document.getElementById('id_request_rc_police').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
+        document.getElementById('label_id_request_rc_receipt').hidden = false;
         document.getElementById('label_id_request_police').hidden = false;
         document.getElementById('label_id_request_rc_police').hidden = false;
     } else {
@@ -194,13 +197,16 @@ function load_data(action, objectid) {
         document.getElementById('id_value').setAttribute("readonly", "readonly");
         document.getElementById('assigned_to_id').setAttribute("disabled", "disabled");
         document.getElementById('id_request_receipt').setAttribute("disabled", "disabled");
+        document.getElementById('id_request_rc_receipt').setAttribute("disabled", "disabled");
         document.getElementById('id_request_police').setAttribute("disabled", "disabled");
         document.getElementById('id_request_rc_police').setAttribute("disabled", "disabled");
         document.getElementById('id_observations').setAttribute("readonly", "readonly");
         document.getElementById('id_request_receipt').hidden = false;
+        document.getElementById('id_request_rc_receipt').hidden = false;
         document.getElementById('id_request_police').hidden = false;
         document.getElementById('id_request_rc_police').hidden = false;
         document.getElementById('label_id_request_receipt').hidden = false;
+        document.getElementById('label_id_request_rc_receipt').hidden = false;
         document.getElementById('label_id_request_police').hidden = false;
         document.getElementById('label_id_request_rc_police').hidden = false;
     }
@@ -219,6 +225,7 @@ function load_data(action, objectid) {
         document.getElementById('label_id_validated_by').hidden = true;
         document.getElementById('id_validated_by').hidden = true;
         document.getElementById('id_request_receipt').removeAttribute("disabled");
+        document.getElementById('id_request_rc_receipt').removeAttribute("disabled");
         document.getElementById('id_request_police').removeAttribute("disabled");
         document.getElementById('id_request_rc_police').removeAttribute("disabled");
     }
@@ -280,6 +287,25 @@ function load_data(action, objectid) {
                         document.getElementById("label_id_request_receipt").hidden = true;
                     }
 
+                    if (request_obj.request_rc_receipt) {
+                        var request_rc_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        request_rc_receipt_code += request_obj.request_rc_receipt.filename;
+                        request_rc_receipt_code += "', '";
+                        request_rc_receipt_code += request_obj.request_rc_receipt.content;
+                        request_rc_receipt_code += "', '";
+                        request_rc_receipt_code += request_obj.request_rc_receipt.file_type;
+                        request_rc_receipt_code += '\')">';
+                        request_rc_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        request_rc_receipt_code += request_obj.request_rc_receipt.filename;
+                        request_rc_receipt_code += '</button>';
+                        document.getElementById("section_id_request_rc_receipt").innerHTML = request_rc_receipt_code;
+                        document.getElementById("section_id_request_rc_receipt").hidden = false;
+                        document.getElementById("label_id_request_rc_receipt").hidden = false;
+                    } else if (action != 'loaddocuments') {
+                        document.getElementById("section_id_request_rc_receipt").hidden = true;
+                        document.getElementById("label_id_request_rc_receipt").hidden = true;
+                    }
+
                     if (request_obj.request_police) {
                         var request_police_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
                         request_police_code += request_obj.request_police.filename;
@@ -336,6 +362,27 @@ function load_data(action, objectid) {
                         document.getElementById("section_id_payment_receipt").hidden = true;
                         document.getElementById("label_id_payment_receipt").hidden = true;
                     }
+
+                    if (request_obj.payment_rc_receipt) {
+                        var payment_rc_receipt_code = '<button type="button" class="btn btn-link" onclick="downloadFile(\'';
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.filename;
+                        payment_rc_receipt_code += "', '";
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.content;
+                        payment_rc_receipt_code += "', '";
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.file_type;
+                        payment_rc_receipt_code += '\')">';
+                        payment_rc_receipt_code += '<i class="fa-solid fa-download"></i>&nbsp;';
+                        payment_rc_receipt_code += request_obj.payment_rc_receipt.filename;
+                        payment_rc_receipt_code += '</button>';
+                        document.getElementById("section_id_payment_rc_receipt").innerHTML = payment_rc_receipt_code;
+                        document.getElementById("section_id_payment_rc_receipt").hidden = false;
+                        document.getElementById("label_id_payment_rc_receipt").hidden = false;
+                    } else {
+                        document.getElementById("section_id_payment_rc_receipt").hidden = true;
+                        document.getElementById("label_id_payment_rc_receipt").hidden = true;
+                    }
+
+
                     loadFieldsData(request_obj.ramo_id, request_obj.fields, action);
                     loadDocumentsData(request_obj.ramo_id, request_obj.documents);
                 }

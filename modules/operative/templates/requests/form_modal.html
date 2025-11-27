@@ -13,13 +13,13 @@
                     <div class="row">
                         {% for field in form %}
                             {% if field.name != "observations" %}
-                                {% if field.name == "request_receipt" or field.name == "request_police" or field.name == "request_rc_police" or field.name == "payment_receipt" %}
+                                {% if field.name == "request_receipt" or field.name == "request_rc_receipt" or field.name == "request_police" or field.name == "request_rc_police" or field.name == "payment_receipt" or field.name == "payment_rc_receipt" %}
                                     <div class="col-lg-6 col-md-12 mb-1">
                                 {% else %}
                                     <div class="col-lg-3 col-md-12 mb-1">
                                 {% endif %}
                                     <label for="{{ field.id_for_label }}" id="label_{{ field.id_for_label }}">{{ field.label }}</label>
-                                    {% if field.name == "request_receipt" or field.name == "request_police" or field.name == "request_rc_police" or field.name == "payment_receipt" %}
+                                    {% if field.name == "request_receipt" or field.name == "request_rc_receipt" or field.name == "request_police" or field.name == "request_rc_police" or field.name == "payment_receipt" or field.name == "payment_rc_receipt" %}
                                         <span id="section_{{field.id_for_label}}">{{field}}</span>
                                     {% else %}
                                         {{ field }}

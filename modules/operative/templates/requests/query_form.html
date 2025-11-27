@@ -110,6 +110,19 @@
                     </button>
                 </div>
             {% endif %}
+            {% if request_data.request_rc_receipt %}
+                <div class="col-lg-6 col-md-12">
+                    <label class="text-main align-self-center">{{form.request_rc_receipt.label}}</label>
+                    <button 
+                        type="button" 
+                        class="btn btn-link" 
+                        onclick="downloadFile('{{request_data.request_rc_receipt.filename}}', '{{request_data.request_rc_receipt.content}}', '{{request_data.request_rc_receipt.file_type}}');"
+                    >
+                        <i class="fa-solid fa-download"></i>&nbsp;
+                        {{request_data.request_rc_receipt.filename}}
+                    </button>
+                </div>
+            {% endif %}
             {% if can_view_police  %}
                 {% if request_data.request_police  %}
                     <div class="col-lg-6 col-md-12">
@@ -153,6 +166,21 @@
                     </button>
                 </div>
             {% endif %}
+
+            {% if request_data.payment_rc_receipt %}
+                <div class="col-lg-6 col-md-12">
+                    <label class="text-main align-self-center">{{form.payment_rc_receipt.label}}</label>
+                    <button 
+                        type="button" 
+                        class="btn btn-link" 
+                        onclick="downloadFile('{{request_data.payment_rc_receipt.filename}}', '{{request_data.payment_rc_receipt.content}}', '{{request_data.payment_rc_receipt.file_type}}');"
+                    >
+                        <i class="fa-solid fa-download"></i>&nbsp;
+                        {{request_data.payment_rc_receipt.filename}}
+                    </button>
+                </div>
+            {% endif %}
+
             {% for document_id, document_data in request_data.documents.items %}
                 <div class="col-lg-6 col-md-12">
                     <label class="text-main align-self-center">{{document_data.document_title}}</label>
