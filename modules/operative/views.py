@@ -438,6 +438,8 @@ def query_request_view(request, operative_request_id):
         error = 'No existe una request con el id'
         operative_request = None
 
+    request_documents = OperativeRequestDocument.objects.filter(operative_request=operative_request)
+
     can_view_police = False
     if current_account is not None:
         if current_account.role.id in ( RoleEnum.ASSISTANT, RoleEnum.ADMIN):
@@ -466,6 +468,7 @@ def query_request_view(request, operative_request_id):
         'request_data': data,
         'can_view_police': can_view_police,
         'operative_request': operative_request,
+        'request_documents': request_documents,
         'back_url': back_url,
         'segment': 'operative'
     }

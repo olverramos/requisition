@@ -96,101 +96,17 @@
                 </h4>
             </div>
         </div>
-        <div class="row" id="ramo_document_id" >
-            {% if request_data.request_receipt %}
+        <div class="row">
+            {% for document in request_documents %}
                 <div class="col-lg-6 col-md-12">
-                    <label class="text-main align-self-center">{{form.request_receipt.label}}</label>
+                    <label class="text-main align-self-center">{{document.title}}</label>
                     <button 
                         type="button" 
                         class="btn btn-link" 
-                        onclick="downloadFile('{{request_data.request_receipt.filename}}', '{{request_data.request_receipt.content}}', '{{request_data.request_receipt.file_type}}');"
+                        onclick="downloadFile('{{document.filename}}', '{{document.content}}', '{{document.file_type}}');"
                     >
                         <i class="fa-solid fa-download"></i>&nbsp;
-                        {{request_data.request_receipt.filename}}
-                    </button>
-                </div>
-            {% endif %}
-            {% if request_data.request_rc_receipt %}
-                <div class="col-lg-6 col-md-12">
-                    <label class="text-main align-self-center">{{form.request_rc_receipt.label}}</label>
-                    <button 
-                        type="button" 
-                        class="btn btn-link" 
-                        onclick="downloadFile('{{request_data.request_rc_receipt.filename}}', '{{request_data.request_rc_receipt.content}}', '{{request_data.request_rc_receipt.file_type}}');"
-                    >
-                        <i class="fa-solid fa-download"></i>&nbsp;
-                        {{request_data.request_rc_receipt.filename}}
-                    </button>
-                </div>
-            {% endif %}
-            {% if can_view_police  %}
-                {% if request_data.request_police  %}
-                    <div class="col-lg-6 col-md-12">
-                        <label class="text-main align-self-center">{{form.request_police.label}}</label>
-                        <button 
-                            type="button" 
-                            class="btn btn-link" 
-                            onclick="downloadFile('{{request_data.request_police.filename}}', '{{request_data.request_police.content}}', '{{request_data.request_police.file_type}}');"
-                        >
-                            <i class="fa-solid fa-download"></i>&nbsp;
-                            {{request_data.request_police.filename}}
-                        </button>
-                    </div>
-                {% endif %}
-
-                {% if request_data.request_rc_police  %}
-                    <div class="col-lg-6 col-md-12">
-                        <label class="text-main align-self-center">{{form.request_rc_police.label}}</label>
-                        <button 
-                            type="button" 
-                            class="btn btn-link" 
-                            onclick="downloadFile('{{request_data.request_rc_police.filename}}', '{{request_data.request_rc_police.content}}', '{{request_data.request_rc_police.file_type}}');"
-                        >
-                            <i class="fa-solid fa-download"></i>&nbsp;
-                            {{request_data.request_rc_police.filename}}
-                        </button>
-                    </div>
-                {% endif %}
-            {% endif %}
-
-            {% if request_data.payment_receipt %}
-                <div class="col-lg-6 col-md-12">
-                    <label class="text-main align-self-center">{{form.payment_receipt.label}}</label>
-                    <button 
-                        type="button" 
-                        class="btn btn-link" 
-                        onclick="downloadFile('{{request_data.payment_receipt.filename}}', '{{request_data.payment_receipt.content}}', '{{request_data.payment_receipt.file_type}}');"
-                    >
-                        <i class="fa-solid fa-download"></i>&nbsp;
-                        {{request_data.payment_receipt.filename}}
-                    </button>
-                </div>
-            {% endif %}
-
-            {% if request_data.payment_rc_receipt %}
-                <div class="col-lg-6 col-md-12">
-                    <label class="text-main align-self-center">{{form.payment_rc_receipt.label}}</label>
-                    <button 
-                        type="button" 
-                        class="btn btn-link" 
-                        onclick="downloadFile('{{request_data.payment_rc_receipt.filename}}', '{{request_data.payment_rc_receipt.content}}', '{{request_data.payment_rc_receipt.file_type}}');"
-                    >
-                        <i class="fa-solid fa-download"></i>&nbsp;
-                        {{request_data.payment_rc_receipt.filename}}
-                    </button>
-                </div>
-            {% endif %}
-
-            {% for document_id, document_data in request_data.documents.items %}
-                <div class="col-lg-6 col-md-12">
-                    <label class="text-main align-self-center">{{document_data.document_title}}</label>
-                    <button 
-                        type="button" 
-                        class="btn btn-link" 
-                        onclick="downloadFile('{{document_data.filename}}', '{{document_data.content}}', '{{document_data.file_type}}');"
-                    >
-                        <i class="fa-solid fa-download"></i>&nbsp;
-                        {{document_data.filename}}
+                        {{document.filename}}
                     </button>
                 </div>
             {% endfor %}
