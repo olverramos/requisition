@@ -68,48 +68,6 @@ $(document).ready(function () {
                 alert('Error en la transacción: ' + JSON.stringify(msg));
             }
         });
-
-        let document_request_url = APP_URL + 'parameters/ramo/' + ramo_id + '/documents/';
-        $.ajax({
-            type: "GET",
-            async: false,
-            url: document_request_url,
-            dataType: "json",
-            success: function (data, textStatus) {
-                var documents_code = "";
-                for (var i = 0; i < data.length; i++) {
-                    let document_data = data[i];
-                    var document_code = '<div class="col-lg-6 col-md-12">\n';
-
-                    document_code += '<label class="text-main align-self-center">';
-                    document_code += document_data.title;
-                    if (document_data.mandatory) {
-                        document_code += ' *'
-                    }
-                    document_code += '</label>';
-
-                    document_code += '<input type="file" '
-                    document_code += 'class="form-control form-control-lg" ';
-                    if (document_data.mandatory) {
-                        document_code += ' required '
-                    }
-                    document_code += 'name="document_';
-                    document_code += document_data.name;
-                    document_code += '" ';
-                    document_code += 'id="id_document_';
-                    document_code += document_data.name;
-                    document_code += '">';
-
-                    document_code += "</div>\n";
-                    documents_code += document_code;
-                }
-                $('#ramo_document_id').html(documents_code);
-            },
-            error: function (msg) {
-                alert('Error en la transacción: ' + JSON.stringify(msg));
-            }
-        });
-
     });
 
     $("#taker_person_type_id").change(function () {

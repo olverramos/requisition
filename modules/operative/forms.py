@@ -1,9 +1,9 @@
 from modules.base.models import Applicant, PersonType, DocumentType
 from bootstrap_datepicker_plus.widgets import DatePickerInput
+from modules.parameters.models import Ramo, DocumentClass
 from django.utils.translation import gettext_lazy as _
 from modules.operative.models import RequestStatus
 from modules.authentication.models import Account
-from modules.parameters.models import Ramo
 from django import forms
 
 
@@ -1399,23 +1399,24 @@ class DocumentRequestFilterForm(forms.Form):
 
 
 class CreateDocumentRequestForm(forms.Form):
-    document_name = forms.ChoiceField(
-        label=_("Nombre *"),
+    document_class = forms.ModelChoiceField(
+        label=_("Tipo de Documento *"),
         required=True,
+        queryset=DocumentClass.objects.all(),
         widget=forms.Select(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'Nombre',
+                'placeholder': 'Tipo de Documento',
             }
         ),
     )
     title = forms.CharField(
-        label=_("Título *"),
+        label=_("Descripción *"),
         required=True,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'Título',
+                'placeholder': 'Descripción',
             }
         ),
     )
@@ -1427,6 +1428,47 @@ class CreateDocumentRequestForm(forms.Form):
                 'class': 'form-control ',
                 'placeholder': 'Documento',
                 'autocomplete': 'off'
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/requestdocuments/form.js', 
+        )
+
+class QueryDocumentRequestForm(forms.Form):
+    document_class = forms.CharField(
+        label=_("Tipo de Documento"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Tipo de Documento',
+                'readonly': 'readonly'
+            }
+        ),
+    )
+    title = forms.CharField(
+        label=_("Descripción *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Descripción',
+                'readonly': 'readonly'
+            }
+        ),
+    )
+    document_file = forms.FileField(
+        label=_("Documento *"),
+        required=True,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Documento',
+                'autocomplete': 'off',
+                'readonly': 'readonly'
             }
         ),
     )

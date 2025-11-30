@@ -1,52 +1,52 @@
 [
     {
-        "name": "request_receipt",
-        "title": "Recibo de Pago",
-        "document_type": "OPERATIVE"
+        "id": "request_receipt",
+        "name": "Recibo de Pago",
+        "document_type": "RECEIPT"
     },
     {
-        "name": "request_rc_receipt",
+        "id": "request_rc_receipt",
         "title": "Recibo de Pago RC",
-        "document_type": "OPERATIVE"
+        "document_type": "RECEIPT"
     },
     {
-        "name": "request_police",
-        "title": "Poliza",
-        "document_type": "OPERATIVE"
+        "id": "request_police",
+        "name": "Poliza",
+        "document_type": "POLICE"
     },
     {
-        "name": "request_rc_police",
-        "title": "Poliza RC",
-        "document_type": "OPERATIVE"
+        "id": "request_rc_police",
+        "name": "Poliza RC",
+        "document_type": "POLICE"
     },
     {
-        "name": "payment_receipt",
-        "title": "Comprobante de Pago",
-        "document_type": "OPERATIVE"
+        "id": "payment_receipt",
+        "name": "Comprobante de Pago",
+        "document_type": "PAYMENT"
     },
     {
-        "name": "payment_rc_receipt",
-        "title": "Comprobante de Pago RC",
-        "document_type": "OPERATIVE"
+        "id": "payment_rc_receipt",
+        "name": "Comprobante de Pago RC",
+        "document_type": "PAYMENT"
     },
     {
-        "name": "contrato",
-        "title": "Contrato",
+        "id": "contrato",
+        "name": "Contrato",
         "document_type": "CUSTOM"
     },
     {
-        "name": "rut",
-        "title": "Copia RUT",
+        "id": "rut",
+        "name": "Copia RUT",
         "document_type": "CUSTOM"
     },
     {
-        "name": "cc",
-        "title": "Copia Cédula",
+        "id": "cc",
+        "name": "Copia Cédula",
         "document_type": "CUSTOM"
     },
     {
-        "name": "requerimiento",
-        "title": "Requerimiento de Cotizacón",
+        "id": "requerimiento",
+        "name": "Requerimiento de Cotizacón",
         "document_type": "CUSTOM"
     }
 ]

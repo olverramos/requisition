@@ -1,0 +1,18 @@
+[
+    {
+        "id": "RECEIPT",
+        "name": "Recibo"
+    },
+    {
+        "id": "POLICE",
+        "name": "Poliza"
+    },
+    {
+        "id": "PAYMENT",
+        "name": "Pago"
+    },
+    {
+        "id": "CUSTOM",
+        "name": "Personalizado"
+    }
+]

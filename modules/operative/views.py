@@ -9,6 +9,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
 from django_mongoengine.mongo_auth.models import User
+from modules.parameters.models import DocumentClass
 from modules.base.models import Applicant, Taker
 from django.shortcuts import render, redirect
 from core.templatetags.tools import currency
@@ -357,28 +358,6 @@ def create_request_view(request):
                     values_fields += ramo_field_value
                     values_fields += ' '
 
-            request_documents = []
-            for document_field in ramo.available_documents:
-                document_file = None
-                document_field_name = 'document_' + document_field.name
-                if document_field_name in request.FILES.keys():
-                    document_file = request.FILES[document_field_name]
-
-                if document_field is not None and document_file is not None:
-                    request_document = RequestDocument()
-                    request_document.document_name = document_field.name
-                    request_document.document_title = document_field.title
-
-                    filename = document_file.name
-                    file_type = document_file.content_type
-                    content = base64.b64encode(document_file.read()).decode('utf-8')
-
-                    request_document.filename = filename
-                    request_document.file_type = file_type
-                    request_document.content = content
-
-                    request_documents.append(request_document)
-
             request_status_id = '1'
             assigned_to = None
             assigned_at = None
@@ -408,7 +387,6 @@ def create_request_view(request):
                 operative_request.number = number
                 operative_request.value = value
                 operative_request.request_fields = request_fields
-                operative_request.request_documents = request_documents
                 operative_request.observations = observations
                 operative_request.created_at = datetime.datetime.now()
                 operative_request.created_by = applicant.email
@@ -1210,6 +1188,9 @@ def get_request_view(request, operative_request_id):
 def documents_request_view(request, operative_request_id):
     current_account:Account = Account.getAccount(request.user)
     error = None
+    role_id = ''
+    if current_account is not None:
+        role_id = current_account.role.id
 
     try:
         operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
@@ -1218,7 +1199,10 @@ def documents_request_view(request, operative_request_id):
         operative_request = None
 
     document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
-
+    if current_account is None or current_account.role.id == RoleEnum.APPLICANT:
+        if operative_request.status.id not in ('4', '5'):
+            document_class_list = DocumentClass.objects.filter(document_type__in=['CUSTOM', 'RECEIPT'])
+            document_list = document_list.filter(document_class__in=document_class_list)
 
     data = { }
     page = 1
@@ -1243,14 +1227,110 @@ def documents_request_view(request, operative_request_id):
                 )
 
     paginator = getPaginator(document_list, page, items_per_page=10)
+    
+    if current_account is None or current_account.role.id == RoleEnum.APPLICANT:
+        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', 'PAYMENT',))
+    elif current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
+        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', 'RECEIPT', 'POLICE',))
+    else: 
+        form.fields['document_class'].queryset = DocumentClass.objects.all()
 
     context = {
         'table_title': f'Documentos de la Solicitud {operative_request}',
         'table_description': table_description,
         'filter_form': filter_form,
         'form': form,
+        'role_id': role_id,
         'paginator': paginator,
+        'back_url': f'../../',
         'segment': 'operative'
     }
  
     return render(request, 'documents/index.html', context)
+
+def create_document_request_view(request, operative_request_id):
+    current_account:Account = Account.getAccount(request.user)
+    error = None
+    role_id = ''
+    if current_account is not None:
+        role_id = current_account.role.id
+
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    if request.method == 'POST':
+        form = CreateDocumentRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            document_class = form.cleaned_data['document_class']
+            title = form.cleaned_data['title']
+            document_file = form.cleaned_data['document_file']
+
+            filename = document_file.name
+            file_type = document_file.content_type
+            content = base64.b64encode(document_file.read()).decode('utf-8')
+
+            document = OperativeRequestDocument()
+            document.operative_request = operative_request
+            document.document_class = document_class
+            document.title = title
+            document.filename = filename
+            document.file_type = file_type
+            document.content = content  
+            document.created_at = datetime.datetime.now()
+            if current_account is not None:
+                document.created_by = current_account.username
+            document.save()
+
+            messages.success (request, f'Documento {document} creado satisfactoriamente!')
+            
+        else:
+            error = "¡Error en el registro del documento! "
+            for field, message_list in form.errors.items():
+                if field == 'value':
+                    error += 'Valor: '
+                else:
+                    error += field + ': '
+                error += ','.join(message_list)
+
+        if error is not None:
+            messages.error (request, error)
+    return redirect('operative_requests_documents', operative_request_id)
+
+def get_document_request_view(request, document_id):
+    document = None
+    document_data = {}
+    try:
+        document:OperativeRequestDocument = OperativeRequestDocument.objects.get(pk=document_id)
+        document_data['id'] = str(document.id)
+        
+        document_data['operative_request'] = str(document.operative_request)
+        document_data['document_class'] = str(document.document_class.id)
+        document_data['title'] = str(document.title)
+        document_data['filename'] = str(document.filename)
+        document_data['file_type'] = str(document.file_type)
+        document_data['content'] = str(document.content)        
+    except OperativeRequestDocument.DoesNotExist:
+        pass
+
+    return JsonResponse(data=document_data)
+
+def delete_document_request_view(request, operative_request_id, document_id):
+    error = None
+    current_account = Account.getAccount(request.user)
+    try:
+        document:OperativeRequestDocument = OperativeRequestDocument.objects.get(pk=document_id)
+    except OperativeRequestDocument.DoesNotExist:
+        error = 'No existe un documento con el id'
+        document = None
+
+    if error is None:
+        if request.method == 'POST':
+            document.delete()
+            messages.success (request, f'Documento {document} eliminado satisfactoriamente!')
+    else:
+        messages.error (request, error)
+    
+    return redirect('operative_requests_documents', operative_request_id)

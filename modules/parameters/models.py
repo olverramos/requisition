@@ -112,13 +112,49 @@ class RamoField(Document):
         except FileNotFoundError:
             pass
 
-class DocumentClass(Document):
+
+class DocumentClassType(Document):
+    id = fields.StringField(verbose_name='ID', primary_key=True, max_length=20)
     name = fields.StringField(verbose_name='Nombre')
-    title = fields.StringField(verbose_name='Título')
-    document_type = fields.StringField(verbose_name='Tipo')
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.name}"
+
+    meta = {
+        'collection': 'parameters_documentclasstypes',
+        'ordering': ['name'],
+        'indexes': [
+            ('name',), 
+        ]
+    }
+
+    @staticmethod
+    def init_table():
+        try:
+            with open(f'{module_folder}/scripts/data/documentclasstypes.json') as data_fp:
+                data_list = json.load(data_fp)
+                for data in data_list:
+                    if 'name' in data.keys() and 'id' in data.keys():
+                        try:
+                            document_type = DocumentClassType.objects.get(id=data["id"])
+                        except DocumentClassType.DoesNotExist:
+                            document_type = DocumentClassType()
+                            document_type.name = data['name']
+                            document_type.id = data['id']
+                            document_type.save()
+
+                            print (f'Tipo de Documento {document_type} creada')
+                    
+        except FileNotFoundError:
+            pass
+
+class DocumentClass(Document):
+    id = fields.StringField(verbose_name='ID', primary_key=True, max_length=20)
+    name = fields.StringField(verbose_name='Nombre')
+    document_type = fields.ReferenceField(DocumentClassType, verbose_name="Tipo de Documento")
+
+    def __str__(self):
+        return f"{self.name}"
 
     meta = {
         'collection': 'parameters_documentclasses',
@@ -134,14 +170,24 @@ class DocumentClass(Document):
             with open(f'{module_folder}/scripts/data/documentclasses.json') as data_fp:
                 data_list = json.load(data_fp)
                 for data in data_list:
-                    if 'name' in data.keys() and 'title' in data.keys():
+
+                    document_type = None
+                    if 'document_type' in data.keys():
+                        document_type_id = data["document_type"]
                         try:
-                            document_class = DocumentClass.objects.get(name=data["name"])
+                            document_type = DocumentClassType.objects.get(pk=document_type_id)
+                        except DocumentClassType.DoesNotExist:
+                            print (f"Tipo de Documento {document_type} no Existe")
+                            document_type = None
+
+                    if 'name' in data.keys() and 'id' in data.keys() and document_type is not None:
+                        try:
+                            document_class = DocumentClass.objects.get(id=data["id"])
                         except DocumentClass.DoesNotExist:
                             document_class = DocumentClass()
+                            document_class.id = data['id']
                             document_class.name = data['name']
-                            document_class.title = data['title']
-                            document_class.document_type = data['document_type']
+                            document_class.document_type = document_type
                             document_class.save()
 
                             print (f'Clase de Documento {document_class} creada')

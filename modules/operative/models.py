@@ -1,4 +1,5 @@
 from django_mongoengine import Document, fields, EmbeddedDocument
+from modules.parameters.models import DocumentClass
 from core.templatetags.tools import currency
 import datetime
 import json
@@ -63,22 +64,23 @@ class RequestDocument(EmbeddedDocument):
 
 class OperativeRequestDocument(Document):
     operative_request = fields.ReferenceField('OperativeRequest', verbose_name="Solicitud")
-    name = fields.StringField(verbose_name='Nombre')
+    document_class = fields.ReferenceField('parameters.DocumentClass', verbose_name="Clase de Documento")
     title = fields.StringField(verbose_name='Título')
     filename = fields.StringField(verbose_name='Nombre Archivo')
     file_type = fields.StringField(verbose_name='Tipo Archivo')
     content = fields.StringField(verbose_name='Contenido Base64')
+    created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
+    updated_by = fields.StringField(verbose_name='Actualizado por', max_length=50, null=True, blank=True)
 
     meta = {
         'collection': 'operative_requestdocuments',
-        'ordering': ['operative_request', 'name'],
-        'indexes': [
-            ('name',), 
-        ]
+        'ordering': ['operative_request', 'document_class'],
     }
     
     def __str__(self):
-        return f"{self.operative_request} - {self.name} - {self.filename}"
+        return f"{self.operative_request} - {self.document_class} - {self.filename}"
     
 
 class RequestFile(EmbeddedDocument):
@@ -136,9 +138,12 @@ class OperativeRequest(Document):
         operative_request_list = OperativeRequest.objects.all()
         for operative_request in operative_request_list:
             for document in operative_request.request_documents:
+
+                document_class = DocumentClass.objects.get(id=document.document_name)
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = document.document_name
+                operative_request_document.document_class = document_class
                 operative_request_document.title = document.document_title
                 operative_request_document.filename = document.filename
                 operative_request_document.file_type = document.file_type
@@ -146,9 +151,12 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.request_receipt:
+
+                document_class = DocumentClass.objects.get(id='request_receipt')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'request_receipt'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Recibo de Pago'
                 operative_request_document.filename = operative_request.request_receipt.filename
                 operative_request_document.file_type = operative_request.request_receipt.file_type
@@ -156,9 +164,11 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.request_rc_receipt:
+                document_class = DocumentClass.objects.get(id='request_rc_receipt')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'request_rc_receipt'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Recibo de Pago RC'
                 operative_request_document.filename = operative_request.request_rc_receipt.filename
                 operative_request_document.file_type = operative_request.request_rc_receipt.file_type
@@ -166,9 +176,11 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.request_police:
+                document_class = DocumentClass.objects.get(id='request_police')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'request_police'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Poliza'
                 operative_request_document.filename = operative_request.request_police.filename
                 operative_request_document.file_type = operative_request.request_police.file_type
@@ -176,9 +188,11 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.request_rc_police:
+                document_class = DocumentClass.objects.get(id='request_rc_police')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'request_rc_police'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Poliza RC'
                 operative_request_document.filename = operative_request.request_rc_police.filename
                 operative_request_document.file_type = operative_request.request_rc_police.file_type
@@ -186,9 +200,11 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.payment_receipt:
+                document_class = DocumentClass.objects.get(id='payment_receipt')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'payment_receipt'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Comprobante de Pago'
                 operative_request_document.filename = operative_request.payment_receipt.filename
                 operative_request_document.file_type = operative_request.payment_receipt.file_type
@@ -196,9 +212,11 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
             if operative_request.payment_rc_receipt:
+                document_class = DocumentClass.objects.get(id='payment_rc_receipt')
+
                 operative_request_document = OperativeRequestDocument()
                 operative_request_document.operative_request = operative_request
-                operative_request_document.name = 'payment_rc_receipt'
+                operative_request_document.document_class = document_class
                 operative_request_document.title = 'Comprobante de Pago RC'
                 operative_request_document.filename = operative_request.payment_rc_receipt.filename
                 operative_request_document.file_type = operative_request.payment_rc_receipt.file_type
@@ -206,7 +224,7 @@ class OperativeRequest(Document):
                 operative_request_document.save()
 
     def __str__(self):
-        return f"{self.number}"
+        return f"{self.number} - {self.taker}"
     
     @staticmethod
     def getNextNumber():
