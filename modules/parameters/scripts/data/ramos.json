@@ -5,27 +5,11 @@
         "fields": [
             "contract_number"
         ],
-        "available_documents": [
-            {
-                "name": "contrato",
-                "title": "Contrato",
-                "mandatory": true
-            },
-            {
-                "name": "rut",
-                "title": "Copia RUT",
-                "mandatory": false
-            },
-            {
-                "name": "cc",
-                "title": "Copia Cédula",
-                "mandatory": false
-            },
-            {
-                "name": "requerimiento",
-                "title": "Requerimiento de Cotizacón",
-                "mandatory": false
-            }
+        "document_classes": [
+            "contrato",
+            "rut",
+            "cc",
+            "requerimiento"
         ]
     }
 ]

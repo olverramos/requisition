@@ -45,6 +45,12 @@
                             <i class="fa fa-eye text-sm"></i>
                         </button>                   
                     </a>
+                    <a href="{% url 'operative_requests_documents' operative_request.id %}">
+                        <button type="button" class="btn" data-original-title="Ver Documentos">
+                            <i class="fa fa-folder-open-o text-sm"></i>
+                        </button>                   
+                    </a>
+
                     {% if operative_request.status.id <= '3' %}
                         <a href="{% url 'operative_requests_attachment_documents' operative_request.id %}">
                             <button type="button" class="btn" data-original-title="Registrar Documentos">

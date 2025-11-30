@@ -22,8 +22,12 @@ function load_data(action, objectid) {
 
     if (action == 'view' || action == 'delete') {
         document.getElementById('id_name').disabled = true;
+        document.getElementById('fields_id').disabled = true;
+        document.getElementById('document_classes_id').disabled = true;
     } else {
         document.getElementById('id_name').disabled = false;
+        document.getElementById('fields_id').disabled = false;
+        document.getElementById('document_classes_id').disabled = false;
     }
 
     document.getElementById('title_formModal').innerText = verbose_action;
@@ -42,6 +46,33 @@ function load_data(action, objectid) {
                     const ramo_obj = JSON.parse(ajaxRequest.responseText);
                     document.getElementById('id_id').value = ramo_obj.id;
                     document.getElementById('id_name').value = ramo_obj.name;
+
+                    const selected_fields = [];
+                    for (let i = 0; i < ramo_obj.fields.length; i++) {
+                        const field = ramo_obj.fields[i].id;
+                        selected_fields.push(field);
+                    }
+
+                    for (const option of document.getElementById('fields_id').options) {
+                        if (selected_fields.includes(option.value)) {
+                            option.selected = true;
+                        } else {
+                            option.selected = false;
+                        }
+                    }
+                    const selected_document_classes = [];
+                    for (let i = 0; i < ramo_obj.document_classes.length; i++) {
+                        const document_class = ramo_obj.document_classes[i].id;
+                        selected_document_classes.push(document_class);
+                    }
+
+                    for (const option of document.getElementById('document_classes_id').options) {
+                        if (selected_document_classes.includes(option.value)) {
+                            option.selected = true;
+                        } else {
+                            option.selected = false;
+                        }
+                    }
                 }
                 else {
                     console.log("Status error: " + ajaxRequest.status);

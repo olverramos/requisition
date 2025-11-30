@@ -1,9 +1,10 @@
 from .models import OperativeRequest, RequestField, RequestDocument, \
-    RequestStatus, RequestEvent, RequestFile
+    RequestStatus, RequestEvent, RequestFile, OperativeRequestDocument
 from .forms import CreateRequestForm, RequestFilterForm, SearchRequestForm, \
     TakerRequestForm, EditRequestForm, TakerRequestFilesForm, \
     EditRequestFilesForm, ApplicantSearchRequestForm, TakerSearchRequestForm, \
-    QueryRequestForm, PaymentRegisterForm, AttachmentDocumentForm
+    QueryRequestForm, PaymentRegisterForm, AttachmentDocumentForm, \
+    DocumentRequestFilterForm, CreateDocumentRequestForm
 from django.contrib.humanize.templatetags.humanize import intcomma
 from modules.authentication.models import Account, RoleEnum
 from django.contrib.auth.decorators import login_required
@@ -1205,3 +1206,51 @@ def get_request_view(request, operative_request_id):
         pass
 
     return JsonResponse(data=request_data)
+
+def documents_request_view(request, operative_request_id):
+    current_account:Account = Account.getAccount(request.user)
+    error = None
+
+    try:
+        operative_request:OperativeRequest = OperativeRequest.objects.get(pk=operative_request_id)
+    except OperativeRequest.DoesNotExist:
+        error = 'No existe una request con el id'
+        operative_request = None
+
+    document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
+
+
+    data = { }
+    page = 1
+    if 'page' in request.GET.keys() and request.GET['page']:
+        page = int(request.GET['page'])
+    if 'page' in request.POST.keys() and request.POST['page']:
+        page = int(request.POST['page'])
+    
+    table_description = f"Listado de Documentos de la Solicitud {operative_request}"
+
+    data['page'] = page
+    filter_form = DocumentRequestFilterForm()
+    form = CreateDocumentRequestForm()
+    if request.method == 'POST':
+        filter_form = DocumentRequestFilterForm(request.POST)
+        if filter_form.is_valid():
+            search = filter_form.cleaned_data['search']
+
+            if search is not None and search != '':
+                document_list = document_list.filter(
+                    document_name__icontains=search
+                )
+
+    paginator = getPaginator(document_list, page, items_per_page=10)
+
+    context = {
+        'table_title': f'Documentos de la Solicitud {operative_request}',
+        'table_description': table_description,
+        'filter_form': filter_form,
+        'form': form,
+        'paginator': paginator,
+        'segment': 'operative'
+    }
+ 
+    return render(request, 'documents/index.html', context)

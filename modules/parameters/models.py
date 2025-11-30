@@ -112,6 +112,43 @@ class RamoField(Document):
         except FileNotFoundError:
             pass
 
+class DocumentClass(Document):
+    name = fields.StringField(verbose_name='Nombre')
+    title = fields.StringField(verbose_name='Título')
+    document_type = fields.StringField(verbose_name='Tipo')
+
+    def __str__(self):
+        return f"{self.title}"
+
+    meta = {
+        'collection': 'parameters_documentclasses',
+        'ordering': ['name'],
+        'indexes': [
+            ('name',), 
+        ]
+    }
+    
+    @staticmethod
+    def init_table():
+        try:
+            with open(f'{module_folder}/scripts/data/documentclasses.json') as data_fp:
+                data_list = json.load(data_fp)
+                for data in data_list:
+                    if 'name' in data.keys() and 'title' in data.keys():
+                        try:
+                            document_class = DocumentClass.objects.get(name=data["name"])
+                        except DocumentClass.DoesNotExist:
+                            document_class = DocumentClass()
+                            document_class.name = data['name']
+                            document_class.title = data['title']
+                            document_class.document_type = data['document_type']
+                            document_class.save()
+
+                            print (f'Clase de Documento {document_class} creada')
+                    
+        except FileNotFoundError:
+            pass
+
 class AvailableDocument(EmbeddedDocument):
     name = fields.StringField(verbose_name='Nombre')
     title = fields.StringField(verbose_name='Título')
@@ -126,7 +163,10 @@ class Ramo(Document):
     ramo_fields = fields.ListField(
         fields.ReferenceField(RamoField), blank=True,
     )
-    available_documents = fields.ListField(
+    document_classes = fields.ListField(
+        fields.ReferenceField(DocumentClass), blank=True,
+    )
+    available_documents = fields.ListField( 
         fields.EmbeddedDocumentField(AvailableDocument), blank=True,
     )
     created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
@@ -145,6 +185,20 @@ class Ramo(Document):
     def __str__(self):
         return f"{self.name}"
     
+    @staticmethod
+    def fix_document_classes():
+        ramo_list = Ramo.objects.all()
+        for ramo in ramo_list:
+            ramo.document_classes = []
+            for available_document in ramo.available_documents:
+                try:
+                    document_class = DocumentClass.objects.get(name=available_document.name)
+                    ramo.document_classes.append(document_class)
+                except DocumentClass.DoesNotExist:
+                    print (f"Clase de Documento {available_document.name} no Existe")
+
+            ramo.save()
+
     @staticmethod
     def init_table():
         try:
@@ -168,22 +222,16 @@ class Ramo(Document):
                                         print (f"Campo {field_name} no Existe")
                                         ramo_field = None
 
-                            ramo.available_documents = []
-                            if 'available_documents' in data.keys():
-                                for available_documents_data in data['available_documents']:
-                                    if 'name' in available_documents_data.keys():
-                                        name = available_documents_data["name"]
-                                        title = available_documents_data["title"]
-                                        mandatory = False
-                                        if 'mandatory' in available_documents_data.keys():
-                                            mandatory = available_documents_data["mandatory"]
-                                        
-                                        available_document = AvailableDocument()
-                                        available_document.name = name
-                                        available_document.title = title
-                                        available_document.mandatory = mandatory
-                                    ramo.available_documents.append(available_document)
-                            
+                            ramo.document_classes = []
+                            if 'document_classes' in data.keys():
+                                for document_class_name in data['document_classes']:
+                                    try:
+                                        document_class = DocumentClass.objects.get(name=document_class_name)
+                                        ramo.document_classes.append(document_class)
+                                    except DocumentClass.DoesNotExist:
+                                        print (f"Clase de Documento {document_class_name} no Existe")
+                                        document_class = None
+
                             ramo.created_at = datetime.datetime.now()
                             ramo.save()
 

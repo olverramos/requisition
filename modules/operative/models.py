@@ -59,6 +59,26 @@ class RequestDocument(EmbeddedDocument):
 
     def __str__(self):
         return f"{self.document_name} - {self.filename}"
+
+
+class OperativeRequestDocument(Document):
+    operative_request = fields.ReferenceField('OperativeRequest', verbose_name="Solicitud")
+    name = fields.StringField(verbose_name='Nombre')
+    title = fields.StringField(verbose_name='Título')
+    filename = fields.StringField(verbose_name='Nombre Archivo')
+    file_type = fields.StringField(verbose_name='Tipo Archivo')
+    content = fields.StringField(verbose_name='Contenido Base64')
+
+    meta = {
+        'collection': 'operative_requestdocuments',
+        'ordering': ['operative_request', 'name'],
+        'indexes': [
+            ('name',), 
+        ]
+    }
+    
+    def __str__(self):
+        return f"{self.operative_request} - {self.name} - {self.filename}"
     
 
 class RequestFile(EmbeddedDocument):
@@ -85,6 +105,7 @@ class OperativeRequest(Document):
         fields.EmbeddedDocumentField(RequestField), blank=True,
     )
     values_fields = fields.StringField(verbose_name='Valores de Campos', max_length=50, null=True, blank=True)
+    ###### Cambio
     request_documents = fields.ListField(
         fields.EmbeddedDocumentField(RequestDocument), blank=True,
     )
@@ -94,6 +115,7 @@ class OperativeRequest(Document):
     request_rc_police = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     payment_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
     payment_rc_receipt = fields.EmbeddedDocumentField(RequestFile, null=True, blank=True)
+    ###### Cambio
     created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
     created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
@@ -109,6 +131,80 @@ class OperativeRequest(Document):
         ]
     }
     
+    @staticmethod
+    def migrate_documents():
+        operative_request_list = OperativeRequest.objects.all()
+        for operative_request in operative_request_list:
+            for document in operative_request.request_documents:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = document.document_name
+                operative_request_document.title = document.document_title
+                operative_request_document.filename = document.filename
+                operative_request_document.file_type = document.file_type
+                operative_request_document.content = document.content
+                operative_request_document.save()
+
+            if operative_request.request_receipt:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'request_receipt'
+                operative_request_document.title = 'Recibo de Pago'
+                operative_request_document.filename = operative_request.request_receipt.filename
+                operative_request_document.file_type = operative_request.request_receipt.file_type
+                operative_request_document.content = operative_request.request_receipt.content
+                operative_request_document.save()
+
+            if operative_request.request_rc_receipt:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'request_rc_receipt'
+                operative_request_document.title = 'Recibo de Pago RC'
+                operative_request_document.filename = operative_request.request_rc_receipt.filename
+                operative_request_document.file_type = operative_request.request_rc_receipt.file_type
+                operative_request_document.content = operative_request.request_rc_receipt.content
+                operative_request_document.save()
+
+            if operative_request.request_police:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'request_police'
+                operative_request_document.title = 'Poliza'
+                operative_request_document.filename = operative_request.request_police.filename
+                operative_request_document.file_type = operative_request.request_police.file_type
+                operative_request_document.content = operative_request.request_police.content
+                operative_request_document.save()
+
+            if operative_request.request_rc_police:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'request_rc_police'
+                operative_request_document.title = 'Poliza RC'
+                operative_request_document.filename = operative_request.request_rc_police.filename
+                operative_request_document.file_type = operative_request.request_rc_police.file_type
+                operative_request_document.content = operative_request.request_rc_police.content
+                operative_request_document.save()
+
+            if operative_request.payment_receipt:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'payment_receipt'
+                operative_request_document.title = 'Comprobante de Pago'
+                operative_request_document.filename = operative_request.payment_receipt.filename
+                operative_request_document.file_type = operative_request.payment_receipt.file_type
+                operative_request_document.content = operative_request.payment_receipt.content
+                operative_request_document.save()
+
+            if operative_request.payment_rc_receipt:
+                operative_request_document = OperativeRequestDocument()
+                operative_request_document.operative_request = operative_request
+                operative_request_document.name = 'payment_rc_receipt'
+                operative_request_document.title = 'Comprobante de Pago RC'
+                operative_request_document.filename = operative_request.payment_rc_receipt.filename
+                operative_request_document.file_type = operative_request.payment_rc_receipt.file_type
+                operative_request_document.content = operative_request.payment_rc_receipt.content
+                operative_request_document.save()
+
     def __str__(self):
         return f"{self.number}"
     

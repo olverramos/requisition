@@ -1,5 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-from .models import RamoField
+from .models import RamoField, DocumentClass
 from django import forms
 
 
@@ -27,15 +27,30 @@ class CreateRamoForm(forms.Form):
         widget=forms.SelectMultiple(
             attrs={
                 'class': 'form-control form-control-lg',
-                'placeholder': 'Campos'
+                'placeholder': 'Campos',
+                'id': 'fields_id'
             }
         ),
         required=False,
         label="Campos"
     )
-
+    document_classes = forms.ModelMultipleChoiceField(
+        queryset=DocumentClass.objects.filter(document_type="CUSTOM"),
+        widget=forms.SelectMultiple(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Documentos',
+                'id': 'document_classes_id'
+            }
+        ),
+        required=False,
+        label="Documentos"
+    )
     class Media:
-        js = ('js/ramos/index.js', 'js/ramos/form.js', )
+        js = (
+            'js/ramos/index.js', 
+            'js/ramos/form.js', 
+        )
 
 
 class RamoFilterForm(forms.Form):

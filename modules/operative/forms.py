@@ -1336,7 +1336,6 @@ class TakerSearchRequestForm(forms.Form):
         js = ('js/requests/index.js',  )
 
 
-
 class SearchRequestForm(forms.Form):
     applicant_phone_number = forms.CharField(
         label=_("Teléfono Solicitante"),
@@ -1382,3 +1381,57 @@ class SearchRequestForm(forms.Form):
     class Media:
         js = ('js/requests/index.js',  )
 
+
+class DocumentRequestFilterForm(forms.Form):
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/requestdocuments/index.js',  )
+
+
+class CreateDocumentRequestForm(forms.Form):
+    document_name = forms.ChoiceField(
+        label=_("Nombre *"),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre',
+            }
+        ),
+    )
+    title = forms.CharField(
+        label=_("Título *"),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Título',
+            }
+        ),
+    )
+    document_file = forms.FileField(
+        label=_("Documento *"),
+        required=True,
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control ',
+                'placeholder': 'Documento',
+                'autocomplete': 'off'
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/requestdocuments/form.js', 
+        )

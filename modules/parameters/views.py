@@ -57,23 +57,7 @@ def create_ramo_view(request):
             ramo_id = form.cleaned_data['id']
             name = form.cleaned_data['name']
             fields = form.cleaned_data['fields']
-
-            available_documents_data = []
-            if 'available_documents' in request.POST.keys():
-                available_documents_data = request.POST['available_documents']
-
-            available_documents = []
-            for available_document_data in available_documents_data:
-                if 'name' in available_document_data.keys():
-                    name = available_document_data["name"]
-                    mandatory = False
-                    if 'mandatory' in available_document_data.keys():
-                        mandatory = available_document_data["mandatory"]
-                    
-                    available_document = AvailableDocument()
-                    available_document.name = name
-                    available_document.mandatory = mandatory
-                    available_documents.append(available_document)
+            document_classes = form.cleaned_data['document_classes']
 
             try:
                 ramo = Ramo.objects.get(name=name)
@@ -86,7 +70,7 @@ def create_ramo_view(request):
                 ramo.id = ramo_id
                 ramo.name = name
                 ramo.ramo_fields = fields
-                ramo.available_documents = available_documents
+                ramo.document_classes = document_classes
                 ramo.created_at = datetime.datetime.now()
                 ramo.created_by = current_account.username
                 ramo.save()
@@ -114,28 +98,11 @@ def edit_ramo_view(request, ramo_id):
         if form.is_valid():
             name = form.cleaned_data['name']
             fields = form.cleaned_data['fields']
-
-            available_documents_data = []
-            if 'available_documents' in request.POST.keys():
-                available_documents_data = request.POST['available_documents']
-
-            available_documents = []
-            for available_document_data in available_documents_data:
-                if 'name' in available_document_data.keys():
-                    name = available_document_data["name"]
-                    mandatory = False
-                    if 'mandatory' in available_document_data.keys():
-                        mandatory = available_document_data["mandatory"]
-                    
-                    available_document = AvailableDocument()
-                    available_document.name = name
-                    available_document.mandatory = mandatory
-                    available_documents.append(available_document)
-
+            document_classes = form.cleaned_data['document_classes']
             if error is None:   
                 ramo.name = name
                 ramo.ramo_fields = fields
-                ramo.available_documents = available_documents
+                ramo.document_classes = document_classes
                 ramo.updated_at = datetime.datetime.now()
                 ramo.updated_by = current_account.username
                 ramo.save()
@@ -176,6 +143,7 @@ def get_ramo_view(request, ramo_id) -> JsonResponse:
         ramo_data['fields'] = []
         for ramo_field in ramo.ramo_fields:
             ramo_field = {
+                'id': str(ramo_field.id),
                 'field_type': ramo_field.field_type.id,
                 'mandatory': ramo_field.mandatory,
                 'name': ramo_field.name,
@@ -187,6 +155,13 @@ def get_ramo_view(request, ramo_id) -> JsonResponse:
                 }
                 ramo_field['options'].append(ramo_option_data)
             ramo_data['fields'].append(ramo_field)
+        ramo_data['document_classes'] = []
+        for document_class in ramo.document_classes:
+            document_class = {
+                'id': str(document_class.id),
+                'name': document_class.name
+            }
+            ramo_data['document_classes'].append(document_class)
     except Ramo.DoesNotExist:
         pass
 
