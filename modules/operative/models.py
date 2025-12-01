@@ -134,6 +134,17 @@ class OperativeRequest(Document):
     }
     
     @staticmethod
+    def fix_values():
+        operative_request_list = OperativeRequest.objects.all()
+        for operative_request in operative_request_list:
+            values_fields = []
+            for request_field in operative_request.request_fields:
+                request_field.value = request_field.value.replace('"', '"')
+                values_fields.append(request_field.value)
+            operative_request.values_fields = '|'.join(values_fields)
+            operative_request.save()
+
+    @staticmethod
     def migrate_documents():
         operative_request_list = OperativeRequest.objects.all()
         for operative_request in operative_request_list:

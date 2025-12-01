@@ -1210,7 +1210,7 @@ class RequestFilterForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+                'placeholder': 'Búsqueda en los Campos'
             }
         ),
     )

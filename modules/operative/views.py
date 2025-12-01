@@ -344,7 +344,7 @@ def create_request_view(request):
                 taker.save()
 
             request_fields = []
-            values_fields = ''
+            values_fields = []
             for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
                 if ramo_field.name in request.POST.keys():
@@ -355,8 +355,7 @@ def create_request_view(request):
                     request_field.field = ramo_field
                     request_field.value = ramo_field_value
                     request_fields.append(request_field)
-                    values_fields += ramo_field_value
-                    values_fields += ' '
+                    values_fields.append(ramo_field_value)
 
             request_status_id = '1'
             assigned_to = None
@@ -387,6 +386,7 @@ def create_request_view(request):
                 operative_request.number = number
                 operative_request.value = value
                 operative_request.request_fields = request_fields
+                operative_request.values_fields = '|'.join(values_fields)
                 operative_request.observations = observations
                 operative_request.created_at = datetime.datetime.now()
                 operative_request.created_by = applicant.email
@@ -474,7 +474,6 @@ def query_request_view(request, operative_request_id):
     }
 
     return render(request, 'requests/query.html', context)
-
 
 @login_required(login_url="/auth/login/")
 def edit_request_view(request, operative_request_id):
@@ -592,7 +591,7 @@ def edit_request_view(request, operative_request_id):
                     payment_rc_receipt.content = content
             
             request_fields = []
-            values_fields = ''
+            values_fields = []
             for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
                 if ramo_field.name in request.POST.keys():
@@ -603,8 +602,7 @@ def edit_request_view(request, operative_request_id):
                     request_field.field = ramo_field
                     request_field.value = ramo_field_value
                     request_fields.append(request_field)
-                    values_fields += ramo_field_value
-                    values_fields += ' '
+                    values_fields.append(ramo_field_value)
 
             request_documents = []
             for document_field in ramo.available_documents:
@@ -666,6 +664,7 @@ def edit_request_view(request, operative_request_id):
                     operative_request.payment_receipt = payment_receipt
                 if payment_rc_receipt is not None:
                     operative_request.payment_rc_receipt = payment_rc_receipt
+                operative_request.values_fields = '|'.join(values_fields)
                 operative_request.assigned_to = assigned_to
                 operative_request.assigned_at = datetime.datetime.now()
                 operative_request.assigned_by = current_account.username
