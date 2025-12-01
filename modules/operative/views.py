@@ -1100,6 +1100,21 @@ def create_document_request_view(request, operative_request_id, source=None):
                 document.created_by = current_account.username
             document.save()
 
+            operative_request_status = None
+            if document_class.document_type.id == DocumentTypeEnum.POLICE:
+                operative_request_status = RequestStatus.objects.get(id='3')
+            if document_class.document_type.id == DocumentTypeEnum.RECEIPT:
+                operative_request_status = RequestStatus.objects.get(id='3')
+            if document_class.document_type.id == DocumentTypeEnum.PAYMENT:
+                operative_request_status = RequestStatus.objects.get(id='4')
+
+            if operative_request_status is not None and operative_request.status.id < operative_request_status.id:
+                operative_request.status = operative_request_status
+                operative_request.updated_at = datetime.datetime.now()
+                if current_account is not None:
+                    operative_request.updated_by = current_account.username
+                operative_request.save()
+
             messages.success (request, f'Documento {document} creado satisfactoriamente!')
         else:
             error = "¡Error en el registro del documento! "
