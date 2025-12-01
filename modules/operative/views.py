@@ -980,10 +980,21 @@ def documents_request_view(request, operative_request_id, source=None):
         operative_request = None
 
     document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
-    if current_account is None or current_account.role.id == RoleEnum.APPLICANT:
-        if operative_request.status.id not in ('4', '5'):
-            document_class_list = DocumentClass.objects.filter(document_type__in=['CUSTOM', 'RECEIPT'])
-            document_list = document_list.filter(document_class__in=document_class_list)
+    document_type_list = ['CUSTOM', 'RECEIPT']
+    if current_account is None:
+        document_type_list.append('PAYMENT')
+        if operative_request.status.id in ('4', '5'):
+            document_type_list.append('POLICE')
+    elif current_account.role.id != RoleEnum.APPLICANT:
+        document_type_list.append('PAYMENT')
+        if operative_request.status.id in ('4', '5'):
+            document_type_list.append('POLICE')
+    else:
+        document_type_list.append('PAYMENT')
+        document_type_list.append('POLICE')
+
+    document_class_list = DocumentClass.objects.filter(document_type__in=document_type_list)
+    document_list = document_list.filter(document_class__in=document_class_list)
 
     if source is not None:
         if source == 'applicant_search':
