@@ -1301,7 +1301,7 @@ class ApplicantSearchRequestForm(forms.Form):
 
 class TakerSearchRequestForm(forms.Form):
     taker_phone_number = forms.CharField(
-        label=_("Teléfono Tomador"),
+        label=_("Teléfono Tomador *"),
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -1311,7 +1311,7 @@ class TakerSearchRequestForm(forms.Form):
         ),
     )
     taker_identification = forms.CharField(
-        label=_("Identificación"),
+        label=_("Identificación *"),
         required=False,
         widget=forms.TextInput(
             attrs={

@@ -168,18 +168,19 @@ def requests_applicant_search_view(request, phone=None):
             applicant = None
             taker = None
 
-            if applicant_phone_number:
+            if applicant_phone_number and applicant_phone_number != '':
                 try:
                     applicant = Applicant.objects.get(phone_number=applicant_phone_number)
                 except Applicant.DoesNotExist:
                     applicant = None
-            if taker_phone_number:
+                    
+            if taker_phone_number and taker_phone_number != '':
                 try:
                     taker = Taker.objects.get(phone_number=taker_phone_number)
                 except Taker.DoesNotExist:
                     taker = None
 
-            if taker_identification:
+            elif taker_identification and taker_identification != '':
                 try:
                     taker = Taker.objects.get(identification=taker_identification)
                 except Taker.DoesNotExist:
@@ -189,10 +190,15 @@ def requests_applicant_search_view(request, phone=None):
                 operative_request_list = operative_request_list.filter(
                     applicant=applicant
                 )
+            else:
+                operative_request_list = operative_request_list.none()
+                
             if taker:
                 operative_request_list = operative_request_list.filter(
                     taker=taker
                 )
+            else:
+                operative_request_list = operative_request_list.none()
             if search:
                 operative_request_list = operative_request_list.filter(
                     request_fields__value=search
@@ -260,29 +266,30 @@ def requests_taker_search_view(request, phone=None):
             
             taker = None
 
-            if taker_phone_number:
+            if taker_phone_number and taker_phone_number != '':
                 search_data = True
                 try:
                     taker = Taker.objects.get(phone_number=taker_phone_number)
                 except Taker.DoesNotExist:
                     taker = None
-
-            if taker_identification:
+            elif taker_identification and taker_identification != '':
                 search_data = True
                 try:
                     taker = Taker.objects.get(identification=taker_identification)
                 except Taker.DoesNotExist:
                     taker = None
 
-            if taker:
-                operative_request_list = operative_request_list.filter(
-                    taker=taker
-                )
             if search:
                 search_data = True
                 operative_request_list = operative_request_list.filter(
                     request_fields__value=search
                 )
+            if taker:
+                operative_request_list = operative_request_list.filter(
+                    taker=taker
+                )
+            else:
+                operative_request_list = operative_request_list.none()
                 
     if not search_data:
         operative_request_list = OperativeRequest.objects.none()
