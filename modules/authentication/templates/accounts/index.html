@@ -51,23 +51,23 @@
                                 {% endif %}
                             </td>
                             <td class="align-middle">
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Usuario" onclick="load_data('view', '{{account.id}}');">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Usuario" alt="Ver Usuario" title="Ver Usuario" onclick="load_data('view', '{{account.id}}');">
                                     <i class="fa fa-eye text-sm"></i>
                                 </button>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Usuario" onclick="load_data('edit', '{{account.id}}');">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Usuario" alt="Editar Usuario" title="Editar Usuario" onclick="load_data('edit', '{{account.id}}');">
                                     <i class="fa fa-pencil text-sm"></i>
                                 </button>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#setPasswordModal" data-original-title="Cambiar Contraseña" onclick="load_setpassword_data('{{account.id}}');">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#setPasswordModal" data-original-title="Cambiar Contraseña" alt="Cambiar Contraseña" title="Cambiar Contraseña" onclick="load_setpassword_data('{{account.id}}');">
                                     <i class="fa fa-lock text-sm"></i>
                                 </button>
                                 {% if not account.is_active %}
-                                    <a href="{{account.id}}/activate/">
+                                    <a href="{{account.id}}/activate/" alt="Activar Usuario" title="Activar Usuario">
                                         <button type="button" class="btn">
                                             <i class="fa fa-user-check text-sm"></i>
                                         </button>
                                     </a>
                                 {% endif %}
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Usuario" onclick="load_data('delete', '{{account.id}}');">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Usuario" alt="Eliminar Usuario" title="Eliminar Usuario" onclick="load_data('delete', '{{account.id}}');">
                                     <i class="fa fa-trash text-sm"></i>
                                 </button>
                             </td>

@@ -25,26 +25,26 @@
                     <span class="text-secondary text-xs font-weight-bold">{{document.title}}</span>
                 </td>
                 <td class="align-middle">
-                    <button type="button" class="btn" data-original-title="Descargar Documento" onclick="downloadFile('{{document.filename}}', '{{document.content}}', '{{document.file_type}}');">
+                    <button type="button" class="btn" data-original-title="Descargar Documento" alt="Descargar Documento" title="Descargar Documento" onclick="downloadFile('{{document.filename}}', '{{document.content}}', '{{document.file_type}}');">
                         <i class="fa fa-download text-sm"></i>
                     </button>      
                     {% if role_id == '' %}
                         {% if document.document_class.document_type.id == 'CUSTOM' or document.document_class.document_type.id == 'PAYMENT' %}
-                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" alt="Eliminar Documento" title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
                                 <i class="fa fa-trash text-sm"></i>
                             </button>
                         {% endif %}
                     {% else %}
                         {% if role_id == 'applicant' %}
                             {% if document.document_class.document_type.id == 'CUSTOM' or document.document_class.document_type.id == 'PAYMENT' %}
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" alt="Eliminar Documento" title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
                                     <i class="fa fa-trash text-sm"></i>
                                 </button>
                             {% endif %}
                         {% else %}
                             {% if role_id == 'assistant' %}
                                 {% if document.document_class.document_type.id != 'PAYMENT' %}
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" alt="Eliminar Documento" title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
                                         <i class="fa fa-trash text-sm"></i>
                                     </button>
                                 {% endif %}

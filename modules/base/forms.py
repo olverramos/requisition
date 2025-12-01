@@ -190,5 +190,5 @@ class TakerFilterForm(forms.Form):
     )
 
     class Media:
-        js = ('js/takers/index.js',  )
+        js = ('js/takers/index.js', 'js/takers/form.js',  )
 
