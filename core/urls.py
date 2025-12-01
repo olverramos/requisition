@@ -15,5 +15,7 @@ urlpatterns = [
 
     path("demo/", include('theme_soft_design.urls')),
     
-    path(".well-known/acme-challenge/Wa-TAMtdo-z8DSbMPQFlw1AZSCSiUHitYjPE0SpZFcM", views.domainfile)
+    path(".well-known/acme-challenge/Wa-TAMtdo-z8DSbMPQFlw1AZSCSiUHitYjPE0SpZFcM", views.domainfile),
+    path('.well-known/appspecific/com.chrome.devtools.json', views.devtools_json),
+
 ]

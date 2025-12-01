@@ -1,7 +1,7 @@
-from .models import Ramo, FieldType, RamoField, AvailableDocument
 from django.contrib.auth.decorators import login_required
 from .forms import CreateRamoForm, RamoFilterForm
 from modules.authentication.models import Account
+from .models import Ramo, FieldType, RamoField
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy

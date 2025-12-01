@@ -1,12 +1,12 @@
 from modules.localization.models import Country, State, City
 from modules.operative.forms import SearchRequestForm
 from modules.operative.models import OperativeRequest
+from django.http import HttpResponse, JsonResponse
 from modules.authentication.models import Account
 # from mongoengine.queryset.visitor import Q
 from modules.parameters.models import Ramo
 from fileprovider.utils import sendfile  
 from django.views.generic import View
-from django.http import HttpResponse
 from django.template import loader
 from django.conf import settings
 
@@ -36,3 +36,11 @@ class HomeView(View):
 
 def domainfile(request):
     return sendfile('/app/staticfiles/file/Wa-TAMtdo-z8DSbMPQFlw1AZSCSiUHitYjPE0SpZFcM')
+
+def devtools_json(request):
+    # Replace with your actual project path and a unique UUID
+    data = {
+        "uuid": settings.SECRET_KEY,
+        "paths": [str(settings.BASE_DIR)] 
+    }
+    return JsonResponse(data)

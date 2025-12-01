@@ -48,7 +48,7 @@ class RequestField(EmbeddedDocument):
     value = fields.StringField(verbose_name='Valor')
 
     def __str__(self):
-        return f"{self.field} - {self.value}"
+        return f"{self.field}: {self.value}"
     
 
 class RequestDocument(EmbeddedDocument):
