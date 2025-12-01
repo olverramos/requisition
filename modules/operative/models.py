@@ -331,22 +331,6 @@ class OperativeRequest(Document):
                                         field.value = value
                                     operative_request.request_fields.append(field)
 
-                            operative_request.request_documents = []
-                            if 'request_documents' in data.keys():
-                                for request_documents_data in data['request_documents']:
-                                    if 'document_name' in request_documents_data.keys() and \
-                                       'filename' in request_documents_data.keys() and \
-                                       'file_type' in request_documents_data.keys() and \
-                                       'content' in request_documents_data.keys():
-
-                                        request_document = RequestDocument()
-                                        request_document.document_name = request_documents_data["document_name"]
-                                        request_document.filename = request_documents_data["filename"]
-                                        request_document.file_type = request_documents_data["file_type"]
-                                        request_document.content = request_documents_data["content"]
-
-                                    operative_request.request_documents.append(request_document)
-                            
                             operative_request.created_at = datetime.datetime.now()
                             operative_request.save()
 

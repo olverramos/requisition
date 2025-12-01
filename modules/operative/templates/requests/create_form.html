@@ -73,12 +73,32 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-lg-12 col-md-12 mt-2" style="background-color: #caf0f8;">
+                <h4>
+                    <center>DOCUMENTOS</center>
+                </h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <input type="hidden" id="document_count_id" name="document_count" value="0">
+
+            <div class="d-none d-sm-block">
+                {% include "requests/create_documents_table.html" %}
+            </div>
+
+            <div class="d-sm-block d-md-none">
+                {% include "requests/create_documents_table_sm.html" %}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-12 col-md-12">
                 <label class="text-main align-self-center">{{form.observations.label}}</label>
                 {{form.observations}}
             </div> 
         </div>
     </div>
+
     <div class="modal-footer">
         <div class="col">
             <div class="col-lg-12 col-md-12 mt-4">
@@ -86,7 +106,7 @@
                     <a href="{% url 'home' %}">
                         <button type="button" class="btn bg-gradient-secondary">Cancelar</button>
                     </a>
-                    <button type="submit" class="btn bg-gradient-primary" id="id_form_button">Cargar Documentos</button>
+                    <button type="submit" class="btn bg-gradient-primary" id="id_form_button">Guardar</button>
                 </center>
             </div>
         </div>

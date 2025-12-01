@@ -132,4 +132,147 @@ $(document).ready(function () {
 
     $("#id_value").mask("#,##0", { reverse: true });
 
+
+    $("#addbutton_id").click(function () {
+        alert("hola");
+
+        let document_count = parseInt($("#document_count_id").val());
+        document_count++;
+        $("#document_count_id").val(document_count);
+
+        let document_form = {
+            document_class: $("#document_class_id").val(),
+            title: $("#document_title_id").val(),
+            document_file: $("#document_file_id").val()
+        };
+
+        let document_form_code = '<tr id="document_detail_' + document_count + '_id">';
+        document_form_code += '<td class="text-center">';
+        document_form_code += document_form.document_class;
+        document_form_code += '</td>';
+        document_form_code += '<td class="text-center">';
+        document_form_code += document_form.title;
+        document_form_code += '</td>';
+        document_form_code += '<td class="text-center">';
+        document_form_code += document_form.document_file;
+        document_form_code += '</td>';
+        document_form_code += '<td class="text-center">';
+        document_form_code += '<button type="button" id="addbutton_id" class="btn btn-table w-30">+</button>';
+        document_form_code += '</td>';
+        document_form_code += '</tr>';
+
+        $("#new_document_tbody_id").append(document_form_code);
+
+        // let detail_json_text = $("#id_detail_json").val();
+
+        // var detail_json = {};
+        // if (detail_json_text != null && detail_json_text != '') {
+        //     detail_json = jQuery.parseJSON(detail_json_text);
+        // }
+
+        // let combs_json_text = $("#id_combs_json").val();
+
+        // var combs_json = {};
+        // if (combs_json_text != null && combs_json_text != '') {
+        //     combs_json = jQuery.parseJSON(combs_json_text);
+        // }
+
+        // let index = parseInt($("#detail_index_id").val());
+        // let color = $("#detail_color_id").val();
+        // let color_name = $("#detail_color_id option:selected").text();
+        // let egg_type = $("#detail_eggtype_id").val();
+        // let egg_type_name = $("#detail_eggtype_id option:selected").text();
+        // let actual_combs = parseInt($("#detail_actualcombs_id").val());
+        // let combs = parseInt($("#detail_combs_id").val());
+        // let unit_price = parseInt($("#detail_unit_price_id").val());
+        // let price = parseInt($("#detail_price_id").val());
+
+        // var total_white_combs = parseInt($("#id_white_combs").val());
+        // var total_red_combs = parseInt($("#id_red_combs").val());
+        // var total_combs = parseInt($("#id_combs").val());
+        // var total_price = parseInt($("#id_price").val());
+
+        // if (egg_type != 'YEM') {
+        //     if (color == null || color == '') {
+        //         alert("Debe elegir el color del Huevo");
+        //         $("#detail_color_id").focus();
+        //         return;
+        //     }
+        // } else {
+        //     color = '';
+        // }
+
+        // if (egg_type == null || egg_type == '') {
+        //     alert("Debe elegir el tipo del Huevo");
+        //     $("#detail_eggtype_id").focus();
+        //     return;
+        // }
+
+        // if (combs == null || combs == '' || combs == 0) {
+        //     alert("Debe indicar la cantidad de panales > 0");
+        //     $("#detail_combs_id").focus();
+        //     $("#detail_combs_id").val(0);
+        //     $("#detail_price_id").val(0);
+        //     return;
+        // }
+
+        // total_price += price;
+        // total_combs += combs;
+        // if (color == 'white') {
+        //     total_white_combs += combs;
+        // }
+        // if (color == 'red') {
+        //     total_red_combs += combs;
+        // }
+
+        // $("#id_white_combs").val(total_white_combs);
+        // $("#id_red_combs").val(total_red_combs);
+        // $("#id_combs").val(total_combs);
+        // $("#id_price").val(total_price);
+
+        // detail_json[index] = {
+        //     'color': color,
+        //     'egg_type': egg_type,
+        //     'actual_combs': actual_combs,
+        //     'combs': combs,
+        //     'unit_price': unit_price,
+        //     'price': price
+        // }
+        // $("#id_detail_json").val(JSON.stringify(detail_json));
+
+        // let combs_key = color + "_" + egg_type;
+        // if (!(combs_key in combs_json)) {
+        //     combs_json[combs_key] = 0;
+        // }
+        // combs_json[combs_key] += combs;
+
+        // $("#id_combs_json").val(JSON.stringify(combs_json));
+
+        // var new_row = $('<tr id="rowdetail_' + index + '_id">');
+        // new_row.append('<td class="text-end">' + index + '</td>');
+        // new_row.append('<td class="text-start">' + egg_type_name + '</td>');
+        // new_row.append('<td class="text-start">' + color_name + '</td>');
+        // new_row.append('<td class="text-end">' + actual_combs + '</td>');
+        // new_row.append('<td class="text-end">' + combs + '</td>');
+        // new_row.append('<td class="text-end">' + unit_price + '</td>');
+        // new_row.append('<td class="text-end">' + price + '</td>');
+        // new_row.append('<td><button type="button" id="removebutton_' + index + '_id" name="removebutton_' + index + '" class="btn btn-table removebutton" onclick="removeItem(' + index + ');">-</button></td>');
+        // new_row.append('</tr>');
+
+        // $("#new_detail_tbody_id").append(new_row);
+
+        // index += 1;
+
+        // $("#detail_index_id").val(index);
+        // $("#detail_color_id").val('');
+        // $("#detail_eggtype_id").val('');
+        // $("#detail_actualcombs_id").val(0);
+        // $("#detail_combs_id").val(0);
+        // $("#detail_unit_price_id").val(0);
+        // $("#detail_price_id").val(0);
+        // $("#detail_color_id").focus();
+    });
+
+
+
 });

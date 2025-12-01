@@ -318,6 +318,7 @@ def create_request_view(request):
         'number': OperativeRequest.getNextNumber()
     }
     form = CreateRequestForm(initial=data)
+    document_form = CreateDocumentRequestForm()
     if request.method == 'POST':
         form = CreateRequestForm(request.POST, request.FILES)
         if form.is_valid():
@@ -441,10 +442,13 @@ def create_request_view(request):
         if error is not None:
             messages.error (request, error)
 
+    document_form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type='CUSTOM')
+    
     context = {
         'table_title': 'Requests',
         'table_description': 'Crear Nueva Solicitud',
         'form': form,
+        'document_form': document_form,
         'segment': 'operative'
     }
 

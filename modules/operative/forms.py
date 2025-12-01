@@ -140,7 +140,6 @@ class CreateRequestForm(forms.Form):
             'js/requests/create.js', 
         )
 
-
 class EditRequestForm(forms.Form):
     number = forms.IntegerField(
         label=_("Número"),

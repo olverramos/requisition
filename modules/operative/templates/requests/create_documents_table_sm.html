@@ -1,0 +1,22 @@
+<table>
+    <thead>
+        <tr>
+            <th width="20%" class="text-center">Archivo</th>
+            <th width="20%" class="text-center">Acción</th>
+        </tr>
+    </thead>
+    <tbody id="new_document_tbody_id">
+    </tbody>
+    <tfoot id="new_document_form_id">
+        <tr id="new_document_detail_id">
+            <td class="text-start">
+                Documento: {{document_form.document_class}}<br/>
+                Descripción: {{document_form.title}}<br/>
+                Archivo: {{document_form.document_file}}
+            </td>
+            <td class="text-center">
+                <button type="button" id="addbutton_id" class="btn btn-table w-30">+</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
