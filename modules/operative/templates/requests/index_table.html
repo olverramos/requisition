@@ -57,14 +57,6 @@
                             <i class="fa fa-folder-open-o text-sm"></i>
                         </button>                   
                     </a>
-
-                    {% if operative_request.status.id <= '3' %}
-                        <a href="{% url 'operative_requests_attachment_documents' operative_request.id %}">
-                            <button type="button" class="btn" data-original-title="Registrar Documentos" alt="Registrar Documentos" title="Registrar Documentos">
-                                <i class="fa fa-book text-sm"></i>
-                            </button>
-                        </a>
-                    {% endif %}
                     {% if can_assign %}
                         {% if operative_request.status.id == '1' %}
                             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Asignar Solicitud" alt="Asignar Solicitud" title="Asignar Solicitud" onclick="load_data('assign', '{{operative_request.id}}');">
@@ -72,50 +64,12 @@
                             </button>
                         {% endif %}
                     {% endif %}
-                    {% if can_load_documents %}
-                        {% if operative_request.status.id == '2' %}
-                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Registrar Documentos" alt="Registrar Documentos" title="Registrar Documentos" onclick="load_data('loaddocuments', '{{operative_request.id}}');">
-                                <i class="fa fa-file-text text-sm"></i>
-                            </button>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if operative_request.status.id == '3' %}
-                        {% if can_download_documents %}
-                            <button type="button" class="btn" data-original-title="Descargar Recibo" alt="Descargar Recibo" title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
-                                <i class="fa fa-ticket text-sm"></i>
-                            </button>
-                            <button type="button" class="btn" data-original-title="Descargar Recibo RC" alt="Descargar Recibo RC" title="Descargar Recibo RC" onclick="downloadFile('{{operative_request.request_rc_receipt.filename}}', '{{operative_request.request_rc_receipt.contentfilename}}', '{{operative_request.request_rc_receipt.file_type}}');">
-                                <i class="fa fa-ticket-o text-sm"></i>
-                            </button>
-                        {% endif %}
-                        {% if can_register_payment %}
-                            <a href="{% url 'operative_requests_payment_register' operative_request.id %}">
-                                <button type="button" class="btn" data-original-title="Registrar Pago" alt="Registrar Pago" title="Registrar Pago">
-                                    <i class="fa fa-credit-card text-sm"></i>
-                                </button>
-                            </a>
-                        {% endif %} 
-                    {% endif %}
 
                     {% if can_valide %}
                         {% if operative_request.status.id == '4' %}
                             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Validar Pago" alt="Validar Pago" title="Validar Pago" onclick="load_data('validate', '{{operative_request.id}}');">
                                 <i class="fa fa-check-circle-o text-sm"></i>
                             </button>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if operative_request.status.id == '4' or operative_request.status.id == '5' %}
-                        {% if can_download_documents %}
-                            <button type="button" class="btn" data-original-title="Descargar Poliza" alt="Descargar Poliza" title="Descargar Poliza" onclick="downloadFile('{{operative_request.request_police.filename}}', '{{operative_request.request_police.contentfilename}}', '{{operative_request.request_police.file_type}}');">
-                                <i class="fa fa-file-text text-sm"></i>
-                            </button>
-                            {% if operative_request.request_rc_police %}
-                                <button type="button" class="btn" data-original-title="Descargar Poliza RC" alt="Descargar Poliza RC" title="Descargar Poliza RC" onclick="downloadFile('{{operative_request.request_rc_police.filename}}', '{{operative_request.request_rc_police.contentfilename}}', '{{operative_request.request_rc_police.file_type}}');">
-                                    <i class="fa fa-file-text-o text-sm"></i>
-                                </button>
-                            {% endif %}
                         {% endif %}
                     {% endif %}
 
