@@ -128,9 +128,11 @@
                     {% endif %}
 
                     {% if can_delete %}
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Solicitud" onclick="load_data('delete', '{{operative_request.id}}');">
-                            <i class="fa fa-trash text-sm"></i>
-                        </button>
+                        <a href="{% url 'operative_requests_delete' operative_request.id %}">
+                            <button type="button" class="btn" data-original-title="Eliminar Solicitud">
+                                <i class="fa fa-trash text-sm"></i>
+                            </button>                   
+                        </a>
                     {% endif %}
                 </td>
             </tr>

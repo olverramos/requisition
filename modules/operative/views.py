@@ -998,6 +998,21 @@ def delete_request_view(request, operative_request_id):
         error = 'No existe una request con el id'
         operative_request = None
 
+    request_documents = OperativeRequestDocument.objects.filter(operative_request=operative_request)
+
+    can_view_police = False
+    if current_account is not None:
+        if current_account.role.id in ( RoleEnum.ASSISTANT, RoleEnum.ADMIN):
+            can_view_police = True
+        elif operative_request.status.id >= "4":
+            can_view_police = True
+
+    data = {}
+    if error is None:
+        data = operative_request.query()
+
+    form = QueryRequestForm(initial=data)
+    back_url = reverse_lazy("operative_requests")
     if error is None:
         if request.method == 'POST':
             request_status =  RequestStatus.objects.get(id='9') 
@@ -1015,10 +1030,23 @@ def delete_request_view(request, operative_request_id):
             request_event.save()
 
             messages.success (request, f'Solicitud {operative_request} eliminada satisfactoriamente!')
-    else:
-        messages.error (request, error)
+            return redirect(reverse_lazy("operative_requests"))
+        else:
+            messages.error (request, error)
 
-    return redirect(reverse_lazy("operative_requests"))
+    context = {
+        'table_title': 'Requests',
+        'table_description': 'Eliminar Solicitud',
+        'form': form,
+        'request_data': data,
+        'can_view_police': can_view_police,
+        'operative_request': operative_request,
+        'request_documents': request_documents,
+        'back_url': back_url,
+        'segment': 'operative'
+    }
+
+    return render(request, 'requests/delete.html', context)
 
 
 def get_request_view(request, operative_request_id):
