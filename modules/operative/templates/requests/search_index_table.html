@@ -36,10 +36,19 @@
                     <span class="text-secondary text-xs font-weight-bold">{{operative_request.status}}</span>
                 </td>
                 <td class="align-middle">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Solicitud" onclick="load_data('view', '{{operative_request.id}}');">
-                        <i class="fa fa-eye text-sm"></i>
-                    </button>
-                    
+                    <a href="{% url 'operative_requests_query_source' operative_request.id source %}">
+                        <button type="button" class="btn" data-original-title="Ver Solicitud">
+                            <i class="fa fa-eye text-sm"></i>
+                        </button>                   
+                    </a>
+                    <a href="{% url 'operative_requests_documents_source' operative_request.id source %}">
+                        <button type="button" class="btn" data-original-title="Ver Documentos">
+                            <i class="fa fa-folder-open-o text-sm"></i>
+                        </button>                   
+                    </a>
+
+
+
                     {% if operative_request.status.id == '3' %}
                             <button type="button" class="btn" data-original-title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
                                 <i class="fa fa-ticket text-sm"></i>

@@ -132,7 +132,7 @@ def requests_index_view(request):
  
     return render(request, 'requests/index.html', context)
 
-def requests_applicant_search_view(request):
+def requests_applicant_search_view(request, phone=None):
     data = { }
     
     current_account = Account.getAccount(request.user)
@@ -143,10 +143,18 @@ def requests_applicant_search_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
     applicant = None
+    operative_request_list = OperativeRequest.objects.filter(status__ne='9')
+    if phone:
+        try:
+            applicant = Applicant.objects.get(phone_number=phone)
+            operative_request_list = operative_request_list.filter(applicant=applicant)
+        except Applicant.DoesNotExist:
+            applicant = None
+
     data['page'] = page
-    filter_form = ApplicantSearchRequestForm()
+    data['applicant_phone_number'] = phone
+    filter_form = ApplicantSearchRequestForm(initial=data)
     form = TakerRequestForm()
     files_form = TakerRequestFilesForm()
     if request.method == 'POST':
@@ -211,12 +219,13 @@ def requests_applicant_search_view(request):
         'paginator': paginator,
         'segment': 'operative', 
         'back_url': '/',
+        'source': 'applicant_search',
         'filter_name': 'Buscar',
     }
 
     return render(request, 'requests/search_index.html', context)
 
-def requests_taker_search_view(request):
+def requests_taker_search_view(request, phone=None):
     data = { }
     
     current_account = Account.getAccount(request.user)
@@ -229,8 +238,17 @@ def requests_taker_search_view(request):
     
     operative_request_list = OperativeRequest.objects.filter(status__ne='9')
     search_data = False
+    if phone:
+        try:
+            taker = Taker.objects.get(phone_number=phone)
+            operative_request_list = operative_request_list.filter(taker=taker)
+            search_data = True
+        except Taker.DoesNotExist:
+            taker = None
+
     data['page'] = page
-    filter_form = TakerSearchRequestForm()
+    data['taker_phone_number'] = phone
+    filter_form = TakerSearchRequestForm(initial=data)
     form = TakerRequestForm()
     files_form = TakerRequestFilesForm()
     if request.method == 'POST':
@@ -287,6 +305,7 @@ def requests_taker_search_view(request):
         'paginator': paginator,
         'segment': 'operative', 
         'back_url': '/',
+        'source': 'taker_search',
         'filter_name': 'Buscar',
     }
 
@@ -428,7 +447,7 @@ def create_request_view(request):
 
     return render(request, 'requests/create.html', context)
 
-def query_request_view(request, operative_request_id):
+def query_request_view(request, operative_request_id, source=None):
     error = None
     current_account:Account = Account.getAccount(request.user)
 
@@ -453,10 +472,27 @@ def query_request_view(request, operative_request_id):
 
     form = QueryRequestForm(initial=data)
 
-    if 'back_url' in request.GET:
-        back_url = reverse_lazy(request.GET['back_url'])
+    if source is not None:
+        if source == 'applicant_search':
+            back_url = reverse_lazy(
+                "operative_requests_applicant_search_phone",
+                kwargs={
+                    'phone': operative_request.applicant.phone_number
+                },
+            )
+            
+        elif source == 'taker_search':
+            back_url = reverse_lazy(
+                "operative_requests_taker_search_phone",
+                kwargs={
+                    'phone': operative_request.taker.phone_number
+                },            
+            )
     else:
-        back_url = reverse_lazy("operative_requests")
+        if 'back_url' in request.GET:
+            back_url = reverse_lazy(request.GET['back_url'])
+        else:
+            back_url = reverse_lazy("operative_requests")
 
     if error is not None:
         messages.error (request, error)
@@ -1187,7 +1223,7 @@ def get_request_view(request, operative_request_id):
 
     return JsonResponse(data=request_data)
 
-def documents_request_view(request, operative_request_id):
+def documents_request_view(request, operative_request_id, source=None):
     current_account:Account = Account.getAccount(request.user)
     error = None
     role_id = ''
@@ -1205,6 +1241,28 @@ def documents_request_view(request, operative_request_id):
         if operative_request.status.id not in ('4', '5'):
             document_class_list = DocumentClass.objects.filter(document_type__in=['CUSTOM', 'RECEIPT'])
             document_list = document_list.filter(document_class__in=document_class_list)
+
+    if source is not None:
+        if source == 'applicant_search':
+            back_url = reverse_lazy(
+                "operative_requests_applicant_search_phone",
+                kwargs={
+                    'phone': operative_request.applicant.phone_number
+                },
+            )
+            
+        elif source == 'taker_search':
+            back_url = reverse_lazy(
+                "operative_requests_taker_search_phone",
+                kwargs={
+                    'phone': operative_request.taker.phone_number
+                },            
+            )
+    else:
+        if 'back_url' in request.GET:
+            back_url = reverse_lazy(request.GET['back_url'])
+        else:
+            back_url = reverse_lazy("operative_requests")
 
     data = { }
     page = 1
@@ -1244,13 +1302,13 @@ def documents_request_view(request, operative_request_id):
         'form': form,
         'role_id': role_id,
         'paginator': paginator,
-        'back_url': f'../../',
+        'back_url': back_url,
         'segment': 'operative'
     }
  
     return render(request, 'documents/index.html', context)
 
-def create_document_request_view(request, operative_request_id):
+def create_document_request_view(request, operative_request_id, source=None):
     current_account:Account = Account.getAccount(request.user)
     error = None
     role_id = ''
@@ -1299,7 +1357,7 @@ def create_document_request_view(request, operative_request_id):
 
         if error is not None:
             messages.error (request, error)
-    return redirect('operative_requests_documents', operative_request_id)
+    return redirect('../')
 
 def get_document_request_view(request, document_id):
     document = None
@@ -1319,7 +1377,7 @@ def get_document_request_view(request, document_id):
 
     return JsonResponse(data=document_data)
 
-def delete_document_request_view(request, operative_request_id, document_id):
+def delete_document_request_view(request, operative_request_id, source=None, document_id=None):
     error = None
     current_account = Account.getAccount(request.user)
     try:
@@ -1335,4 +1393,4 @@ def delete_document_request_view(request, operative_request_id, document_id):
     else:
         messages.error (request, error)
     
-    return redirect('operative_requests_documents', operative_request_id)
+    return redirect('../../')
