@@ -181,8 +181,7 @@ class EditRequestForm(forms.Form):
         widget=forms.Select(
             attrs={
                 'class': 'form-control form-select', 
-                'id': 'status_id',
-                'readonly': True
+                'id': 'status_id'
             }
         ),
     )

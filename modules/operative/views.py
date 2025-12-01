@@ -521,14 +521,23 @@ def edit_request_view(request, operative_request_id):
         error = 'No existe una request con el id'
         operative_request = None
 
+    data = {}
+    if error is None:
+        data = operative_request.query()
+        data['taker_person_type'] = data['taker_person_type_id']
+        data['taker_document_type'] = data['taker_document_type_id']
+        data['ramo'] = data['ramo_id']
+        data['status'] = data['status_id'] 
+        data['assigned_to'] = data['assigned_to_id']
+
+    form = EditRequestForm(initial=data)
+
     if error is None and request.method == 'POST':
         form = EditRequestForm(request.POST)
-        files_form = EditRequestFilesForm(request.POST, request.FILES)
         
-        if form.is_valid() and files_form.is_valid():
+        if form.is_valid():
             taker_person_type = form.cleaned_data['taker_person_type']
             taker_document_type = form.cleaned_data['taker_document_type']
-            taker_identification = form.cleaned_data['taker_identification']
             taker_name = form.cleaned_data['taker_name']
             taker_phone_number = form.cleaned_data['taker_phone_number']
             taker_contact_name = form.cleaned_data['taker_contact_name']
@@ -541,91 +550,7 @@ def edit_request_view(request, operative_request_id):
             request_status = form.cleaned_data['status']
             observations = form.cleaned_data['observations']
             assigned_to = form.cleaned_data['assigned_to']
-            request_receipt = None
-            request_rc_receipt = None
-            request_police = None
-            request_rc_police = None
-            payment_receipt = None
-            payment_rc_receipt = None
 
-            if 'request_receipt' in request.FILES.keys():
-                request_receipt_file = request.FILES['request_receipt']
-                if request_receipt_file is not None:
-                    request_receipt = RequestFile()
-
-                    filename = request_receipt_file.name
-                    file_type = request_receipt_file.content_type
-                    content = base64.b64encode(request_receipt_file.read()).decode('utf-8')
-
-                    request_receipt.filename = filename
-                    request_receipt.file_type = file_type
-                    request_receipt.content = content
-
-            if 'request_rc_receipt' in request.FILES.keys():
-                request_rc_receipt_file = request.FILES['request_rc_receipt']
-                if request_rc_receipt_file is not None:
-                    request_rc_receipt = RequestFile()
-
-                    filename = request_rc_receipt_file.name
-                    file_type = request_rc_receipt_file.content_type
-                    content = base64.b64encode(request_rc_receipt_file.read()).decode('utf-8')
-
-                    request_rc_receipt.filename = filename
-                    request_rc_receipt.file_type = file_type
-                    request_rc_receipt.content = content
-
-            if 'request_police' in request.FILES.keys():
-                request_police_file = request.FILES['request_police']
-                if request_police_file is not None:
-                    request_police = RequestFile()
-
-                    filename = request_police_file.name
-                    file_type = request_police_file.content_type
-                    content = base64.b64encode(request_police_file.read()).decode('utf-8')
-
-                    request_police.filename = filename
-                    request_police.file_type = file_type
-                    request_police.content = content
-            
-            if 'request_rc_police' in request.FILES.keys():
-                request_rc_police_file = request.FILES['request_rc_police']
-                if request_rc_police_file is not None:
-                    request_rc_police = RequestFile()
-
-                    filename = request_rc_police_file.name
-                    file_type = request_rc_police_file.content_type
-                    content = base64.b64encode(request_rc_police_file.read()).decode('utf-8')
-
-                    request_rc_police.filename = filename
-                    request_rc_police.file_type = file_type
-                    request_rc_police.content = content
-            
-            if 'payment_receipt' in request.FILES.keys():
-                payment_receipt_file = request.FILES['payment_receipt']
-                if payment_receipt_file is not None:
-                    payment_receipt = RequestFile()
-
-                    filename = payment_receipt_file.name
-                    file_type = payment_receipt_file.content_type
-                    content = base64.b64encode(payment_receipt_file.read()).decode('utf-8')
-
-                    payment_receipt.filename = filename
-                    payment_receipt.file_type = file_type
-                    payment_receipt.content = content
-            
-            if 'payment_rc_receipt' in request.FILES.keys():
-                payment_rc_receipt_file = request.FILES['payment_rc_receipt']
-                if payment_rc_receipt_file is not None:
-                    payment_rc_receipt = RequestFile()
-
-                    filename = payment_rc_receipt_file.name
-                    file_type = payment_rc_receipt_file.content_type
-                    content = base64.b64encode(payment_rc_receipt_file.read()).decode('utf-8')
-
-                    payment_rc_receipt.filename = filename
-                    payment_rc_receipt.file_type = file_type
-                    payment_rc_receipt.content = content
-            
             request_fields = []
             values_fields = []
             for ramo_field in ramo.ramo_fields:
@@ -640,66 +565,27 @@ def edit_request_view(request, operative_request_id):
                     request_fields.append(request_field)
                     values_fields.append(ramo_field_value)
 
-            request_documents = []
-            for document_field in ramo.available_documents:
-                document_file = None
-                document_field_name = 'document_' + document_field.name
-                if document_field_name in request.FILES.keys():
-                    document_file = request.FILES[document_field_name]
-
-                if document_field is not None and document_file is not None:
-                    request_document = RequestDocument()
-                    request_document.document_name = document_field.name
-                    request_document.document_title = document_field.title
-
-                    filename = document_file.name
-                    file_type = document_file.content_type
-                    content = base64.b64encode(document_file.read()).decode('utf-8')
-
-                    request_document.filename = filename
-                    request_document.file_type = file_type
-                    request_document.content = content
-
-                    request_documents.append(request_document)
-
-            taker = None
-            if taker_identification is not None and taker_identification != '':
-                try:
-                    taker = Taker.objects.get(identification=taker_identification)
-                except Taker.DoesNotExist:
-                    taker = Taker()
-                    taker.person_type = taker_person_type
-                    taker.document_type = taker_document_type
-                    taker.identification = taker_identification
-                    taker.created_at = datetime.datetime.now()
-                    taker.created_by = current_account.username 
+            taker = operative_request.taker
+            if taker_person_type is not None:
+                taker.person_type = taker_person_type
+            if taker_document_type is not None:
+                taker.document_type = taker_document_type
+            if taker_name is not None:
                 taker.name = taker_name
+            if taker_phone_number is not None:
                 taker.phone_number = taker_phone_number
+            if taker_contact_name is not None:
                 taker.contact_name = taker_contact_name
-                taker.updated_at = datetime.datetime.now()
-                taker.updated_by = current_account.username 
-                taker.save()
+            taker.updated_at = datetime.datetime.now()
+            taker.updated_by = current_account.username 
+            taker.save()
 
             if error is None:   
-                operative_request.taker = taker
                 operative_request.ramo = ramo
                 operative_request.value = value
                 operative_request.status = request_status
                 operative_request.request_fields = request_fields
-                operative_request.request_documents = request_documents
                 operative_request.observations = observations
-                if request_receipt is not None:
-                    operative_request.request_receipt = request_receipt
-                if request_rc_receipt is not None:
-                    operative_request.request_rc_receipt = request_rc_receipt
-                if request_police is not None:
-                    operative_request.request_police = request_police
-                if request_rc_police is not None:
-                    operative_request.request_rc_police = request_rc_police
-                if payment_receipt is not None:
-                    operative_request.payment_receipt = payment_receipt
-                if payment_rc_receipt is not None:
-                    operative_request.payment_rc_receipt = payment_rc_receipt
                 operative_request.values_fields = '|'.join(values_fields)
                 operative_request.assigned_to = assigned_to
                 operative_request.assigned_at = datetime.datetime.now()
@@ -716,12 +602,23 @@ def edit_request_view(request, operative_request_id):
                 request_event.created_by = current_account.username 
                 request_event.save()
                 
-                messages.success (request, f'Solicitud {operative_request} actualizado satisfactoriamente!')
+                messages.success (request, f'Solicitud {operative_request} editada satisfactoriamente!')
+                return redirect(reverse_lazy("operative_requests"))
         else:
-            error = "¡Error en la actualización del Request!"
+            error = "¡Error en la edición del Request!"
         if error is not None:
             messages.error (request, error)
-    return redirect(reverse_lazy("operative_requests"))
+    
+    context = {
+        'table_title': 'Requests',
+        'table_description': 'Editar Solicitud',
+        'form': form,
+        'request_data': data,
+        'operative_request': operative_request,
+        'segment': 'operative'
+    }
+
+    return render(request, 'requests/edit.html', context)
 
 @login_required(login_url="/auth/login/")
 def assign_request_view(request, operative_request_id):

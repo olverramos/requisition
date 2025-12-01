@@ -120,9 +120,11 @@
                     {% endif %}
 
                     {% if can_edit %}
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Solicitud" onclick="load_data('edit', '{{operative_request.id}}');">
-                            <i class="fa fa-pencil text-sm"></i>
-                        </button>
+                        <a href="{% url 'operative_requests_edit' operative_request.id %}">
+                            <button type="button" class="btn" data-original-title="Editar Solicitud">
+                                <i class="fa fa-pencil text-sm"></i>
+                            </button>                   
+                        </a>
                     {% endif %}
 
                     {% if can_delete %}
