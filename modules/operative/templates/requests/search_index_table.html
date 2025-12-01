@@ -46,9 +46,6 @@
                             <i class="fa fa-folder-open-o text-sm"></i>
                         </button>                   
                     </a>
-
-
-
                     {% if operative_request.status.id == '3' %}
                             <button type="button" class="btn" data-original-title="Descargar Recibo" onclick="downloadFile('{{operative_request.request_receipt.filename}}', '{{operative_request.request_receipt.contentfilename}}', '{{operative_request.request_receipt.file_type}}');">
                                 <i class="fa fa-ticket text-sm"></i>
