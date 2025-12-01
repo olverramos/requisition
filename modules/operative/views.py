@@ -425,7 +425,10 @@ def create_request_view(request):
                 request_event.save()
 
                 messages.success (request, f'Solicitud {operative_request} creada satisfactoriamente!')
-                return redirect(reverse_lazy("home"))
+                return redirect(
+                    reverse_lazy("operative_requests_documents", 
+                        kwargs={"operative_request_id": operative_request.id})
+                )
         else:
             error = "¡Error en el registro de la solicitud! "
             for field, message_list in form.errors.items():
@@ -993,7 +996,9 @@ def documents_request_view(request, operative_request_id, source=None):
                 },            
             )
     else:
-        if 'back_url' in request.GET:
+        if role_id == '':
+            back_url  = reverse_lazy("home")
+        elif 'back_url' in request.GET:
             back_url = reverse_lazy(request.GET['back_url'])
         else:
             back_url = reverse_lazy("operative_requests")
@@ -1079,7 +1084,6 @@ def create_document_request_view(request, operative_request_id, source=None):
             document.save()
 
             messages.success (request, f'Documento {document} creado satisfactoriamente!')
-            
         else:
             error = "¡Error en el registro del documento! "
             for field, message_list in form.errors.items():
