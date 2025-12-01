@@ -197,8 +197,7 @@ def requests_applicant_search_view(request, phone=None):
                 operative_request_list = operative_request_list.filter(
                     taker=taker
                 )
-            else:
-                operative_request_list = operative_request_list.none()
+            
             if search:
                 operative_request_list = operative_request_list.filter(
                     request_fields__value=search
