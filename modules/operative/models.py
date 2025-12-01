@@ -247,6 +247,29 @@ class OperativeRequest(Document):
         return next_number        
 
     @staticmethod
+    def update_status():
+        operative_request_list = OperativeRequest.objects.all()
+        operative_request_status = None
+
+        police_document_class_list = DocumentClass.objects.filter(document_type='POLICE')
+        receipt_document_class_list = DocumentClass.objects.filter(document_type='RECEIPT')
+        payment_document_class_list = DocumentClass.objects.filter(document_type='PAYMENT')
+
+        for operative_request in operative_request_list:
+            document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
+            police_document_list = document_list.filter(document_class__in=police_document_class_list)
+            receipt_document_list = document_list.filter(document_class__in=receipt_document_class_list)
+            payment_document_list = document_list.filter(document_class__in=payment_document_class_list)
+
+            if police_document_list.count() > 0:
+                operative_request.status = RequestStatus.objects.get(id='3')
+            if receipt_document_list.count() > 0:
+                operative_request.status = RequestStatus.objects.get(id='3')
+            if payment_document_list.count() > 0:
+                operative_request.status = RequestStatus.objects.get(id='4')
+            operative_request.save()
+
+    @staticmethod
     def init_table():
         from modules.authentication.models import Account
         from modules.base.models import Applicant, Taker

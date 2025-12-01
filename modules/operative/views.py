@@ -1101,11 +1101,11 @@ def create_document_request_view(request, operative_request_id, source=None):
             document.save()
 
             operative_request_status = None
-            if document_class.document_type.id == DocumentTypeEnum.POLICE:
+            if document_class.document_type.id == 'POLICE':
                 operative_request_status = RequestStatus.objects.get(id='3')
-            if document_class.document_type.id == DocumentTypeEnum.RECEIPT:
+            if document_class.document_type.id == 'RECEIPT':
                 operative_request_status = RequestStatus.objects.get(id='3')
-            if document_class.document_type.id == DocumentTypeEnum.PAYMENT:
+            if document_class.document_type.id == 'PAYMENT':
                 operative_request_status = RequestStatus.objects.get(id='4')
 
             if operative_request_status is not None and operative_request.status.id < operative_request_status.id:
