@@ -262,12 +262,14 @@ class OperativeRequest(Document):
             payment_document_list = document_list.filter(document_class__in=payment_document_class_list)
 
             if police_document_list.count() > 0:
-                operative_request.status = RequestStatus.objects.get(id='3')
+                operative_request_status = RequestStatus.objects.get(id='3')
             if receipt_document_list.count() > 0:
-                operative_request.status = RequestStatus.objects.get(id='3')
+                operative_request_status = RequestStatus.objects.get(id='3')
             if payment_document_list.count() > 0:
-                operative_request.status = RequestStatus.objects.get(id='4')
-            operative_request.save()
+                operative_request_status = RequestStatus.objects.get(id='4')
+            if operative_request_status is not None and operative_request.status.id < operative_request_status.id:
+                operative_request.status = operative_request_status
+                operative_request.save()
 
     @staticmethod
     def init_table():
