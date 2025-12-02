@@ -68,3 +68,73 @@ class RamoFilterForm(forms.Form):
     class Media:
         js = ('js/ramos/index.js',  )
 
+
+class DocumentClassFilterForm(forms.Form):
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/documentclass/index.js',  )
+
+
+class CreateDocumentClassForm(forms.Form):
+    id = forms.CharField(
+        label=_("ID *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'ID'
+            }
+        ),
+    )
+    name = forms.CharField(
+        label=_("Nombre *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre'
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/documentclass/index.js', 
+            'js/documentclass/form.js', 
+        )
+
+class EditDocumentClassForm(forms.Form):
+    id = forms.CharField(
+        label=_("ID *"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'ID',
+                'readonly': True,
+            }
+        ),
+    )
+    name = forms.CharField(
+        label=_("Nombre *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre'
+            }
+        ),
+    )
+
+    class Media:
+        js = (
+            'js/documentclass/index.js', 
+            'js/documentclass/form.js', 
+        )

@@ -1,0 +1,46 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block form %}
+    {% include "documentclass/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">ID</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="50%">Nombre</th>
+                        <th class="text-secondary opacity-7" width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document_class in paginator.data %}
+                        <tr>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{document_class.id}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{document_class.name}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Clase Documento" alt="Ver Clase Documento" title="Ver Clase Documento" onclick="load_data('view', '{{document_class.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Clase Documento" alt="Editar Clase Documento" title="Editar Clase Documento" onclick="load_data('edit', '{{document_class.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Clase Documento" alt="Eliminar Clase Documento" title="Eliminar Clase Documento" onclick="load_data('delete', '{{document_class.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

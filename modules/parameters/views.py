@@ -1,7 +1,8 @@
+from .forms import CreateRamoForm, RamoFilterForm, CreateDocumentClassForm, \
+    DocumentClassFilterForm, EditDocumentClassForm
+from .models import Ramo, FieldType, RamoField, DocumentClass, DocumentClassType
 from django.contrib.auth.decorators import login_required
-from .forms import CreateRamoForm, RamoFilterForm
 from modules.authentication.models import Account
-from .models import Ramo, FieldType, RamoField
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -41,7 +42,7 @@ def ramos_index_view(request):
         'form': create_form,
         'filter_form': filter_form,
         'paginator': paginator,
-        'segment': 'bussiness'
+        'segment': 'parameters'
     }
 
     return render(request, 'ramos/index.html', context)
@@ -115,7 +116,7 @@ def edit_ramo_view(request, ramo_id):
 
 
 @login_required(login_url="/auth/login/")
-def delete_ramo_view(request, ramo_id):
+def delete_ramo_view(reques, ramo_id):
     error = None
     try:
         ramo = Ramo.objects.get(pk=ramo_id)
@@ -131,7 +132,6 @@ def delete_ramo_view(request, ramo_id):
         messages.error (request, error)
 
     return redirect(reverse_lazy("parameters_ramos"))
-
 
 @login_required(login_url="/auth/login/")
 def get_ramo_view(request, ramo_id) -> JsonResponse:
@@ -211,3 +211,129 @@ def ajax_getdocuments(request, ramo_id) -> JsonResponse:
         pass 
 
     return JsonResponse(data=fields_data, safe=False)
+
+
+@login_required(login_url="/auth/login/")
+def documentclass_index_view(request):
+    data = { }
+    page = 1
+    if 'page' in request.GET.keys() and request.GET['page']:
+        page = int(request.GET['page'])
+    if 'page' in request.POST.keys() and request.POST['page']:
+        page = int(request.POST['page'])
+    
+    documentclass_list = DocumentClass.objects.filter(document_type="CUSTOM")
+    
+    data['page'] = page
+    create_form = CreateDocumentClassForm()
+    filter_form = DocumentClassFilterForm()
+    if request.method == 'POST':
+        filter_form = DocumentClassFilterForm(request.POST)
+        if filter_form.is_valid():
+            search = filter_form.cleaned_data['search']
+            if search is not None and search != '':
+                documentclass_list = documentclass_list.filter(
+                    name__icontains=search
+                )
+
+    paginator = getPaginator(documentclass_list, page)
+
+    context = {
+        'table_title': 'Clases de Documentos',
+        'table_description': 'Administrador de Clases de Documentos',
+        'form': create_form,
+        'filter_form': filter_form,
+        'paginator': paginator,
+        'segment': 'parameters'
+    }
+
+    return render(request, 'documentclass/index.html', context)
+
+@login_required(login_url="/auth/login/")
+def create_documentclass_view(request):
+    current_account = Account.getAccount(request.user)
+    error = None
+    if request.method == 'POST':
+        form = CreateDocumentClassForm(request.POST)
+        if form.is_valid():
+            document_class_id = form.cleaned_data['id']
+            name = form.cleaned_data['name']
+
+            try:
+                document_class = DocumentClass.objects.get(id=document_class_id)
+                error = 'Hay una Clase de Documento registrado con el nombre'
+            except DocumentClass.DoesNotExist:
+                document_class = None
+
+            if error is None:
+                document_class:DocumentClass = DocumentClass()
+                document_class.id = document_class_id
+                document_class.name = name
+                document_class.document_type = DocumentClassType.objects.get(id="CUSTOM")
+                document_class.created_at = datetime.datetime.now()
+                document_class.created_by = current_account.username
+                document_class.save()
+
+                messages.success (request, f'Clase de Documento {document_class} creada satisfactoriamente!')
+        else:
+            error = "¡Error en el registro de la Clase de Documento!"
+        if error is not None:
+            messages.error (request, error)
+
+    return redirect(reverse_lazy("parameters_documentclass"))
+
+@login_required(login_url="/auth/login/")
+def get_documentclass_view(request, document_class_id) -> JsonResponse:
+    document_class_data = {}
+    try:
+        document_class:DocumentClass = DocumentClass.objects.get(pk=document_class_id)
+        document_class_data['id'] = str(document_class.id)
+        document_class_data['name'] = document_class.name
+    except DocumentClass.DoesNotExist:
+        pass
+
+    return JsonResponse(data=document_class_data)
+
+@login_required(login_url="/auth/login/")
+def edit_documentclass_view(request, document_class_id):
+    current_account = Account.getAccount(request.user)
+    error = None
+    try:
+        document_class:DocumentClass = DocumentClass.objects.get(pk=document_class_id)
+    except DocumentClass.DoesNotExist:
+        error = 'No existe una Clase de Documento con el id'
+        document_class = None
+
+    if error is None and request.method == 'POST':
+        form = EditDocumentClassForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            if error is None:   
+                document_class.name = name
+                document_class.updated_at = datetime.datetime.now()
+                document_class.updated_by = current_account.username
+                document_class.save()
+                messages.success (request, f'Clase de Documento {document_class} actualizada satisfactoriamente!')
+        else:
+            error = "¡Error en la actualización de la Clase de Documento!"
+        if error is not None:
+            messages.error (request, error)
+    return redirect(reverse_lazy("parameters_documentclass"))
+
+@login_required(login_url="/auth/login/")
+def delete_documentclass_view(request, document_class_id):
+    error = None
+    try:
+        document_class = DocumentClass.objects.get(pk=document_class_id)
+    except DocumentClass.DoesNotExist:
+        error = 'No existe una Clase de Documento con el id'
+        document_class = None
+
+    if error is None:
+        if request.method == 'POST':
+            document_class.delete()
+            messages.success (request, f'Clase de Documento {document_class} eliminada satisfactoriamente!')
+    else:
+        messages.error (request, error) 
+
+    return redirect(reverse_lazy("parameters_documentclass"))
