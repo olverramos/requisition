@@ -371,6 +371,7 @@ def create_request_view(request):
 
             request_fields = []
             values_fields = []
+            text_field = ''
             for ramo_field in ramo.ramo_fields:
                 ramo_field_value = None
                 if ramo_field.name in request.POST.keys():
@@ -380,6 +381,7 @@ def create_request_view(request):
                     request_field = RequestField()
                     request_field.field = ramo_field
                     request_field.value = ramo_field_value
+                    text_field += f'{ramo_field.name}: {ramo_field_value}\n'
                     request_fields.append(request_field)
                     values_fields.append(ramo_field_value)
 
@@ -431,7 +433,7 @@ def create_request_view(request):
                 request_event.created_by = applicant.email
                 request_event.save()
 
-                messages.success (request, f'Solicitud {operative_request} creada satisfactoriamente!')
+                messages.success (request, f'Solicitud {operative_request}, telefono: {operative_request.taker.phone_number}, {text_field} creada satisfactoriamente!')
                 return redirect(
                     reverse_lazy("operative_requests_documents", 
                         kwargs={"operative_request_id": operative_request.id})
