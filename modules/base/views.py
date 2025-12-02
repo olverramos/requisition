@@ -28,12 +28,12 @@ def applicants_index_view(request):
     if request.method == 'POST':
         filter_form = ApplicantFilterForm(request.POST)
         if filter_form.is_valid():
-            search = filter_form.cleaned_data['search']
+            name = filter_form.cleaned_data['name']
             identification = filter_form.cleaned_data['identification']
             phone_number = filter_form.cleaned_data['phone_number']
-            if search is not None and search != '':
+            if name is not None and name != '':
                 applicant_list = applicant_list.filter(
-                    name__icontains=search
+                    name__icontains=name
                 )
             if identification is not None and identification != '':
                 applicant_list = applicant_list.filter(
@@ -193,10 +193,21 @@ def takers_index_view(request):
     if request.method == 'POST':
         filter_form = TakerFilterForm(request.POST)
         if filter_form.is_valid():
-            search = filter_form.cleaned_data['search']
-            if search is not None and search != '':
+            name = filter_form.cleaned_data['name']
+            identification = filter_form.cleaned_data['identification']
+            phone_number = filter_form.cleaned_data['phone_number']
+
+            if name is not None and name != '':
                 taker_list = taker_list.filter(
-                    name__icontains=search
+                    name__icontains=name
+                )
+            if identification is not None and identification != '':
+                taker_list = taker_list.filter(
+                    identification__icontains=identification
+                )
+            if phone_number is not None and phone_number != '':
+                taker_list = taker_list.filter(
+                    phone_number__icontains=phone_number
                 )
 
     paginator = getPaginator(taker_list, page)
