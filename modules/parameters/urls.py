@@ -3,6 +3,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('documentclass/', views.documentclass_index_view, name='parameters_documentclass'),
+    path('documentclass/create/', views.create_documentclass_view, name='parameters_documentclass_create'),
+    path('documentclass/<str:document_class_id>/get/', views.get_documentclass_view, name='parameters_documentclass_query'),
+    path('documentclass/<str:document_class_id>/edit/', views.edit_documentclass_view, name='parameters_documentclass_edit'),
+    path('documentclass/<str:document_class_id>/delete/', views.delete_documentclass_view, name='parameters_documentclass_delete'),
+
     path('ramo/', views.ramos_index_view, name='parameters_ramos'),
     path('ramo/create/', views.create_ramo_view, name='parameters_ramos_create'),
     path('ramo/<str:ramo_id>/get/', views.get_ramo_view, name='parameters_ramos_query'),

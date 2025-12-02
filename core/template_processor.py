@@ -14,6 +14,10 @@ def generic_variables(request):
                 'title': 'Usuarios'
             },
             {
+                'url': 'parameters_documentclass',
+                'title': 'Clase Documentos'
+            },
+            {
                 'url': 'parameters_ramos',
                 'title': 'Ramos'
             },

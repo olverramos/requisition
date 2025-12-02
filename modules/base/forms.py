@@ -9,7 +9,7 @@ class CreateApplicantForm(forms.Form):
         label=_("Identificación *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Identificación'
             }
         ),
@@ -18,7 +18,7 @@ class CreateApplicantForm(forms.Form):
         label=_("Nombre *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Nombre'
             }
         ),
@@ -27,7 +27,7 @@ class CreateApplicantForm(forms.Form):
         label=_("Teléfono *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Teléfono'
             }
         ),
@@ -36,7 +36,7 @@ class CreateApplicantForm(forms.Form):
         label=_("Email *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Email'
             }
         ),
@@ -52,7 +52,7 @@ class EditApplicantForm(CreateApplicantForm):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Teléfono'
             }
         ),
@@ -68,7 +68,7 @@ class ApplicantFilterForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Ingrese el número de identificación'
             }
         ),
@@ -78,18 +78,18 @@ class ApplicantFilterForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Ingrese el número de teléfono'
             }
         ),
     )
-    search = forms.CharField(
-        label=_("Buscar"),
+    name = forms.CharField(
+        label=_("Nombre"),
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+                'class': 'form-control form-control-sm',
+                'placeholder': 'Ingrese el nombre para realizar la búsqueda'
             }
         ),
     )
@@ -104,20 +104,20 @@ class CreateTakerForm(forms.Form):
         required=True,
         queryset=PersonType.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Tipo de Persona', 'id': 'person_type_id'}),
+            attrs={'class': 'form-control form-control-sm form-select', 'placeholder': 'Tipo de Persona', 'id': 'person_type_id'}),
     )
     document_type = forms.ModelChoiceField(
         label=_("Tipo de Documento *"),
         required=True,
         queryset=DocumentType.objects.all(),
         widget=forms.Select(
-            attrs={'class': 'form-control form-control-lg form-select', 'placeholder': 'Tipo de Documento', 'id': 'document_type_id'}),
+            attrs={'class': 'form-control form-control-sm form-select', 'placeholder': 'Tipo de Documento', 'id': 'document_type_id'}),
     )
     identification = forms.CharField(
         label=_("Identificación *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Identificación'
             }
         ),
@@ -126,7 +126,7 @@ class CreateTakerForm(forms.Form):
         label=_("Nombre *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Nombre'
             }
         ),
@@ -135,7 +135,7 @@ class CreateTakerForm(forms.Form):
         label=_("Email *"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Email'
             }
         ),
@@ -144,7 +144,7 @@ class CreateTakerForm(forms.Form):
         label=_("Teléfono"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Teléfono'
             }
         ),
@@ -153,7 +153,7 @@ class CreateTakerForm(forms.Form):
         label=_("Nombre Contacto"),
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Nombre Contacto'
             }
         ),
@@ -168,7 +168,7 @@ class EditTakerForm(CreateTakerForm):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
+                'class': 'form-control form-control-sm',
                 'placeholder': 'Identificación'
             }
         ),
@@ -178,13 +178,33 @@ class EditTakerForm(CreateTakerForm):
 
 
 class TakerFilterForm(forms.Form):
-    search = forms.CharField(
-        label=_("Buscar"),
+    identification = forms.CharField(
+        label=_("Identificación"),
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control form-control-lg',
-                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+                'class': 'form-control form-control-sm',
+                'placeholder': 'Ingrese el número de identificación'
+            }
+        ),
+    )
+    phone_number = forms.CharField(
+        label=_("Teléfono"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-sm',
+                'placeholder': 'Ingrese el número de teléfono'
+            }
+        ),
+    )
+    name = forms.CharField(
+        label=_("Nombre"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-sm',
+                'placeholder': 'Ingrese el nombre para realizar la búsqueda'
             }
         ),
     )

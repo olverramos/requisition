@@ -152,6 +152,10 @@ class DocumentClass(Document):
     id = fields.StringField(verbose_name='ID', primary_key=True, max_length=20)
     name = fields.StringField(verbose_name='Nombre')
     document_type = fields.ReferenceField(DocumentClassType, verbose_name="Tipo de Documento")
+    created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
+    updated_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -188,6 +192,7 @@ class DocumentClass(Document):
                             document_class.id = data['id']
                             document_class.name = data['name']
                             document_class.document_type = document_type
+                            document_class.created_at = datetime.datetime.now()
                             document_class.save()
 
                             print (f'Clase de Documento {document_class} creada')
