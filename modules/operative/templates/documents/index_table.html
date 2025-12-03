@@ -48,6 +48,12 @@
                                         <i class="fa fa-trash text-sm"></i>
                                     </button>
                                 {% endif %}
+                            {% else %}
+                                {% if role_id == 'admin' %}
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" alt="Eliminar Documento" title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
+                                        <i class="fa fa-trash text-sm"></i>
+                                    </button>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
