@@ -222,7 +222,7 @@ def documentclass_index_view(request):
     if 'page' in request.POST.keys() and request.POST['page']:
         page = int(request.POST['page'])
     
-    documentclass_list = DocumentClass.objects.filter(document_type="CUSTOM")
+    documentclass_list = DocumentClass.objects.all()
     
     data['page'] = page
     create_form = CreateDocumentClassForm()

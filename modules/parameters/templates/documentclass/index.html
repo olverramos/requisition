@@ -32,9 +32,11 @@
                                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Clase Documento" alt="Editar Clase Documento" title="Editar Clase Documento" onclick="load_data('edit', '{{document_class.id}}');">
                                     <i class="fa fa-pencil text-sm"></i>
                                 </button>
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Clase Documento" alt="Eliminar Clase Documento" title="Eliminar Clase Documento" onclick="load_data('delete', '{{document_class.id}}');">
-                                    <i class="fa fa-trash text-sm"></i>
-                                </button>
+                                {% if document_class.document_type.id == 'CUSTOM' %}
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Clase Documento" alt="Eliminar Clase Documento" title="Eliminar Clase Documento" onclick="load_data('delete', '{{document_class.id}}');">
+                                        <i class="fa fa-trash text-sm"></i>
+                                    </button>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

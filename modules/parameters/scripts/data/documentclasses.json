@@ -1,7 +1,7 @@
 [
     {
         "id": "request_receipt",
-        "name": "Recibo de Pago",
+        "name": "Recibo de Pago Cumplimiento",
         "document_type": "RECEIPT"
     },
     {
@@ -11,7 +11,7 @@
     },
     {
         "id": "request_police",
-        "name": "Poliza",
+        "name": "Poliza Cumplimiento",
         "document_type": "POLICE"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
         "id": "payment_receipt",
-        "name": "Comprobante de Pago",
+        "name": "Comprobante de Pago Cumplimiento",
         "document_type": "PAYMENT"
     },
     {
