@@ -992,7 +992,7 @@ def documents_request_view(request, operative_request_id, source=None):
         document_type_list.append('PAYMENT')
         if operative_request.status.id in ('4', '5'):
             document_type_list.append('POLICE')
-    elif current_account.role.id != RoleEnum.APPLICANT:
+    elif current_account.role.id == RoleEnum.APPLICANT:
         document_type_list.append('PAYMENT')
         if operative_request.status.id in ('4', '5'):
             document_type_list.append('POLICE')
