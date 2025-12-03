@@ -1122,7 +1122,8 @@ def create_document_request_view(request, operative_request_id, source=None):
                     operative_request.updated_by = current_account.username
                 operative_request.save()
 
-            messages.success (request, f'Documento {document} creado satisfactoriamente!')
+            messages.success (request, f'Documento {document_class} del tomador {operative_request.taker.name}, numero de contrato {operative_request.field_values}, telefono {operative_request.taker.phone}, numero de requerimiento {operative_request.request_number}, solicitante {operative_request.applicant.name} creado satisfactoriamente!')
+
         else:
             error = "¡Error en el registro del documento! "
             for field, message_list in form.errors.items():
