@@ -76,10 +76,15 @@ def requests_index_view(request):
         filter_form = RequestFilterForm(request.POST)
         if filter_form.is_valid():
             search = filter_form.cleaned_data['search']
+            number = filter_form.cleaned_data['number']
             applicant = filter_form.cleaned_data['applicant']
             ramo = filter_form.cleaned_data['ramo']
             date = filter_form.cleaned_data['date']
 
+            if number is not None and number != '':
+                operative_request_list = operative_request_list.filter(
+                    number=number
+                )
             if search is not None and search != '':
                 operative_request_list = operative_request_list.filter(
                     values_fields__icontains=search

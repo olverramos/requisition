@@ -176,6 +176,7 @@ class DocumentClass(Document):
                 for data in data_list:
 
                     document_type = None
+                    
                     if 'document_type' in data.keys():
                         document_type_id = data["document_type"]
                         try:

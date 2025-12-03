@@ -1203,6 +1203,16 @@ class AttachmentDocumentForm(BaseRequestForm):
         )
 
 class RequestFilterForm(forms.Form):
+    number = forms.CharField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Número'
+            }
+        ),
+    )
     search = forms.CharField(
         label=_("Buscar"),
         required=False,

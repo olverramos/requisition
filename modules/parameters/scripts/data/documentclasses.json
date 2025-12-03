@@ -6,7 +6,7 @@
     },
     {
         "id": "request_rc_receipt",
-        "title": "Recibo de Pago RC",
+        "name": "Recibo de Pago RC",
         "document_type": "RECEIPT"
     },
     {
