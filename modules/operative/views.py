@@ -178,6 +178,7 @@ def requests_applicant_search_view(request, phone=None):
             taker_phone_number = filter_form.cleaned_data['taker_phone_number']
             taker_identification = filter_form.cleaned_data['taker_identification']
             search = filter_form.cleaned_data['search']
+            number = filter_form.cleaned_data['number']
             
             applicant = None
             taker = None
@@ -214,9 +215,12 @@ def requests_applicant_search_view(request, phone=None):
             
             if search:
                 operative_request_list = operative_request_list.filter(
-                    request_fields__value=search
+                    values_fields=search
                 )
-                
+            if number:
+                operative_request_list = operative_request_list.filter(
+                    number=number
+                )
     if applicant is None:
         operative_request_list = OperativeRequest.objects.none()
 
@@ -276,6 +280,7 @@ def requests_taker_search_view(request, phone=None):
             taker_phone_number = filter_form.cleaned_data['taker_phone_number']
             taker_identification = filter_form.cleaned_data['taker_identification']
             search = filter_form.cleaned_data['search']
+            number = filter_form.cleaned_data['number']
             
             taker = None
 
@@ -295,7 +300,11 @@ def requests_taker_search_view(request, phone=None):
             if search:
                 search_data = True
                 operative_request_list = operative_request_list.filter(
-                    request_fields__value=search
+                    values_fields=search
+                )
+            if number:
+                operative_request_list = operative_request_list.filter(
+                    number=number
                 )
             if taker:
                 operative_request_list = operative_request_list.filter(

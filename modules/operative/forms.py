@@ -1264,6 +1264,16 @@ class RequestFilterForm(forms.Form):
 
 
 class ApplicantSearchRequestForm(forms.Form):
+    number = forms.CharField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Número de la Solicitud'
+            }
+        ),
+    )
     applicant_phone_number = forms.CharField(
         label=_("Teléfono Solicitante *"),
         required=True,
@@ -1310,6 +1320,16 @@ class ApplicantSearchRequestForm(forms.Form):
 
 
 class TakerSearchRequestForm(forms.Form):
+    number = forms.CharField(
+        label=_("Número"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Número de la Solicitud'
+            }
+        ),
+    )
     taker_phone_number = forms.CharField(
         label=_("Teléfono Tomador *"),
         required=False,
