@@ -13,6 +13,7 @@ from modules.parameters.models import DocumentClass
 from modules.base.models import Applicant, Taker
 from django.shortcuts import render, redirect
 from core.templatetags.tools import currency
+from mongoengine.queryset.visitor import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from core.utils import getPaginator
@@ -215,7 +216,7 @@ def requests_applicant_search_view(request, phone=None):
             
             if search:
                 operative_request_list = operative_request_list.filter(
-                    values_fields=search
+                    values_fields__icontains=search
                 )
             if number:
                 operative_request_list = operative_request_list.filter(
@@ -300,7 +301,7 @@ def requests_taker_search_view(request, phone=None):
             if search:
                 search_data = True
                 operative_request_list = operative_request_list.filter(
-                    values_fields=search
+                    values_fields__icontains=search
                 )
             if number:
                 operative_request_list = operative_request_list.filter(
@@ -1072,10 +1073,8 @@ def documents_request_view(request, operative_request_id, source=None):
     paginator = getPaginator(document_list, page, items_per_page=10)
     
     if current_account is None or current_account.role.id == RoleEnum.APPLICANT:
-        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', 'PAYMENT',))
-    elif current_account is not None and current_account.role.id == RoleEnum.ASSISTANT:
-        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', 'RECEIPT', 'POLICE',))
-    else: 
+        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', ))
+    elif current_account is not None and current_account.role.id != RoleEnum.APPLICANT:
         form.fields['document_class'].queryset = DocumentClass.objects.all()
 
     context = {
