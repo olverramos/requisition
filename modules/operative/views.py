@@ -80,32 +80,41 @@ def requests_index_view(request):
             applicant = filter_form.cleaned_data['applicant']
             ramo = filter_form.cleaned_data['ramo']
             date = filter_form.cleaned_data['date']
+            try:
+                if number is not None and number != '':
+                    operative_request_list = operative_request_list.filter(
+                        number=number
+                    )
+                if search is not None and search != '':
+                    operative_request_list = operative_request_list.filter(
+                        values_fields__icontains=search
+                    )
+                if applicant is not None:
+                    operative_request_list = operative_request_list.filter(
+                        applicant=applicant
+                    )
+                if ramo is not None:
+                    operative_request_list = operative_request_list.filter(
+                        ramo=ramo
+                    )
+                if date is not None:
+                    start_date_time = datetime.datetime.combine(date, datetime.time.min)
+                    end_date_time = datetime.datetime.combine(date, datetime.time.max)
+                    operative_request_list = operative_request_list.filter(
+                        created_at__gte=start_date_time,
+                        created_at__lte=end_date_time
+                    )
+            except Exception as e:
+                error = f'Error al filtrar las solicitudes: {str(e)}'
+                messages.error(request, error)
 
-            if number is not None and number != '':
-                operative_request_list = operative_request_list.filter(
-                    number=number
-                )
-            if search is not None and search != '':
-                operative_request_list = operative_request_list.filter(
-                    values_fields__icontains=search
-                )
-            if applicant is not None:
-                operative_request_list = operative_request_list.filter(
-                    applicant=applicant
-                )
-            if ramo is not None:
-                operative_request_list = operative_request_list.filter(
-                    ramo=ramo
-                )
-            if date is not None:
-                start_date_time = datetime.datetime.combine(date, datetime.time.min)
-                end_date_time = datetime.datetime.combine(date, datetime.time.max)
-                operative_request_list = operative_request_list.filter(
-                    created_at__gte=start_date_time,
-                    created_at__lte=end_date_time
-                )
-
-    paginator = getPaginator(operative_request_list, page, items_per_page=10)
+    try:
+        paginator = getPaginator(operative_request_list, page, items_per_page=10)
+    except Exception as e:
+        error = f'Error al filtrar las solicitudes: {str(e)}'
+        messages.error(request, error)
+        operative_request_list = OperativeRequest.objects.none()
+        paginator = getPaginator(operative_request_list, page, items_per_page=10)
 
     user_list = User.objects.filter(is_active=True)
     form.fields['assigned_to'].queryset = Account.objects.filter(
@@ -985,23 +994,25 @@ def documents_request_view(request, operative_request_id, source=None):
     except OperativeRequest.DoesNotExist:
         error = 'No existe una request con el id'
         operative_request = None
+    if error is None:
+        document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
+        document_type_list = ['CUSTOM', 'RECEIPT']
+        if current_account is None:
+            document_type_list.append('PAYMENT')
+            if operative_request.status.id in ('4', '5'):
+                document_type_list.append('POLICE')
+        elif current_account.role.id == RoleEnum.APPLICANT:
+            document_type_list.append('PAYMENT')
+            if operative_request.status.id in ('4', '5'):
+                document_type_list.append('POLICE')
+        else:
+            document_type_list.append('PAYMENT')
+            document_type_list.append('POLICE')
 
-    document_list = OperativeRequestDocument.objects.filter(operative_request=operative_request)
-    document_type_list = ['CUSTOM', 'RECEIPT']
-    if current_account is None:
-        document_type_list.append('PAYMENT')
-        if operative_request.status.id in ('4', '5'):
-            document_type_list.append('POLICE')
-    elif current_account.role.id == RoleEnum.APPLICANT:
-        document_type_list.append('PAYMENT')
-        if operative_request.status.id in ('4', '5'):
-            document_type_list.append('POLICE')
+        document_class_list = DocumentClass.objects.filter(document_type__in=document_type_list)
+        document_list = document_list.filter(document_class__in=document_class_list)
     else:
-        document_type_list.append('PAYMENT')
-        document_type_list.append('POLICE')
-
-    document_class_list = DocumentClass.objects.filter(document_type__in=document_type_list)
-    document_list = document_list.filter(document_class__in=document_class_list)
+        document_list = OperativeRequestDocument.objects.none()
 
     if source is not None:
         if source == 'applicant_search':

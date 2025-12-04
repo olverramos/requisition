@@ -1209,7 +1209,7 @@ class RequestFilterForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'Número'
+                'placeholder': 'Número de la Solicitud'
             }
         ),
     )
