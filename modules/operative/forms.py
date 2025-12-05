@@ -109,7 +109,7 @@ class CreateRequestForm(forms.Form):
     )
     ramo = forms.ModelChoiceField(
         label=_("Ramo *"),
-        required=False,
+        required=True,
         queryset=Ramo.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control form-select', 'placeholder': 'Ramo', 'id': 'ramo_id'}),

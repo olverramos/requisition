@@ -365,67 +365,75 @@ def create_request_view(request):
                 value = float(value)
             except ValueError:
                 error = 'El valor debe ser un número'
+
+            if ramo is None:
+                error = 'Debe seleccionar un ramo'
+                
             observations = form.cleaned_data['observations']
             
-            applicant = None
-            if applicant_phone_number is not None and applicant_phone_number != '':
+            if error is None:
+                applicant = None
+                if applicant_phone_number is not None and applicant_phone_number != '':
+                    try:
+                        applicant = Applicant.objects.get(phone_number=applicant_phone_number)
+                    except Applicant.DoesNotExist:
+                        error = 'No existe un solicitante con el teléfono'
+
+            if error is None:
+                taker = None
+                if taker_identification is not None and taker_identification != '':
+                    try:
+                        taker = Taker.objects.get(identification=taker_identification)
+                    except Taker.DoesNotExist:
+                        taker = Taker()
+                        taker.person_type = taker_person_type
+                        taker.document_type = taker_document_type
+                        taker.identification = taker_identification
+                        taker.created_at = datetime.datetime.now()
+                        taker.created_by = applicant.email 
+                    taker.name = taker_name
+                    taker.phone_number = taker_phone_number
+                    taker.contact_name = taker_contact_name
+                    taker.updated_at = datetime.datetime.now()
+                    taker.updated_by = applicant.email
+                    taker.save()
+
+            if error is None:
+                request_fields = []
+                values_fields = []
+                text_field = ''
+                for ramo_field in ramo.ramo_fields:
+                    ramo_field_value = None
+                    if ramo_field.name in request.POST.keys():
+                        ramo_field_value = request.POST[ramo_field.name]
+
+                    if ramo_field is not None and ramo_field_value is not None:
+                        request_field = RequestField()
+                        request_field.field = ramo_field
+                        request_field.value = ramo_field_value
+                        text_field += f'{ramo_field.name}: {ramo_field_value}\n'
+                        request_fields.append(request_field)
+                        values_fields.append(ramo_field_value)
+
+            if error is None:
+                request_status_id = '1'
+                assigned_to = None
+                assigned_at = None
+                assigned_by = None
+
+                assistants = Account.objects.filter(role=RoleEnum.ASSISTANT)
+                if assistants.count() == 1:
+                    assistant = assistants[0]
+                    assigned_to = assistant
+                    assigned_at = datetime.datetime.now()
+                    assigned_by = applicant.email
+                    request_status_id = '2'
+                
                 try:
-                    applicant = Applicant.objects.get(phone_number=applicant_phone_number)
-                except Applicant.DoesNotExist:
-                    error = 'No existe un solicitante con el teléfono'
-
-            taker = None
-            if taker_identification is not None and taker_identification != '':
-                try:
-                    taker = Taker.objects.get(identification=taker_identification)
-                except Taker.DoesNotExist:
-                    taker = Taker()
-                    taker.person_type = taker_person_type
-                    taker.document_type = taker_document_type
-                    taker.identification = taker_identification
-                    taker.created_at = datetime.datetime.now()
-                    taker.created_by = applicant.email 
-                taker.name = taker_name
-                taker.phone_number = taker_phone_number
-                taker.contact_name = taker_contact_name
-                taker.updated_at = datetime.datetime.now()
-                taker.updated_by = applicant.email
-                taker.save()
-
-            request_fields = []
-            values_fields = []
-            text_field = ''
-            for ramo_field in ramo.ramo_fields:
-                ramo_field_value = None
-                if ramo_field.name in request.POST.keys():
-                    ramo_field_value = request.POST[ramo_field.name]
-
-                if ramo_field is not None and ramo_field_value is not None:
-                    request_field = RequestField()
-                    request_field.field = ramo_field
-                    request_field.value = ramo_field_value
-                    text_field += f'{ramo_field.name}: {ramo_field_value}\n'
-                    request_fields.append(request_field)
-                    values_fields.append(ramo_field_value)
-
-            request_status_id = '1'
-            assigned_to = None
-            assigned_at = None
-            assigned_by = None
-
-            assistants = Account.objects.filter(role=RoleEnum.ASSISTANT)
-            if assistants.count() == 1:
-                assistant = assistants[0]
-                assigned_to = assistant
-                assigned_at = datetime.datetime.now()
-                assigned_by = applicant.email
-                request_status_id = '2'
-            
-            try:
-                request_status = RequestStatus.objects.get(id=request_status_id)
-            except RequestStatus.DoesNotExist:
-                error = 'Error de Parametrización: Estado de Solicitud Inicial no encontrado'
-                request_status = None
+                    request_status = RequestStatus.objects.get(id=request_status_id)
+                except RequestStatus.DoesNotExist:
+                    error = 'Error de Parametrización: Estado de Solicitud Inicial no encontrado'
+                    request_status = None
 
             if error is None:
                 number = OperativeRequest.getNextNumber()
