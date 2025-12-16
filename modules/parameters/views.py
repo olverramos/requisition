@@ -1,15 +1,16 @@
 from .forms import CreateRamoForm, RamoFilterForm, CreateDocumentClassForm, \
-    DocumentClassFilterForm, EditDocumentClassForm
+    DocumentClassFilterForm, EditDocumentClassForm, RamoFieldFilterForm, \
+    CreateRamoFieldForm
 from .models import Ramo, FieldType, RamoField, DocumentClass, DocumentClassType
 from django.contrib.auth.decorators import login_required
 from modules.authentication.models import Account
 from django.shortcuts import render, redirect
+from mongoengine.queryset.visitor import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from core.utils import getPaginator
 from django.contrib import messages
 import datetime
-
 
 @login_required(login_url="/auth/login/")
 def ramos_index_view(request):
@@ -337,3 +338,141 @@ def delete_documentclass_view(request, document_class_id):
         messages.error (request, error) 
 
     return redirect(reverse_lazy("parameters_documentclass"))
+
+@login_required(login_url="/auth/login/")
+def ramo_field_index_view(request):
+    data = { }
+    page = 1
+    if 'page' in request.GET.keys() and request.GET['page']:
+        page = int(request.GET['page'])
+    if 'page' in request.POST.keys() and request.POST['page']:
+        page = int(request.POST['page'])
+    
+    ramo_field_list = RamoField.objects.all()
+    
+    data['page'] = page
+    create_form = CreateRamoFieldForm()
+    filter_form = RamoFieldFilterForm()
+    if request.method == 'POST':
+        filter_form = RamoFieldFilterForm(request.POST)
+        if filter_form.is_valid():
+            search = filter_form.cleaned_data['search']
+            if search is not None and search != '':
+                ramo_field_list = ramo_field_list.filter(
+                    Q(title__icontains=search) |
+                    Q(name__icontains=search)
+                )
+
+    paginator = getPaginator(ramo_field_list, page)
+
+    context = {
+        'table_title': 'Campos de Ramo',
+        'table_description': 'Administrador de Campos de Ramo',
+        'form': create_form,
+        'filter_form': filter_form,
+        'paginator': paginator,
+        'segment': 'parameters'
+    }
+
+    return render(request, 'ramofield/index.html', context)
+
+@login_required(login_url="/auth/login/")
+def create_field_view(request):
+    current_account = Account.getAccount(request.user)
+    error = None
+    if request.method == 'POST':
+        form = CreateRamoFieldForm(request.POST)
+        if form.is_valid():
+            field_type = form.cleaned_data['field_type']
+            name = form.cleaned_data['name']
+            title = form.cleaned_data['title']
+            mandatory = form.cleaned_data['mandatory']
+
+            try:
+                ramo_field = RamoField.objects.get(name=name)
+                error = 'Hay un Campo registrado con el nombre'
+            except RamoField.DoesNotExist:
+                ramo_field = None
+
+            if error is None:
+                ramo_field:RamoField = RamoField()
+                ramo_field.field_type = field_type
+                ramo_field.name = name
+                ramo_field.title = title
+                ramo_field.mandatory = mandatory
+                ramo_field.created_at = datetime.datetime.now()
+                ramo_field.created_by = current_account.username
+                ramo_field.save()
+
+                messages.success (request, f'Campo {ramo_field} creado satisfactoriamente!')
+        else:
+            error = "¡Error en el registro del Campo!"
+        if error is not None:
+            messages.error (request, error)
+
+    return redirect(reverse_lazy("parameters_ramo_field"))
+
+@login_required(login_url="/auth/login/")
+def get_field_view(request, field_id) -> JsonResponse:
+    field_data = {}
+    try:
+        field:RamoField = RamoField.objects.get(pk=field_id)
+        field_data['name'] = field.name
+        field_data['title'] = field.title
+        field_data['field_type'] = field.field_type.id
+        field_data['mandatory'] = field.mandatory
+    except RamoField.DoesNotExist:
+        pass
+
+    return JsonResponse(data=field_data)
+
+@login_required(login_url="/auth/login/")
+def edit_field_view(request, field_id):
+    current_account = Account.getAccount(request.user)
+    error = None
+    try:
+        field:RamoField = RamoField.objects.get(pk=field_id)
+    except RamoField.DoesNotExist:
+        error = 'No existe un Campo con el id'
+        field = None
+
+    if error is None and request.method == 'POST':
+        form = CreateRamoFieldForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            title = form.cleaned_data['title']
+            field_type = form.cleaned_data['field_type']
+            mandatory = form.cleaned_data['mandatory']
+            if error is None:   
+                field.name = name
+                field.title = title
+                field.field_type = field_type
+                field.mandatory = mandatory
+                field.updated_at = datetime.datetime.now()
+                field.updated_by = current_account.username
+                field.save()
+                messages.success (request, f'Campo {field} actualizado satisfactoriamente!')
+        else:
+            error = "¡Error en la actualización del Campo!"
+        if error is not None:
+            messages.error (request, error)
+    return redirect(reverse_lazy("parameters_ramo_field"))
+
+@login_required(login_url="/auth/login/")
+def delete_field_view(request, field_id):
+    error = None
+    try:
+        field = RamoField.objects.get(pk=field_id)
+    except RamoField.DoesNotExist:
+        error = 'No existe un Campo de Ramo con el id'
+        field = None
+
+    if error is None:
+        if request.method == 'POST':
+            field.delete()
+            messages.success (request, f'Campo de Ramo {field} eliminado satisfactoriamente!')
+    else:
+        messages.error (request, error) 
+
+    return redirect(reverse_lazy("parameters_ramo_field"))
+

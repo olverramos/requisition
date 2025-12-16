@@ -18,6 +18,10 @@ def generic_variables(request):
                 'title': 'Clase Documentos'
             },
             {
+                'url': 'parameters_ramo_field',
+                'title': 'Campos de Ramo'
+            },
+            {
                 'url': 'parameters_ramos',
                 'title': 'Ramos'
             },

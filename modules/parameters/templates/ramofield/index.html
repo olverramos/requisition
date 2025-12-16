@@ -1,0 +1,57 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block form %}
+    {% include "ramofield/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="15%">Nombre</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="15%">Tipo</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="40%">Título</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Obligatorio</th>
+                        <th class="text-secondary opacity-7" width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ramo_field in paginator.data %}
+                        <tr>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field.name}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field.field_type.name}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field.title}}</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field.mandatory|yesno:"Sí,No"}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Campo" alt="Ver Campo" title="Ver Campo" onclick="load_data('view', '{{ramo_field.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Campo" alt="Editar Campo" title="Editar Campo" onclick="load_data('edit', '{{ramo_field.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Campo" alt="Eliminar Campo" title="Eliminar Campo" onclick="load_data('delete', '{{ramo_field.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                                {% if ramo_field.field_type.id == 'SU' %}
+                                    Opciones
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

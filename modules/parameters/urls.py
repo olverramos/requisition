@@ -17,4 +17,10 @@ urlpatterns = [
     path("ramo/<str:ramo_id>/fields/", views.ajax_getfields, name="parameters_ramos_getfields"),
     path("ramo/<str:ramo_id>/documents/", views.ajax_getdocuments, name="parameters_ramos_getdocuments"),
 
+    path('field/', views.ramo_field_index_view, name='parameters_ramo_field'),
+    path('field/create/', views.create_field_view, name='parameters_field_create'),
+    path('field/<str:field_id>/get/', views.get_field_view, name='parameters_field_query'),
+    path('field/<str:field_id>/edit/', views.edit_field_view, name='parameters_field_edit'),
+    path('field/<str:field_id>/delete/', views.delete_field_view, name='parameters_field_delete'),
+
 ]

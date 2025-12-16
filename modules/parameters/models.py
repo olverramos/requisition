@@ -41,12 +41,25 @@ class FieldType(Document):
             pass
 
 
-class FieldOption(EmbeddedDocument):
+class FieldOption(Document):
+    field = fields.ReferenceField('RamoField', verbose_name="Campo")
     value = fields.StringField(verbose_name='Valor')
     title = fields.StringField(verbose_name='Nombre')
+    created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
+    updated_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
+    meta = {
+        'collection': 'parameters_fieldoptions',
+        'ordering': ['title'],
+        'indexes': [
+            ('title',), 
+        ]
+    }
+    
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.value} - {self.title}"
     
 
 class RamoField(Document):
@@ -54,15 +67,16 @@ class RamoField(Document):
     name = fields.StringField(verbose_name='Nombre', unique=True)
     title = fields.StringField(verbose_name='Título', unique=True)
     mandatory = fields.BooleanField(verbose_name="Es Obligatorio", dafault=False)
-    options = fields.ListField(
-        fields.EmbeddedDocumentField('FieldOption'), blank=True,
-    )
+    created_at = fields.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = fields.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
+    updated_by = fields.StringField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
     meta = {
         'collection': 'parameters_ramofields',
-        'ordering': ['name'],
+        'ordering': ['title'],
         'indexes': [
-            ('name',), 
+            ('title',), 
         ]
     }
     
@@ -102,9 +116,14 @@ class RamoField(Document):
                                 for option_data in data["options"]:
                                     if 'value' in option_data.keys() and 'title' in option_data.keys():
                                         option = FieldOption()
+                                        option.field = ramo_field
                                         option.value = option_data['value']
                                         option.title = option_data['title']
-                                        ramo_field.options.append(option)
+                                        option.created_at = datetime.now()
+                                        option.created_by = 'System'
+                                        option.updated_at = datetime.now()
+                                        option.updated_by = 'System'
+                                        option.save()
                             ramo_field.save()
 
                             print (f'Campo {ramo_field} creado')
