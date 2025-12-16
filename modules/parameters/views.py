@@ -182,8 +182,8 @@ def ajax_getfields(request, ramo_id) -> JsonResponse:
                 'mandatory': ramo_field.mandatory,
                 'options': []
             }
-            
-            for ramo_field_option in ramo_field.options:
+            ramo_field_options = FieldOption.objects.filter(field=ramo_field)
+            for ramo_field_option in ramo_field_options:
                 option_data = {
                     'value': ramo_field_option.value,
                     'title': ramo_field_option.title
