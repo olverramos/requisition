@@ -1,0 +1,46 @@
+{% extends 'core/table_index.html' %}
+{% load static %}
+
+{% block form %}
+    {% include "ramofieldoption/form_modal.html" %}
+{% endblock %}
+
+{% block data_table %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">Valor</th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="50%">Título</th>
+                        <th class="text-secondary opacity-7" width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ramo_field_option in paginator.data %}
+                        <tr>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field_option.value}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-secondary text-xs font-weight-bold">{{ramo_field_option.title}}</span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Ver Opción" alt="Ver Opción" title="Ver Opción" onclick="load_data('view', '{{ramo_field_option.id}}');">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Opción" alt="Editar Opción" title="Editar Opción" onclick="load_data('edit', '{{ramo_field_option.id}}');">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </button>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Opción" alt="Eliminar Opción" title="Eliminar Opción" onclick="load_data('delete', '{{ramo_field_option.id}}');">
+                                    <i class="fa fa-trash text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

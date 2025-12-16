@@ -23,4 +23,10 @@ urlpatterns = [
     path('field/<str:field_id>/edit/', views.edit_field_view, name='parameters_field_edit'),
     path('field/<str:field_id>/delete/', views.delete_field_view, name='parameters_field_delete'),
 
+    path('field/<str:field_id>/options/', views.ramo_field_option_index_view, name='parameters_ramo_field_option'),
+    path('field/<str:field_id>/options/create/', views.create_field_option_view, name='parameters_field_option_create'),
+    path('field/options/<str:field_option_id>/get/', views.get_field_option_view, name='parameters_field_option_query'),
+    path('field/<str:field_id>/options/<str:field_option_id>/edit/', views.edit_field_option_view, name='parameters_field_option_edit'),
+    path('field/<str:field_id>/options/<str:field_option_id>/delete/', views.delete_field_option_view, name='parameters_field_option_delete'),
+
 ]

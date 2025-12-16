@@ -1,7 +1,8 @@
 from .forms import CreateRamoForm, RamoFilterForm, CreateDocumentClassForm, \
     DocumentClassFilterForm, EditDocumentClassForm, RamoFieldFilterForm, \
-    CreateRamoFieldForm
-from .models import Ramo, FieldType, RamoField, DocumentClass, DocumentClassType
+    CreateRamoFieldForm, CreateFieldOptionForm, FieldOptionFilterForm
+from .models import Ramo, FieldType, RamoField, DocumentClass, \
+    FieldOption, DocumentClassType
 from django.contrib.auth.decorators import login_required
 from modules.authentication.models import Account
 from django.shortcuts import render, redirect
@@ -475,4 +476,147 @@ def delete_field_view(request, field_id):
         messages.error (request, error) 
 
     return redirect(reverse_lazy("parameters_ramo_field"))
+
+@login_required(login_url="/auth/login/")
+def ramo_field_option_index_view(request, field_id):
+    data = { }
+    page = 1
+    if 'page' in request.GET.keys() and request.GET['page']:
+        page = int(request.GET['page'])
+    if 'page' in request.POST.keys() and request.POST['page']:
+        page = int(request.POST['page'])
+    
+    error = None
+    try:
+        field:RamoField = RamoField.objects.get(pk=field_id)
+    except RamoField.DoesNotExist:
+        error = 'No existe un Campo con el id'
+        field = None
+
+
+    field_option_list = FieldOption.objects.all()
+    
+    data['page'] = page
+    create_form = CreateFieldOptionForm()
+    filter_form = FieldOptionFilterForm()
+    if request.method == 'POST':
+        filter_form = FieldOptionFilterForm(request.POST)
+        if filter_form.is_valid():
+            search = filter_form.cleaned_data['search']
+            if search is not None and search != '':
+                field_option_list = field_option_list.filter(
+                    Q(title__icontains=search) |
+                    Q(value__icontains=search)
+                )
+
+    paginator = getPaginator(field_option_list, page)
+
+    context = {
+        'table_title': f'Opciones de Campo de Ramo {field.title}',
+        'table_description': f'Administrador de Opciones de Campo de Ramo {field.title}',
+        'form': create_form,
+        'filter_form': filter_form,
+        'paginator': paginator,
+        'segment': 'parameters',
+        'back_url': reverse_lazy("parameters_ramo_field")
+    }
+
+    return render(request, 'ramofieldoption/index.html', context)
+
+@login_required(login_url="/auth/login/")
+def create_field_option_view(request, field_id):
+    current_account = Account.getAccount(request.user)
+    error = None
+    try:
+        field:RamoField = RamoField.objects.get(pk=field_id)
+    except RamoField.DoesNotExist:
+        error = 'No existe un Campo con el id'
+        field = None
+
+    if error is None and request.method == 'POST':
+        form = CreateFieldOptionForm(request.POST)
+        if form.is_valid():
+            value = form.cleaned_data['value']
+            title = form.cleaned_data['title']
+
+            try:
+                field_option = FieldOption.objects.get(field=field, value=value)
+                error = 'Hay una Opcion de Campo registrado con el valor'
+            except FieldOption.DoesNotExist:
+                field_option = None
+
+            if error is None:
+                field_option:FieldOption = FieldOption()
+                field_option.field = field
+                field_option.value = value
+                field_option.title = title
+                field_option.created_at = datetime.datetime.now()
+                field_option.created_by = current_account.username
+                field_option.save()
+
+                messages.success (request, f'Opcion de Campo {field_option} creado satisfactoriamente!')
+        else:
+            error = "¡Error en el registro de la Opcion de Campo!"
+        if error is not None:
+            messages.error (request, error)
+
+    return redirect(reverse_lazy("parameters_ramo_field_option", args=[field_id]))
+
+@login_required(login_url="/auth/login/")
+def get_field_option_view(request, field_option_id) -> JsonResponse:
+    field_option_data = {}
+    try:
+        field_option:FieldOption = FieldOption.objects.get(pk=field_option_id)
+        field_option_data['value'] = field_option.value
+        field_option_data['title'] = field_option.title
+    except FieldOption.DoesNotExist:
+        pass
+
+    return JsonResponse(data=field_option_data)
+
+@login_required(login_url="/auth/login/")
+def edit_field_option_view(request, field_id, field_option_id):
+    current_account = Account.getAccount(request.user)
+    error = None
+    try:
+        field_option:FieldOption = FieldOption.objects.get(pk=field_option_id)
+    except FieldOption.DoesNotExist:
+        error = 'No existe una Opcion de Campo con el id'
+        field_option = None
+
+    if error is None and request.method == 'POST':
+        form = CreateFieldOptionForm(request.POST)
+        if form.is_valid():
+            value = form.cleaned_data['value']
+            title = form.cleaned_data['title']
+            if error is None:   
+                field_option.value = value
+                field_option.title = title
+                field_option.updated_at = datetime.datetime.now()
+                field_option.updated_by = current_account.username
+                field_option.save()
+                messages.success (request, f'Opcion de Campo {field_option} actualizada satisfactoriamente!')
+        else:
+            error = "¡Error en la actualización de la Opcion de Campo!"
+        if error is not None:
+            messages.error (request, error)
+    return redirect(reverse_lazy("parameters_ramo_field_option", args=[field_id]))
+
+@login_required(login_url="/auth/login/")
+def delete_field_option_view(request, field_id, field_option_id):
+    error = None
+    try:
+        field_option = FieldOption.objects.get(pk=field_option_id)
+    except FieldOption.DoesNotExist:
+        error = 'No existe una Opcion de Campo con el id'
+        field_option = None
+
+    if error is None:
+        if request.method == 'POST':
+            field_option.delete()   
+            messages.success (request, f'Opcion de Campo {field_option} eliminada satisfactoriamente!')
+    else:
+        messages.error (request, error) 
+
+    return redirect(reverse_lazy("parameters_ramo_field_option", args=[field_id]))
 

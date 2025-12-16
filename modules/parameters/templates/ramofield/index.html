@@ -44,7 +44,9 @@
                                     <i class="fa fa-trash text-sm"></i>
                                 </button>
                                 {% if ramo_field.field_type.id == 'SU' %}
-                                    Opciones
+                                    <a href="{% url 'parameters_ramo_field_option' ramo_field.id %}" class="btn text-xs font-weight-bold opacity-8" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Ver Opciones">
+                                        <i class="fa fa-list text-sm"></i>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

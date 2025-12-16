@@ -200,3 +200,109 @@ class CreateRamoFieldForm(forms.Form):
             'js/ramofield/index.js', 
             'js/ramofield/form.js', 
         )
+
+
+
+class FieldOptionFilterForm(forms.Form):
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/fieldoption/index.js',  )
+
+
+class CreateFieldOptionForm(forms.Form):
+    value = forms.CharField(
+        label=_("Valor *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Valor'
+            }
+        ),
+    )
+    title = forms.CharField(
+        label=_("Título *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Título'
+            }
+        ),
+    )
+    
+    class Media:
+        js = (
+            'js/fieldoption/index.js', 
+            'js/fieldoption/form.js', 
+        )        
+
+
+class RamoFieldFilterForm(forms.Form):
+    search = forms.CharField(
+        label=_("Buscar"),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Ingrese el texto para realizar la búsqueda'
+            }
+        ),
+    )
+
+    class Media:
+        js = ('js/ramofield/index.js',  )
+
+
+class CreateRamoFieldForm(forms.Form):
+    field_type = forms.ModelChoiceField(
+        label=_("Tipo de Campo *"),
+        queryset=FieldType.objects.all(), 
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Tipo de Campo'
+            }
+        ),
+    )
+    name = forms.CharField(
+        label=_("Nombre *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre'
+            }
+        ),
+    )
+    title = forms.CharField(
+        label=_("Título *"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Título'
+            }
+        ),
+    )
+    mandatory = forms.BooleanField(
+        label=_("Es Obligatorio"),
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input',
+            }
+        )
+    )
+
+    class Media:
+        js = (
+            'js/ramofield/index.js', 
+            'js/ramofield/form.js', 
+        )
