@@ -464,7 +464,9 @@ def create_request_view(request):
                 request_event.created_by = applicant.email
                 request_event.save()
 
-                messages.success (request, f'Solicitud {operative_request}, telefono: {operative_request.taker.phone_number}, {text_field} creada satisfactoriamente!')
+                success_message = f"Se ha creado la solicitud número {operative_request}, para el siguiente requerimiento:\n\nTomador {operative_request.taker.name}\n{text_field}\nTeléfono contacto {operative_request.taker.phone_number}\nNombre contacto: {operative_request.taker.contact_name}"
+
+                messages.success (request, success_message)
                 return redirect(
                     reverse_lazy("operative_requests_documents", 
                         kwargs={"operative_request_id": operative_request.id})
