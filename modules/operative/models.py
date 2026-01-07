@@ -48,7 +48,10 @@ class RequestField(EmbeddedDocument):
     value = fields.StringField(verbose_name='Valor')
 
     def __str__(self):
-        return f"{self.field}: {self.value}"
+        try:
+            return f"{self.field.name}: {self.value}"
+        except:
+            return f"{self.value}"
     
 
 class RequestDocument(EmbeddedDocument):
@@ -459,10 +462,13 @@ class OperativeRequest(Document):
 
         request_data['fields'] = {}
         for request_field in self.request_fields:
-            request_data['fields'][str(request_field.field.name)] = {
-                'value': request_field.value,
-                'field': request_field.field,
-            }
+            try:
+                request_data['fields'][str(request_field.field.name)] = {
+                    'value': request_field.value,
+                    'field': request_field.field,
+                }
+            except:
+                pass
         request_data['documents'] = {}
         
         for document_field in self.request_documents:

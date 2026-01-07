@@ -24,6 +24,8 @@ class CreateRamoForm(forms.Form):
     )
     fields = forms.ModelMultipleChoiceField(
         queryset=RamoField.objects.all(),
+        required=False,
+        label="Campos",
         widget=forms.SelectMultiple(
             attrs={
                 'class': 'form-control form-control-lg',
@@ -31,8 +33,6 @@ class CreateRamoForm(forms.Form):
                 'id': 'fields_id'
             }
         ),
-        required=False,
-        label="Campos"
     )
     document_classes = forms.ModelMultipleChoiceField(
         queryset=DocumentClass.objects.filter(document_type="CUSTOM"),
