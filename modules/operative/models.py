@@ -79,7 +79,7 @@ class OperativeRequestDocument(Document):
 
     meta = {
         'collection': 'operative_requestdocuments',
-        'ordering': ['operative_request', 'document_class'],
+       # 'ordering': ['operative_request', 'document_class'],
     }
     
     def __str__(self):
@@ -146,6 +146,15 @@ class OperativeRequest(Document):
                 values_fields.append(request_field.value)
             operative_request.values_fields = '|'.join(values_fields)
             operative_request.save()
+
+    @staticmethod
+    def fix_documents():
+        operative_request_document_list = OperativeRequestDocument.objects.all()
+        for operative_request_document in operative_request_document_list:
+            document_class = DocumentClass.objects.get(id=operative_request_document.document_class.id)
+            operative_request_document.title = document_class.name
+            operative_request_document.save()
+
 
     @staticmethod
     def migrate_documents():

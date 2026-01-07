@@ -5,10 +5,9 @@
 <table class="table align-items-center mb-0">
     <thead>
         <tr>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Documento</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="40%">Nombre Archivo</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="40%">Descripción</th>
-            <th class="text-secondary opacity-7" width="10%"></th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="30%">Documento</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="50%">Nombre Archivo</th>
+            <th class="text-secondary opacity-7" width="20%"></th>
         </tr>
     </thead>
 
@@ -20,9 +19,6 @@
                 </td>
                 <td class="align-middle">
                     <span class="text-secondary text-xs font-weight-bold">{{document.filename}}</span>
-                </td>
-                <td class="align-middle">
-                    <span class="text-secondary text-xs font-weight-bold">{{document.title}}</span>
                 </td>
                 <td class="align-middle">
                     <button type="button" class="btn" data-original-title="Descargar Documento" alt="Descargar Documento" title="Descargar Documento" onclick="downloadFile('{{document.filename}}', '{{document.content}}', '{{document.file_type}}');">

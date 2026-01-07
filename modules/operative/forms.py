@@ -1439,16 +1439,6 @@ class CreateDocumentRequestForm(forms.Form):
             }
         ),
     )
-    title = forms.CharField(
-        label=_("Descripción *"),
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Descripción',
-            }
-        ),
-    )
     document_file = forms.FileField(
         label=_("Documento *"),
         required=True,
@@ -1474,17 +1464,6 @@ class QueryDocumentRequestForm(forms.Form):
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Tipo de Documento',
-                'readonly': 'readonly'
-            }
-        ),
-    )
-    title = forms.CharField(
-        label=_("Descripción *"),
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Descripción',
                 'readonly': 'readonly'
             }
         ),

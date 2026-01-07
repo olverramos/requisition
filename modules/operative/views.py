@@ -1117,9 +1117,9 @@ def create_document_request_view(request, operative_request_id, source=None):
         form = CreateDocumentRequestForm(request.POST, request.FILES)
         if form.is_valid():
             document_class = form.cleaned_data['document_class']
-            title = form.cleaned_data['title']
             document_file = form.cleaned_data['document_file']
 
+            title = document_class.name
             filename = document_file.name
             file_type = document_file.content_type
             content = base64.b64encode(document_file.read()).decode('utf-8')
