@@ -157,8 +157,6 @@ class Account(Document):
     def resetpassword(email):
         account = Account.getAccount(email)
         if account is not None:
-            # template_id = settings.SENDGRID_TEMPLATES['PASSWORD_RESET']
-
             reset_password_url = settings.APP_URL
             reset_password_url += 'auth/passwordresetconfirm/'
             reset_password_url += Token.generate(account, 2)

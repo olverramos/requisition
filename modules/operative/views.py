@@ -1082,10 +1082,14 @@ def documents_request_view(request, operative_request_id, source=None):
 
     paginator = getPaginator(document_list, page, items_per_page=10)
     
+
+    custom_document_classes_id = [document_class.id for document_class in operative_request.ramo.document_classes]
+
     if current_account is None or current_account.role.id == RoleEnum.APPLICANT:
-        form.fields['document_class'].queryset = DocumentClass.objects.filter(document_type__in=( 'CUSTOM', ))
+        form.fields['document_class'].queryset = DocumentClass.objects.filter(id__in=custom_document_classes_id)
     elif current_account is not None and current_account.role.id != RoleEnum.APPLICANT:
-        form.fields['document_class'].queryset = DocumentClass.objects.all()
+        main_document_classes_id = [document_class.id for document_class in DocumentClass.objects.filter(document_type__in=('RECEIPT', 'PAYMENT', 'POLICE'))]
+        form.fields['document_class'].queryset = DocumentClass.objects.filter(id__in=main_document_classes_id + custom_document_classes_id)
 
     context = {
         'table_title': f'Documentos de la Solicitud {operative_request}',
