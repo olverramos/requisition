@@ -1081,7 +1081,6 @@ def documents_request_view(request, operative_request_id, source=None):
                 )
 
     paginator = getPaginator(document_list, page, items_per_page=10)
-    
 
     custom_document_classes_id = [document_class.id for document_class in operative_request.ramo.document_classes]
 
