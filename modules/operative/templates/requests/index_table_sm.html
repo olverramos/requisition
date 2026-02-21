@@ -1,0 +1,79 @@
+{% load static %}
+{% load humanize %}
+{% load tools %} 
+ 
+ <table class="table align-items-center mb-0">
+    <thead>
+        <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Nro</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="60%">Tomador</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Estado</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="10%">Campos</th>
+            <th class="text-secondary opacity-7" width="10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for operative_request in paginator.data %}
+            <tr>
+                <td class="align-middle text-end">
+                    <span class="text-secondary text-xs font-weight-bold">{{operative_request.number}}</span>
+                </td>
+                <td class="align-middle">
+                    <span class="text-secondary text-xs font-weight-bold">{{operative_request.taker}}</span>
+                </td>
+                <td class="align-middle">
+                    <span class="text-secondary text-xs font-weight-bold">{{operative_request.status}}</span>
+                </td>
+                <td class="align-middle text-start">
+                    {% for request_field in operative_request.request_fields %}
+                        <span class="text-secondary text-xs font-weight-bold">{{request_field}}</span>
+                        {% with operative_request.request_fields|last as last %}
+                            {% if request_field.field.id != last.field.id %}
+                                <br/>
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </td>
+                <td class="align-middle">
+                    <a href="{% url 'operative_requests_query' operative_request.id %}">
+                        <button type="button" class="btn" data-original-title="Ver Solicitud" alt="Ver Solicitud" title="Ver Solicitud">
+                            <i class="fa fa-eye text-sm"></i>
+                        </button>                   
+                    </a>
+                    <a href="{% url 'operative_requests_documents' operative_request.id %}">
+                        <button type="button" class="btn" data-original-title="Ver Documentos" alt="Ver Documentos" title="Ver Documentos">
+                            <i class="fa fa-folder-open-o text-sm"></i>
+                        </button>                   
+                    </a>
+                    {% if can_assign %}
+                        {% if operative_request.status.id == '1' %}
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Asignar Solicitud" alt="Asignar Solicitud" title="Asignar Solicitud" onclick="load_data('assign', '{{operative_request.id}}');">
+                                <i class="fa fa-hand-o-right text-sm"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if can_valide %}
+                        {% if operative_request.status.id == '4' %}
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Validar Pago" alt="Validar Pago" title="Validar Pago" onclick="load_data('validate', '{{operative_request.id}}');">
+                                <i class="fa fa-check-circle-o text-sm"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if can_edit %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Editar Solicitud" alt="Editar Solicitud" title="Editar Solicitud" onclick="load_data('edit', '{{operative_request.id}}');">
+                            <i class="fa fa-pencil text-sm"></i>
+                        </button>
+                    {% endif %}
+
+                    {% if can_delete %}
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Solicitud" alt="Eliminar Solicitud" title="Eliminar Solicitud" onclick="load_data('delete', '{{operative_request.id}}');">
+                            <i class="fa fa-trash text-sm"></i>
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody> 
+</table>

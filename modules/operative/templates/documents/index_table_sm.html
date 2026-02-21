@@ -1,0 +1,34 @@
+{% load static %}
+{% load humanize %}
+{% load tools %}
+
+<table class="table align-items-center mb-0">
+    <thead>
+        <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="20%">Nombre</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" width="60%">Nombre Archivo</th>
+            <th class="text-secondary opacity-7" width="20%"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for document in paginator.data %}
+            <tr>
+                <td class="align-middle">
+                    <span class="text-secondary text-xs font-weight-bold">{{document.title}}</span>
+                </td>
+                <td class="align-middle">
+                    <span class="text-secondary text-xs font-weight-bold">{{document.filename}}</span>
+                </td>
+                <td class="align-middle">
+                    <button type="button" class="btn" data-original-title="Descargar Documento" alt="Descargar Documento" title="Descargar Documento" onclick="downloadFile('{{document.filename}}', '{{document.content}}', '{{document.file_type}}');">
+                        <i class="fa fa-download text-sm"></i>
+                    </button>                        
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-original-title="Eliminar Documento" alt="Eliminar Documento" title="Eliminar Documento" onclick="load_data('delete', '{{document.id}}');">
+                        <i class="fa fa-trash text-sm"></i>
+                    </button>
+                </td>
+            </tr>
+    {% endfor %}
+    </tbody> 
+</table>

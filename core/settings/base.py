@@ -105,7 +105,7 @@ MODULES = [
     "modules.auths.apps.ModuleConfig",
     "modules.parameters.apps.ModuleConfig",
     "modules.base.apps.ModuleConfig",
-    # "modules.operative.apps.ModuleConfig",
+    "modules.operative.apps.ModuleConfig",
 ]
 
 INSTALLED_APPS = [
