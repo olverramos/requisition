@@ -1,0 +1,10 @@
+{% load static %}
+
+{% block filter_media %}
+{% endblock%}
+
+<input type="hidden" value="filter" id="id_formname" name="formname" /> 
+<input type="hidden" value="{{paginator.page_number}}" id="id_page" name="page" /> 
+
+{% block filterform %}
+{% endblock %}

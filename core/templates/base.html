@@ -1,0 +1,70 @@
+{% load static %}
+{% load humanize %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{{COMPANY_NAME}} - {% block title %}{% endblock %}</title>
+        
+        {% include "include/static_include.html" %}
+
+        <script>
+            {% if ACCOUNT %}
+                let ACCOUNT = JSON.parse('{{ ACCOUNT.to_json|escapejs }}');
+            {% else %}
+                let ACCOUNT = null;
+            {% endif %}
+            let APP_URL = "{{ APP_URL|escapejs }}";
+            let APP_NAME = "{{ APP_NAME }}";
+            let COMPANY_NAME = "{{ COMPANY_NAME }}";
+            let COMERCIAL_APP_NAME = "{{ COMERCIAL_APP_NAME }}";
+            let TODAY = "{{ TODAY }}";
+            let STATIC_URL = "{{ STATIC_URL|escapejs }}";
+            let VERSION = "{{ VERSION }}";
+            let ENVIRONMENT = "{{ ENVIRONMENT }}";
+        </script>
+    
+        {% block js %} {% endblock%}
+        {% block css %} {% endblock%}
+    </head>
+
+    <body>
+        <input id="id_show_menu" type="hidden" />
+        
+        {% include "include/header.html" %}
+
+        <main id="main" class="container py-3">
+            <section class="card card-body">
+                <h2 class="text-center">{% block page_title %}{% endblock %}</h2> 
+                <br />
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }} alert-dismissible fade show text-start" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+            </section>
+            
+            {% include "include/footer.html" %}
+        
+        </main>
+        
+        <script>
+            var show_menu = sessionStorage.getItem('show_menu');;
+            if (show_menu != null && show_menu == "1") {
+                openNav();
+            }            
+        </script>
+    </body>
+</html>

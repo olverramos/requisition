@@ -1,0 +1,10 @@
+#DATABASE_URL = 'mongodb://admin:am3ricas2024@localhost:27017/requisitiondb?authSource=admin'
+ENVIRONMENT = 'DEVELOPMENT'
+DEBUG = True
+APP_URL = 'http://localhost:8152/'
+# DATABASE_NAME = 'requisitiondb'
+# DATABASE_HOST = 'localhost'
+# DATABASE_SCHEME = 'mongodb'
+# DATABASE_PORT = 27017
+# DATABASE_VARS = 'serverSelectionTimeoutMS=2000&appName=mongosh+2.5.9'
+# DATABASE_URL = f'{DATABASE_SCHEME}://{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}?{DATABASE_VARS}'
