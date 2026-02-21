@@ -1,0 +1,41 @@
+{% load static %}
+{% load tools %}
+{% load mathfilters %}
+
+<section>
+    <div class="row justify-space-between py-1 ">
+        <div class="col-lg-12">
+            <ul class="pagination pagination-primary m-4 justify-content-center">
+                {% if paginator.page > 1 %}
+                <li class="page-item">
+                    <a 
+                        class="page-link" 
+                        onclick="document.filter_form.page.value = '{{paginator.page|sub:1}}'; document.getElementById('filter_form').submit();"
+                        aria-label="Previous"
+                    >
+                        <span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span>
+                    </a>                  
+                </li>
+                {% endif %}
+                {% for page in paginator.total_pages|getrange %}
+                    <li class="page-item {% if page == paginator.page %}active{% endif %}">
+                        <a 
+                            class="page-link" 
+                            onclick="document.filter_form.page.value = '{{page}}'; document.getElementById('filter_form').submit();"
+                        >{{page}}</a>
+                    </li>
+                {% endfor %}
+                {% if paginator.page < paginator.total_pages %}
+                    <li class="page-item">
+                        <a 
+                            class="page-link" 
+                            onclick="document.filter_form.page.value = '{{paginator.page|add:1}}'; document.getElementById('filter_form').submit();"
+                            aria-label="Next">
+                            <span aria-hidden="true"><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</section>

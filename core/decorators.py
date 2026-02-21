@@ -1,6 +1,6 @@
 from functools import wraps
 from django.http import HttpResponseForbidden
-from apps.auths.models import Account, Role
+from modules.auths.models import Account, Role
 
 def role_required(allowed_roles):
     def decorator(view_func):

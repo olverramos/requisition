@@ -1,29 +1,57 @@
-from modules.auths.models import Account
-from modules.menu.models import Option
-from django.utils import timezone
+import datetime
 from django.conf import settings
-
+from modules.auths.models import Account
 
 def generic_variables(request):
     account = None
-    menu = []
-    
     if request.user.is_authenticated:
         account = Account.getAccount(request.user)
-        
-        if account:
-            menu = Option.getMenu(account)
     
-    return {    
-        'ACCOUNT': account,
-        'CURRENT_YEAR': timezone.now().strftime("%Y"),
-        'TODAY': timezone.now().strftime("%Y-%m-%d"),
-        'APP_NAME': settings.APP_NAME,
-        'COMERCIAL_APP_NAME': settings.COMERCIAL_APP_NAME,
-        'COMPANY_NAME': settings.COMPANY_NAME,
-        'APP_URL': settings.APP_URL,
-        'STATIC_URL': settings.STATIC_URL,
-        'VERSION': settings.VERSION,
-        'ENVIRONMENT': settings.ENVIRONMENT,
-        'MENU': menu
+    menu_list = {
+        'admin': [
+            {
+                'url': 'auth_accounts',
+                'title': 'Usuarios'
+            },
+            {
+                'url': 'parameters_documentclass',
+                'title': 'Clase Documentos'
+            },
+            {
+                'url': 'parameters_ramo_field',
+                'title': 'Campos de Ramo'
+            },
+            {
+                'url': 'parameters_ramos',
+                'title': 'Ramos'
+            },
+            {
+                'url': 'base_applicants',
+                'title': 'Solicitantes'
+            },
+            {
+                'url': 'base_takers',
+                'title': 'Tomadores'
+            },
+        ],
+        'operative': [
+            {
+                'url': 'operative_requests',
+                'title': 'Solicitudes'
+            },
+        ],
     }
+
+    return {    
+                'ACCOUNT': account,
+                'CURRENT_YEAR': datetime.date.today().strftime("%Y"),
+                'TODAY': datetime.date.today().strftime("%Y-%m-%d"),
+                'APP_NAME': settings.APP_NAME,
+                'COMERCIAL_APP_NAME': settings.COMERCIAL_APP_NAME,
+                'APP_VERSION': settings.APP_VERSION,
+                'APP_URL': settings.APP_URL,
+                'STATIC_URL': settings.STATIC_URL,
+                'ENVIRONMENT': settings.ENVIRONMENT,
+                'ENTERPRISE': settings.ENTERPRISE,
+                'MENU': menu_list
+            }

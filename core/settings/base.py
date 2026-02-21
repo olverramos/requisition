@@ -103,7 +103,7 @@ LIBRARY_MODULES = [
 MODULES = [
     # "modules.localization.apps.ModuleConfig",
     # "modules.entities.apps.ModuleConfig",
-    # "modules.auths.apps.ModuleConfig",
+    "modules.auths.apps.ModuleConfig",
     # "modules.menu.apps.ModuleConfig",
     # "modules.parameters.apps.ModuleConfig",
     # "modules.projects.apps.ModuleConfig",

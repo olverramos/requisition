@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block body %} class="index-page bg-gray-200" {% endblock body %}
+
+{% block content %}
+    <header class="header-2">
+        <div class="page-header relative">
+            <div class="container" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="text-left mx-auto">
+                        <h3 class="text-primary">
+                            Perfil
+                        </h3>
+                        <p>Datos del usuario {{ACCOUNT.complete_name}}</p>
+                        <br />
+                        <form role="form" id="profile-form" method="post" autocomplete="off" action=".">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col mb-2 col-sm-4">
+                                    <label class="text-secondary">{{form.username.label}}</label>
+                                    {{ form.username}}
+                                </div>
+                                
+                                <div class="col mb-2 col-sm-4">
+                                    <label class="text-secondary">{{form.first_name.label}}</label>
+                                    {{ form.first_name}}
+                                </div>
+
+                                <div class="col mb-2 col-sm-4">
+                                    <label class="text-secondary">{{form.last_name.label}}</label>
+                                    {{ form.last_name}}
+                                </div>
+                            </div>      
+
+                            <div class="row">
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.role.label}}</label>
+                                    {{ form.role}}
+                                </div>
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.genre.label}}</label>
+                                    {{ form.genre}}
+                                </div>
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.phone.label}}</label>
+                                    {{ form.phone}}
+                                </div>
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.whatsapp.label}}</label>
+                                    {{ form.whatsapp}}
+                                </div>
+                            </div>                                
+                            <div class="row">
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.state.label}}</label>
+                                    {{ form.state }}
+                                </div>
+                                <div class="col mb-2 col-sm-3">
+                                    <label class="text-secondary">{{form.city.label}}</label>
+                                    {{ form.city }}
+                                </div>
+                                <div class="col mb-2 col-sm-6">
+                                    <label class="text-secondary">{{form.address.label}}</label>
+                                    {{ form.address}}
+                                </div>
+                            </div>                                
+                            
+
+                            <div class="row">
+                                <div class="col col-sm-1 ms-lg-auto">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>  
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'js/localization.js' %}"></script>
+    {{form.media}}
+{% endblock %}

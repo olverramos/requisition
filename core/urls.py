@@ -18,11 +18,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
-# from home import views
+from home import views
 
 urlpatterns = [
-    # path("", views.Home.as_view(), name="home"),
-    # path("auth/", include('modules.authentication.urls')),
+    path("", views.Home.as_view(), name="home"),
+    path("auth/", include('modules.auths.urls')),
     # path("localization/", include("modules.localization.urls")),
     # path("parameters/", include("modules.parameters.urls")),
     # path("base/", include("modules.base.urls")),

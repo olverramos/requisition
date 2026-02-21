@@ -1,20 +1,19 @@
-from modules.localization.models import Country, State, City
-from modules.operative.forms import SearchRequestForm
-from modules.operative.models import OperativeRequest
+# from modules.localization.models import Country, State, City
+# from modules.operative.forms import SearchRequestForm
+# from modules.operative.models import OperativeRequest
 from django.http import HttpResponse, JsonResponse
-from modules.authentication.models import Account
-# from mongoengine.queryset.visitor import Q
-from modules.parameters.models import Ramo
+# from modules.parameters.models import Ramo
 from fileprovider.utils import sendfile  
 from django.views.generic import View
 from django.template import loader
 from django.conf import settings
+from modules.auths.models import Account
 
 
-class HomeView(View):
+class Home(View):
 
     def get(self, request, *args, **kwargs):
-
+        current_account = None
         current_account = Account.getAccount(request.user)
 
         filter_form = SearchRequestForm()
@@ -32,7 +31,6 @@ class HomeView(View):
                 request
             )
         )
-
 
 def domainfile(request):
     return sendfile('/app/staticfiles/file/Wa-TAMtdo-z8DSbMPQFlw1AZSCSiUHitYjPE0SpZFcM')

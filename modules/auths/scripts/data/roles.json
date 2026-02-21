@@ -1,0 +1,14 @@
+[
+    {
+        "id": "admin",
+        "name": "Administrador"
+    },
+    {
+        "id": "assitant",
+        "name": "Asistente"
+    },
+    {
+        "id": "applicant",
+        "name": "Solicitante"
+    }
+]

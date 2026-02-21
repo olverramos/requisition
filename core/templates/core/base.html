@@ -1,0 +1,74 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/favicon/apple-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+
+        <title>
+            {{COMERCIAL_APP_NAME}} - {% block title %}{% endblock title %}
+        </title>
+
+        {% include "core/includes/static_include.html" %}
+
+    </head>
+
+    <body {% block body %}{% endblock body %}>
+
+        <script>
+            {% if ACCOUNT %}
+                let ACCOUNT = JSON.parse('{{ ACCOUNT.to_json|escapejs }}');
+            {% endif %}
+            let APP_URL = "{{ APP_URL|escapejs }}";
+            let APP_NAME = "{{ APP_NAME }}";
+            let ENTERPRISE = "{{ ENTERPRISE }}";
+            let COMERCIAL_APP_NAME = "{{ COMERCIAL_APP_NAME }}";
+            let TODAY = "{{ TODAY }}";
+            let STATIC_URL = "{{ STATIC_URL|escapejs }}";
+            let VERSION = "{{ APP_VERSION }}";
+            let ENVIRONMENT = "{{ ENVIRONMENT }}";
+            let CURRENT_YEAR = "{{ CURRENT_YEAR }}";
+        </script>
+
+        {% block header %}
+            <div style="margin-bottom: 10px;" class="d-none d-sm-block">
+                {% include 'core/includes/navigation.html' %}
+            </div>
+            <div style="margin-bottom: 10px;" class="d-block d-sm-none">
+                {% include 'core/includes/navigation_xs.html' %}
+            </div>
+        {% endblock header %}
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mx-lg-5 mx-md-3 mx-sm-1 px-lg-5 px-md-3 px-sm-0">
+            {% block content %}{% endblock content %}
+        </div>
+        
+        {% block footer %}
+            <div style="margin-top: 10px;" class="d-none d-sm-block">
+                {% include 'core/includes/footer.html' %}
+            </div>
+            <div style="margin-top: 10px;" class="d-block d-sm-none">
+                {% include 'core/includes/footer_xs.html' %}
+            </div>
+        {% endblock footer %}
+
+        {% block javascripts %}{% endblock javascripts %} 
+
+    </body>
+</html>
