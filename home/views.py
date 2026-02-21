@@ -1,8 +1,8 @@
 from modules.localization.models import Country, State, City
-# from modules.operative.forms import SearchRequestForm
-# from modules.operative.models import OperativeRequest
+from modules.operative.forms import SearchRequestForm
+from modules.operative.models import OperativeRequest
 from django.http import HttpResponse, JsonResponse
-# from modules.parameters.models import Ramo
+from modules.parameters.models import Ramo
 from fileprovider.utils import sendfile  
 from django.views.generic import View
 from django.template import loader
@@ -15,12 +15,11 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         current_account = None
         current_account = Account.getAccount(request.user)
-        filter_form = None
-        # filter_form = SearchRequestForm()
+        filter_form = SearchRequestForm()
         
         context = {
             'segment': 'index',
-            # 'filter_form': filter_form,
+            'filter_form': filter_form,
             'current_account': current_account,
         }
 

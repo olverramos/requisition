@@ -1,0 +1,15 @@
+[
+    {
+        "id": "cumplimiento",
+        "name": "Cumplimiento",
+        "fields": [
+            "contract_number"
+        ],
+        "document_classes": [
+            "contrato",
+            "rut",
+            "cc",
+            "requerimiento"
+        ]
+    }
+]
