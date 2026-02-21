@@ -23,7 +23,7 @@ from home import views
 urlpatterns = [
     path("", views.Home.as_view(), name="home"),
     path("auth/", include('modules.auths.urls')),
-    # path("localization/", include("modules.localization.urls")),
+    path("localization/", include("modules.localization.urls")),
     # path("parameters/", include("modules.parameters.urls")),
     # path("base/", include("modules.base.urls")),
     # path("operative/", include("modules.operative.urls")),

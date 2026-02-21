@@ -310,69 +310,69 @@ class Account(models.Model):
         ordering = ['user']
 
 
-
-# class Token(models.Model):
-#     token = fields.StringField(verbose_name='Valor')
-#     times = fields.IntField(verbose_name='Validaciones')
-#     max_times = fields.IntField(verbose_name='Máximo de Validaciones')
+class Token(models.Model):
+    token = models.CharField(verbose_name='Valor', max_length=255)
+    times = models.IntegerField(verbose_name='Validaciones')
+    max_times = models.IntegerField(verbose_name='Máximo de Validaciones')
     
-#     meta = {
-#         'collection': 'authentication_token',
-#         'indexes': [
-#             ('token',), 
-#         ]
-#     }
     
-#     def __str__(self):
-#         return f"{self.token}"
+    def __str__(self):
+        return f"{self.token}"
     
-#     @staticmethod
-#     def generate(account, max_times=1):
-#         generate_at = datetime.datetime.now()
-#         expires_at = generate_at + datetime.timedelta(hours=24)
-#         token_data = f'{account.id}|{expires_at.strftime("%Y%m%d%H%M%S")}'
-#         token_bytes = token_data.encode('ascii')
-#         token_encoded = base64.b64encode(token_bytes)
-#         token = token_encoded.decode('ascii')
+    @staticmethod
+    def generate(account, max_times=1):
+        generate_at = datetime.datetime.now()
+        expires_at = generate_at + datetime.timedelta(hours=24)
+        token_data = f'{account.id}|{expires_at.strftime("%Y%m%d%H%M%S")}'
+        token_bytes = token_data.encode('ascii')
+        token_encoded = base64.b64encode(token_bytes)
+        token = token_encoded.decode('ascii')
 
-#         token_object = Token()
-#         token_object.token = token
-#         token_object.times = 0
-#         token_object.max_times = max_times
-#         token_object.save()
+        token_object = Token()
+        token_object.token = token
+        token_object.times = 0
+        token_object.max_times = max_times
+        token_object.save()
 
-#         return token
+        return token
 
-#     @staticmethod
-#     def decode(token, delete=False):
-#         base64_bytes = token.encode('ascii')
-#         message_bytes = base64.b64decode(base64_bytes)
-#         token_data = message_bytes.decode('ascii')
-#         userid, expire_str = token_data.split('|')
-#         try:
-#             expire_at = datetime.datetime.strptime(expire_str, "%Y%m%d%H%M%S")
-#         except ValueError:
-#             return None, True
+    @staticmethod
+    def decode(token, delete=False):
+        base64_bytes = token.encode('ascii')
+        message_bytes = base64.b64decode(base64_bytes)
+        token_data = message_bytes.decode('ascii')
+        userid, expire_str = token_data.split('|')
+        try:
+            expire_at = datetime.datetime.strptime(expire_str, "%Y%m%d%H%M%S")
+        except ValueError:
+            return None, True
 
-#         account = None
+        account = None
        
-#         try:
-#             account_id = userid
-#             account = Account.objects.get(pk=account_id)
-#         except Account.DoesNotExist:
-#             return None, True
+        try:
+            account_id = userid
+            account = Account.objects.get(pk=account_id)
+        except Account.DoesNotExist:
+            return None, True
 
-#         if datetime.datetime.now() > expire_at:
-#             print('Expiró el token')
-#             return account, True
+        if datetime.datetime.now() > expire_at:
+            print('Expiró el token')
+            return account, True
 
-#         try:
-#             token_object = Token.objects.get(token=token)
-#         except Token.DoesNotExist:
-#             print('Token ya usado')
-#             return account, True
+        try:
+            token_object = Token.objects.get(token=token)
+        except Token.DoesNotExist:
+            print('Token ya usado')
+            return account, True
         
-#         if delete:
-#             token_object.delete()
+        if delete:
+            token_object.delete()
 
-#         return account, False
+        return account, False
+
+    class Meta:
+        app_label = 'auths'
+        db_table = 'auths_tokens'
+        verbose_name = 'Token'
+        verbose_name_plural = 'Tokens'
+        ordering = ['token']

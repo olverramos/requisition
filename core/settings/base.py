@@ -101,14 +101,11 @@ LIBRARY_MODULES = [
 ]
 
 MODULES = [
-    # "modules.localization.apps.ModuleConfig",
-    # "modules.entities.apps.ModuleConfig",
+    "modules.localization.apps.ModuleConfig",
     "modules.auths.apps.ModuleConfig",
-    # "modules.menu.apps.ModuleConfig",
     # "modules.parameters.apps.ModuleConfig",
-    # "modules.projects.apps.ModuleConfig",
-    # "modules.providers.apps.ModuleConfig",
-    # "modules.needs.apps.ModuleConfig",
+    # "modules.base.apps.ModuleConfig",
+    # "modules.operative.apps.ModuleConfig",
 ]
 
 INSTALLED_APPS = [
@@ -163,10 +160,10 @@ WSGI_APPLICATION = "core.wsgi.application"
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 if IS_HEROKU_APP:
-    DATABASE_NAME = os.environ.get('MONGO_INITDB_DATABASE','requisitiondb')
+    DATABASE_NAME = os.environ.get('MONGO_INITDB_DATABASE','pqrsdb')
     DATABASE_URL = os.environ.get('MONGO_DATABASE_URL')
 else:
-    DATABASE_NAME = config('MONGO_INITDB_DATABASE','requisitiondb')
+    DATABASE_NAME = config('MONGO_INITDB_DATABASE','pqrsdb')
     DATABASE_URL = config('MONGO_DATABASE_URL','localhost')
 
 DATABASES = {

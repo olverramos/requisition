@@ -1,4 +1,4 @@
-# from modules.localization.models import Country, State, City
+from modules.localization.models import Country, State, City
 # from modules.operative.forms import SearchRequestForm
 # from modules.operative.models import OperativeRequest
 from django.http import HttpResponse, JsonResponse
@@ -15,12 +15,12 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         current_account = None
         current_account = Account.getAccount(request.user)
-
-        filter_form = SearchRequestForm()
+        filter_form = None
+        # filter_form = SearchRequestForm()
         
         context = {
             'segment': 'index',
-            'filter_form': filter_form,
+            # 'filter_form': filter_form,
             'current_account': current_account,
         }
 

@@ -5,16 +5,16 @@ from django.contrib.auth.views import LoginView, PasswordResetDoneView
 from django.contrib.auth.decorators import login_required
 from .models import Account, Role, RoleEnum, Genre, Token
 from modules.localization.models import State, City
-from django_mongoengine.mongo_auth.models import User
+from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from mongoengine.queryset.visitor import Q
 from django.contrib.auth import logout
 from django.views.generic import View
 from django.urls import reverse_lazy
 from core.utils import getPaginator
 from django.contrib import messages
 from django.template import loader
+from django.db.models import Q
 import datetime
 
 
