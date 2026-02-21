@@ -1,2 +1,2 @@
 apt install python3-dev build-essential
-python -m pip install --upgrade pip setuptools
+python -m pip install --upgrade pip setuptools wheel
