@@ -104,7 +104,7 @@ MODULES = [
     "modules.localization.apps.ModuleConfig",
     "modules.auths.apps.ModuleConfig",
     "modules.parameters.apps.ModuleConfig",
-    # "modules.base.apps.ModuleConfig",
+    "modules.base.apps.ModuleConfig",
     # "modules.operative.apps.ModuleConfig",
 ]
 
