@@ -11,7 +11,7 @@ module_folder = 'modules/operative'
 
 class RequestStatus(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=10)
-    name = models.CharField(verbose_name='Nombre')
+    name = models.CharField(verbose_name='Nombre', max_length=100)
 
     def __str__(self):
         return f"{self.name}"
@@ -44,28 +44,6 @@ class RequestStatus(models.Model):
         ordering = ['name']
 
 
-class RequestField(EmbeddedModel):
-    field = models.ForeignKey('parameters.RamoField', verbose_name="Campo", on_delete=models.CASCADE)
-    value = models.CharField(verbose_name='Valor', max_length=255)
-
-    def __str__(self):
-        try:
-            return f"{self.field.name}: {self.value}"
-        except:
-            return f"{self.value}"
-    
-
-class RequestDocument(EmbeddedModel):
-    document_name = models.CharField(verbose_name='Nombre', max_length=255)
-    document_title = models.CharField(verbose_name='Título', max_length=255)
-    filename = models.CharField(verbose_name='Nombre Archivo', max_length=255)
-    file_type = models.CharField(verbose_name='Tipo Archivo', max_length=255)
-    content = models.TextField(verbose_name='Contenido Base64')
-
-    def __str__(self):
-        return f"{self.document_name} - {self.filename}"
-
-
 class OperativeRequestDocument(models.Model):
     operative_request = models.ForeignKey('OperativeRequest', verbose_name="Solicitud", on_delete=models.CASCADE)
     document_class = models.ForeignKey('parameters.DocumentClass', verbose_name="Clase de Documento", on_delete=models.CASCADE)
@@ -88,14 +66,6 @@ class OperativeRequestDocument(models.Model):
         verbose_name_plural = 'Documentos de Solicitud'
         ordering = ['operative_request', 'document_class']
 
-class RequestFile(EmbeddedModel):
-    filename = models.CharField(verbose_name='Nombre Archivo', max_length=255)
-    file_type = models.CharField(verbose_name='Tipo Archivo', max_length=255)
-    content = models.TextField(verbose_name='Contenido Base64')
-
-    def __str__(self):
-        return f"{self.filename}"
-
 
 class OperativeRequest(models.Model):
     applicant = models.ForeignKey('base.Applicant', verbose_name="Solicitante", on_delete=models.CASCADE)
@@ -108,21 +78,6 @@ class OperativeRequest(models.Model):
     assigned_at = models.DateTimeField(verbose_name="Fecha Asignación", null=True, blank=True)
     assigned_by = models.CharField(verbose_name='Asignado por', max_length=50, null=True, blank=True)
     observations = models.CharField(verbose_name='Observaciones', max_length=50, null=True, blank=True)
-    request_fields = ArrayField(
-        EmbeddedModelField(RequestField), blank=True,
-    )
-    values_fields = models.CharField(verbose_name='Valores de Campos', max_length=50, null=True, blank=True)
-    ###### Cambio
-    request_documents = ArrayField(
-        EmbeddedModelField(RequestDocument), blank=True,
-    )
-    request_receipt = EmbeddedModelField(RequestFile, null=True, blank=True)
-    request_rc_receipt = EmbeddedModelField(RequestFile, null=True, blank=True)
-    request_police = EmbeddedModelField(RequestFile, null=True, blank=True)
-    request_rc_police = EmbeddedModelField(RequestFile, null=True, blank=True)
-    payment_receipt = EmbeddedModelField(RequestFile, null=True, blank=True)
-    payment_rc_receipt = EmbeddedModelField(RequestFile, null=True, blank=True)
-    ###### Cambio
     created_at = models.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True, auto_now_add=True)
     created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = models.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True, auto_now=True)
@@ -156,7 +111,6 @@ class OperativeRequest(models.Model):
             document_class = DocumentClass.objects.get(id=operative_request_document.document_class.id)
             operative_request_document.title = document_class.name
             operative_request_document.save()
-
 
     @staticmethod
     def migrate_documents():
@@ -515,3 +469,22 @@ class RequestEvent(models.Model):
         verbose_name_plural = 'Eventos de Solicitud'
         ordering = ['created_at']
     
+
+class RequestFieldValue(models.Model):
+    operative_request = models.ForeignKey('OperativeRequest', verbose_name="Solicitud", on_delete=models.CASCADE)
+    field = models.ForeignKey('parameters.RamoField', verbose_name="Campo", on_delete=models.CASCADE)
+    value = models.CharField(verbose_name='Valor', max_length=255)
+
+    def __str__(self):
+        try:
+            return f"{self.field.name}: {self.value}"
+        except:
+            return f"{self.value}"
+    
+    class Meta:
+        app_label = 'operative'
+        db_table = 'operative_requestfieldvalues'
+        verbose_name = 'Valor de Campo de Solicitud'
+        verbose_name_plural = 'Valores de Campos de Solicitud'
+        ordering = ['operative_request', 'field']
+

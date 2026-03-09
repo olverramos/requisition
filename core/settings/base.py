@@ -102,10 +102,11 @@ LIBRARY_MODULES = [
 
 MODULES = [
     "modules.localization.apps.ModuleConfig",
-    "modules.auths.apps.ModuleConfig",
     "modules.parameters.apps.ModuleConfig",
-    "modules.base.apps.ModuleConfig",
-    "modules.operative.apps.ModuleConfig",
+    "modules.menu.apps.ModuleConfig",
+    # "modules.auths.apps.ModuleConfig",
+    # "modules.base.apps.ModuleConfig",
+    # "modules.operative.apps.ModuleConfig",
 ]
 
 INSTALLED_APPS = [

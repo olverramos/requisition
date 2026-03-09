@@ -3,7 +3,6 @@ from modules.parameters.models import Ramo, FieldType, RamoField, \
     
 def run():
     FieldType.init_table()
-    RamoField.init_table()
     DocumentClassType.init_table()
     DocumentClass.init_table()
     Ramo.init_table()

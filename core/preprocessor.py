@@ -13,32 +13,32 @@ def generic_variables(request):
                 'url': 'auth_accounts',
                 'title': 'Usuarios'
             },
-            {
-                'url': 'parameters_documentclass',
-                'title': 'Clase Documentos'
-            },
-            {
-                'url': 'parameters_ramo_field',
-                'title': 'Campos de Ramo'
-            },
-            {
-                'url': 'parameters_ramos',
-                'title': 'Ramos'
-            },
-            {
-                'url': 'base_applicants',
-                'title': 'Solicitantes'
-            },
-            {
-                'url': 'base_takers',
-                'title': 'Tomadores'
-            },
+            # {
+            #     'url': 'parameters_documentclass',
+            #     'title': 'Clase Documentos'
+            # },
+            # {
+            #     'url': 'parameters_ramo_field',
+            #     'title': 'Campos de Ramo'
+            # },
+            # {
+            #     'url': 'parameters_ramos',
+            #     'title': 'Ramos'
+            # },
+            # {
+            #     'url': 'base_applicants',
+            #     'title': 'Solicitantes'
+            # },
+            # {
+            #     'url': 'base_takers',
+            #     'title': 'Tomadores'
+            # },
         ],
         'operative': [
-            {
-                'url': 'operative_requests',
-                'title': 'Solicitudes'
-            },
+            # {
+            #     'url': 'operative_requests',
+            #     'title': 'Solicitudes'
+            # },
         ],
     }
 

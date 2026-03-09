@@ -1,5 +1,3 @@
-from django_mongodb_backend.fields import EmbeddedModelField, ArrayField
-from django_mongodb_backend.models import EmbeddedModel
 from django.db import models
 import datetime
 import json
@@ -10,10 +8,6 @@ module_folder = 'modules/parameters'
 class FieldType(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=10)
     name = models.CharField(max_length=100, verbose_name='Nombre')
-    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
-    created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
-    updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -46,108 +40,9 @@ class FieldType(models.Model):
         ordering = ['name']
 
 
-class FieldOption(models.Model):
-    field = models.ForeignKey('RamoField', verbose_name="Campo", on_delete=models.CASCADE)
-    value = models.CharField(verbose_name='Valor')
-    title = models.CharField(verbose_name='Nombre')
-    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
-    created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
-    updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-
-    meta = {
-        'collection': 'parameters_fieldoptions',
-        'ordering': ['title'],
-        'indexes': [
-            ('title',), 
-        ]
-    }
-    
-    def __str__(self):
-        return f"{self.value} - {self.title}"
-    
-
-    class Meta:
-        app_label = 'parameters'
-        db_table = 'parameters_fieldoptions'
-        verbose_name = 'Opción de Campo'
-        verbose_name_plural = 'Opciones de Campos'
-        ordering = ['field', 'title']
-        unique_together = ('field', 'value',)
-
-
-class RamoField(models.Model):
-    field_type = models.ForeignKey(FieldType, verbose_name="Tipo de Campo", on_delete=models.CASCADE)
-    name = models.CharField(verbose_name='Nombre', unique=True)
-    title = models.CharField(verbose_name='Título', db_index=True)
-    mandatory = models.BooleanField(verbose_name="Es Obligatorio", default=False)
-    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
-    created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
-    updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.title}"
-    
-    @staticmethod
-    def init_table():
-        try:
-            with open(f'{module_folder}/scripts/data/ramofields.json') as data_fp:
-                data_list = json.load(data_fp)
-                for data in data_list:
-                    field_type = None
-                    if 'field_type' in data.keys():
-                        field_type_id = data["field_type"]
-                        try:
-                            field_type = FieldType.objects.get(pk=field_type_id)
-                        except FieldType.DoesNotExist:
-                            print (f"Tipo de Campo {field_type} no Existe")
-                            field_type = None
-                    
-                    if field_type is not None and 'name' in data.keys() and 'title' in data.keys():
-                        mandatory = False
-                        if 'mandatory' in data.keys():
-                            mandatory = data["mandatory"]
-                    
-                        try:
-                            ramo_field = RamoField.objects.get(name=data["name"])
-                        except RamoField.DoesNotExist:
-                            ramo_field = RamoField()
-                            ramo_field.field_type = field_type
-                            ramo_field.name = data['name']
-                            ramo_field.title = data['title']
-                            ramo_field.mandatory = mandatory
-                            ramo_field.options = []
-                            if 'options' in data.keys():
-                                for option_data in data["options"]:
-                                    if 'value' in option_data.keys() and 'title' in option_data.keys():
-                                        option = FieldOption()
-                                        option.field = ramo_field
-                                        option.value = option_data['value']
-                                        option.title = option_data['title']
-                                        option.created_at = datetime.now()
-                                        option.created_by = 'System'
-                                        option.updated_at = datetime.now()
-                                        option.updated_by = 'System'
-                                        option.save()
-                            ramo_field.save()
-
-                            print (f'Campo {ramo_field} creado')
-
-        except FileNotFoundError:
-            pass
-
-    class Meta:
-        app_label = 'parameters'
-        db_table = 'parameters_ramofields'
-        verbose_name = 'Campo de Ramo'
-        verbose_name_plural = 'Campos de Ramos'
-        ordering = ['name']
-
-
 class DocumentClassType(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=20)
-    name = models.CharField(verbose_name='Nombre')
+    name = models.CharField(verbose_name='Nombre', max_length=100)
 
     def __str__(self):
         return f"{self.name}"
@@ -182,11 +77,11 @@ class DocumentClassType(models.Model):
 
 class DocumentClass(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=20)
-    name = models.CharField(verbose_name='Nombre')
+    name = models.CharField(verbose_name='Nombre', max_length=100)
     document_type = models.ForeignKey('DocumentClassType', verbose_name="Tipo de Documento", on_delete=models.PROTECT)
-    created_at = models.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True)
+    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
     created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True)
+    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
     updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
     def __str__(self):
@@ -217,7 +112,7 @@ class DocumentClass(models.Model):
                             document_class.id = data['id']
                             document_class.name = data['name']
                             document_class.document_type = document_type
-                            document_class.created_at = datetime.datetime.now()
+                            document_class.created_by = 'System'
                             document_class.save()
 
                             print (f'Clase de Documento {document_class} creada')
@@ -233,49 +128,17 @@ class DocumentClass(models.Model):
         ordering = ['name']
 
 
-class AvailableDocument(EmbeddedModel):
-    name = models.CharField(verbose_name='Nombre')
-    title = models.CharField(verbose_name='Título')
-    mandatory = models.BooleanField(verbose_name="Es Obligatorio", default=False)
-
-    def __str__(self):
-        return f"{self.title}"
-
-
 class Ramo(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=20)
     name = models.CharField(max_length=100, verbose_name='Nombre')
-    ramo_fields = ArrayField(
-        models.ForeignKey('RamoField', on_delete=models.CASCADE), blank=True,
-    )
-    document_classes = ArrayField(
-        models.ForeignKey('DocumentClass', on_delete=models.CASCADE), blank=True,
-    )
-    available_documents = ArrayField( 
-        EmbeddedModelField('AvailableDocument'), blank=True,
-    )
-    created_at = models.DateTimeField(verbose_name="Fecha Creación", null=True, blank=True, auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
     created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
-    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", null=True, blank=True, auto_now=True)
+    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
     updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
     
-    @staticmethod
-    def fix_document_classes():
-        ramo_list = Ramo.objects.all()
-        for ramo in ramo_list:
-            ramo.document_classes = []
-            for available_document in ramo.available_documents:
-                try:
-                    document_class = DocumentClass.objects.get(name=available_document.name)
-                    ramo.document_classes.append(document_class)
-                except DocumentClass.DoesNotExist:
-                    print (f"Clase de Documento {available_document.name} no Existe")
-
-            ramo.save()
-
     @staticmethod
     def init_table():
         try:
@@ -289,30 +152,69 @@ class Ramo(models.Model):
                             ramo = Ramo()
                             ramo.id = data['id']
                             ramo.name = data['name']
-                            ramo.ramo_fields = []
-                            if 'fields' in data.keys():
-                                for field_name in data['fields']:
-                                    try:
-                                        ramo_field = RamoField.objects.get(name=field_name)
-                                        ramo.ramo_fields.append(ramo_field)
-                                    except RamoField.DoesNotExist:
-                                        print (f"Campo {field_name} no Existe")
-                                        ramo_field = None
-
-                            ramo.document_classes = []
-                            if 'document_classes' in data.keys():
-                                for document_class_name in data['document_classes']:
-                                    try:
-                                        document_class = DocumentClass.objects.get(name=document_class_name)
-                                        ramo.document_classes.append(document_class)
-                                    except DocumentClass.DoesNotExist:
-                                        print (f"Clase de Documento {document_class_name} no Existe")
-                                        document_class = None
-
-                            ramo.created_at = datetime.datetime.now()
+                            ramo.created_by = 'System'
                             ramo.save()
 
-                            print (f'Ramo {ramo} creada')
+                            if 'fields' in data.keys():
+                                for field_data in data['fields']:
+                                    field_type = None
+                                    try:
+                                        field_type = FieldType.objects.get(id=field_data['field_type'])
+                                    except FieldType.DoesNotExist:
+                                        print (f"Tipo de Campo {field_data['field_type']} no Existe")
+                                        field_type = None
+
+                                    if field_type is not None and 'name' in field_data.keys():
+                                        field_name = field_data['name']
+                                        try:
+                                            ramo_field = RamoField.objects.get(
+                                                ramo=ramo,
+                                                name=field_name
+                                            )
+                                        except RamoField.DoesNotExist:
+                                            ramo_field = RamoField()
+                                            ramo_field.ramo = ramo
+                                            ramo_field.name = field_name
+                                            ramo_field.field_type = field_type
+                                            if 'title' in field_data.keys() and field_data['title']:
+                                                ramo_field.title = field_data['title']
+                                            else:
+                                                ramo_field.title = field_name
+                                            ramo_field.mandatory = False
+                                            if 'mandatory' in field_data.keys() and field_data['mandatory']:
+                                                ramo_field.mandatory = field_data['mandatory']
+                                            ramo_field.created_by = 'System'
+                                            ramo_field.save()
+
+                                            print (f'Campo {ramo_field} del Ramo {ramo} creado')
+                                        
+                            if 'required_documents' in data.keys():
+                                for required_document_data in data['required_documents']:
+                                    document_class_id = required_document_data['document_class']
+                                    try:
+                                        document_class = DocumentClass.objects.get(pk=document_class_id)
+                                    except DocumentClass.DoesNotExist:
+                                        print (f"Clase de Documento {document_class_id} no Existe")
+                                        document_class = None
+                                    if document_class is not None:
+                                        try:
+                                            ramo_required_document = RamoRequiredDocument.objects.get(
+                                                ramo=ramo,
+                                                document_class=document_class
+                                            )
+                                        except RamoRequiredDocument.DoesNotExist:
+                                            ramo_required_document = RamoRequiredDocument()
+                                            ramo_required_document.ramo = ramo
+                                            ramo_required_document.document_class = document_class
+                                            ramo_required_document.mandatory = False
+                                            if 'mandatory' in required_document_data.keys() and required_document_data['mandatory']:
+                                                ramo_required_document.mandatory = required_document_data['mandatory']
+                                            ramo_required_document.created_by = 'System'
+                                            ramo_required_document.save()
+
+                                            print (f'Documento requerido {ramo_required_document} del Ramo {ramo} creado')
+
+                            print (f'Ramo {ramo} creado')
         except FileNotFoundError:
             pass
 
@@ -322,3 +224,70 @@ class Ramo(models.Model):
         verbose_name = 'Ramo'
         verbose_name_plural = 'Ramos'
         ordering = ['name']
+
+
+class RamoField(models.Model):
+    ramo = models.ForeignKey('Ramo', verbose_name="Ramo", on_delete=models.CASCADE)
+    field_type = models.ForeignKey('FieldType', verbose_name="Tipo de Campo", on_delete=models.CASCADE)
+    name = models.CharField(verbose_name='Nombre', max_length=100)
+    title = models.CharField(verbose_name='Título', db_index=True, max_length=100)
+    mandatory = models.BooleanField(verbose_name="Es Obligatorio", default=False)
+    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
+    created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
+    updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+
+    def __repr__(self):
+        return f"{self.ramo} - {self.title}"
+
+    def __str__(self):
+        return f"{self.title}"
+    
+    class Meta:
+        app_label = 'parameters'
+        db_table = 'parameters_ramofields'
+        verbose_name = 'Campo de Ramo'
+        verbose_name_plural = 'Campos de Ramos'
+        ordering = ['name']
+        unique_together = ('ramo', 'name', )
+
+
+class FieldOption(models.Model):
+    field = models.ForeignKey('RamoField', verbose_name="Campo", on_delete=models.CASCADE)
+    value = models.CharField(verbose_name='Valor', max_length=50)
+    title = models.CharField(verbose_name='Nombre', max_length=100)
+
+    def __str__(self):
+        return f"{self.value} - {self.title}"
+
+    class Meta:
+        app_label = 'parameters'
+        db_table = 'parameters_fieldoptions'
+        verbose_name = 'Opción de Campo'
+        verbose_name_plural = 'Opciones de Campos'
+        ordering = ['field', 'title']
+        unique_together = ('field', 'value',)
+
+
+class RamoRequiredDocument(models.Model):
+    ramo = models.ForeignKey('Ramo', verbose_name="Ramo", on_delete=models.CASCADE)
+    document_class = models.ForeignKey('DocumentClass', verbose_name="Clase de Documento", on_delete=models.CASCADE)
+    mandatory = models.BooleanField(verbose_name="Es Obligatorio", default=False)
+    created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
+    created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+    updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
+    updated_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
+
+    def __repr__(self):
+        return f"{self.ramo} - {self.document_class}"
+
+    def __str__(self):
+        return f"{self.document_class.name}"
+
+    class Meta:
+        app_label = 'parameters'
+        db_table = 'parameters_ramorequireddocuments'
+        verbose_name = 'Documento Requerido para Ramo'
+        verbose_name_plural = 'Documentos Requeridos para Ramos'
+        ordering = ['ramo', 'document_class']
+        unique_together = ('ramo', 'document_class', )

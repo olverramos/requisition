@@ -48,5 +48,140 @@
         "id": "requerimiento",
         "name": "Requerimiento de Cotizacón",
         "document_type": "CUSTOM"
+    },
+    {
+        "id": "odoc",
+        "document_type": "CUSTOM",
+        "name": "Soporte Contrato"
+    },
+    {
+        "id": "ipol",
+        "document_type": "CUSTOM",
+        "name": "Instructivo de Poliza"
+    },
+    {
+        "id": "lam",
+        "document_type": "CUSTOM",
+        "name": "Licencia Ambiental"
+    },
+    {
+        "id": "cregmin",
+        "document_type": "CUSTOM",
+        "name": "Certificado Registro Minero"
+    },
+    {
+        "id": "EF1",
+        "document_type": "CUSTOM",
+        "name": "Estados Financieros 1"
+    },
+    {
+        "id": "EF2",
+        "document_type": "CUSTOM",
+        "name": "Estados Financieros 2"
+    },
+    {
+        "id": "EF3",
+        "document_type": "CUSTOM",
+        "name": "Estados Financieros 3"
+    },
+    {
+        "id": "EF4",
+        "document_type": "CUSTOM",
+        "name": "Estados Financieros 4"
+    },
+    {
+        "id": "CERACC",
+        "document_type": "CUSTOM",
+        "name": "Certificación Accionaria"
+    },
+    {
+        "id": "infulvis",
+        "document_type": "CUSTOM",
+        "name": "Informe Última Visita"
+    },
+    {
+        "id": "polanterios",
+        "document_type": "CUSTOM",
+        "name": "Poliza Anterior"
+    },
+    {
+        "id": "reg",
+        "document_type": "CUSTOM",
+        "name": "Regalias 1"
+    },
+    {
+        "id": "con_secop",
+        "document_type": "CUSTOM",
+        "name": "Condiciones Secop"
+    },
+    {
+        "id": "Gen_Secop",
+        "document_type": "CUSTOM",
+        "name": "Generales Secop"
+    },
+    {
+        "id": "Poliza",
+        "document_type": "CUSTOM",
+        "name": "Poliza Emitida"
+    },
+    {
+        "id": "CC",
+        "document_type": "CUSTOM",
+        "name": "Cedula Tomador"
+    },
+    {
+        "id": "CA",
+        "document_type": "CUSTOM",
+        "name": "Cedula Asegurado"
+    },
+    {
+        "id": "CAF",
+        "document_type": "CUSTOM",
+        "name": "Cedula Afianzado"
+    },
+    {
+        "id": "FUCC",
+        "document_type": "CUSTOM",
+        "name": "Sarlaft"
+    },
+    {
+        "id": "DP",
+        "document_type": "CUSTOM",
+        "name": "Diploma"
+    },
+    {
+        "id": "TP",
+        "document_type": "CUSTOM",
+        "name": "Tarjeta Profesional"
+    },
+    {
+        "id": "for_rc_prof_med",
+        "document_type": "CUSTOM",
+        "name": "Formulario RC profesional medico"
+    },
+    {
+        "id": "TARJETA PROPIEDAD",
+        "document_type": "CUSTOM",
+        "name": "Tarjeta de Propiedad"
+    },
+    {
+        "id": "extr_ban",
+        "document_type": "CUSTOM",
+        "name": "Extracto Bancario"
+    },
+    {
+        "id": "Cotizacion",
+        "document_type": "CUSTOM",
+        "name": "Cotización"
+    },
+    {
+        "id": "DECLARACION",
+        "document_type": "CUSTOM",
+        "name": "Declaración de Asegurabilidad"
+    },
+    {
+        "id": "CARTA CANCELACION",
+        "document_type": "CUSTOM",
+        "name": "Carta Cancelación"
     }
 ]

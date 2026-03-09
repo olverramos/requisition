@@ -1,0 +1,17 @@
+[
+    {
+        "id": "admin",
+        "title": "Admin",
+        "icon": "fa fa-shield"
+    },
+    {
+        "id": "base",
+        "title": "Base",
+        "icon": "fa fa-database"
+    },
+    {
+        "id": "operative",
+        "title": "Operativo",
+        "icon": "fa fa-podcast"
+    }
+]

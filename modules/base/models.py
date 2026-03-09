@@ -7,7 +7,7 @@ module_folder = 'modules/base'
 
 class PersonType(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=10)
-    name = models.CharField(verbose_name='Nombre')
+    name = models.CharField(verbose_name='Nombre', max_length=50)
     
     def __str__(self):
         return f"{self.name}"
@@ -42,7 +42,7 @@ class PersonType(models.Model):
 
 class DocumentType(models.Model):
     id = models.CharField(verbose_name='ID', primary_key=True, max_length=10)
-    name = models.CharField(verbose_name='Nombre')
+    name = models.CharField(verbose_name='Nombre', max_length=50)
     person_type = models.ForeignKey('PersonType', verbose_name="Tipo de Persona", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -85,13 +85,13 @@ class DocumentType(models.Model):
 
 
 class Applicant(models.Model):
-    identification = models.CharField(verbose_name='Identificacíon', unique=True)
-    name = models.CharField(verbose_name='Nombre')
+    identification = models.CharField(verbose_name='Identificacíon', unique=True, max_length=20)
+    name = models.CharField(verbose_name='Nombre', max_length=200)
     email = models.EmailField(verbose_name='Email', unique=True)
-    phone_number = models.CharField(verbose_name='Teléfono', unique=True)
+    phone_number = models.CharField(verbose_name='Teléfono', unique=True, max_length=20)
     state = models.ForeignKey('localization.State', verbose_name="Departamento", null=True, blank=True, on_delete=models.SET_NULL)
     city = models.ForeignKey('localization.City', verbose_name="Ciudad", null=True, blank=True, on_delete=models.SET_NULL)
-    account = models.ForeignKey('account.Account', verbose_name="Cuenta", null=True, blank=True, on_delete=models.SET_NULL)
+    account = models.ForeignKey('auths.Account', verbose_name="Cuenta", null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)
     created_by = models.CharField(verbose_name='Creado por', max_length=50, null=True, blank=True)
     updated_at = models.DateTimeField(verbose_name="Fecha Actualización", auto_now=True)
@@ -151,12 +151,12 @@ class Applicant(models.Model):
 class Taker(models.Model):
     person_type = models.ForeignKey(PersonType, verbose_name="Tipo de Persona", on_delete=models.PROTECT, null=True, blank=True)
     document_type = models.ForeignKey(DocumentType, verbose_name="Tipo de Documento", on_delete=models.PROTECT, null=True, blank=True)
-    identification = models.CharField(verbose_name='Identificacíon', unique=True)
-    name = models.CharField(verbose_name='Nombre')
+    identification = models.CharField(verbose_name='Identificacíon', unique=True, max_length=20)
+    name = models.CharField(verbose_name='Nombre', max_length=200)
     email = models.EmailField(verbose_name='Email', null=True, blank=True)
-    phone_number = models.CharField(verbose_name='Teléfono', null=True, blank=True)
-    contact_name = models.CharField(verbose_name='Nombre Contacto', null=True, blank=True)
-    address = models.CharField(verbose_name='Dirección', null=True, blank=True)
+    phone_number = models.CharField(verbose_name='Teléfono', null=True, blank=True, max_length=20)
+    contact_name = models.CharField(verbose_name='Nombre Contacto', null=True, blank=True, max_length=200)
+    address = models.TextField(verbose_name='Dirección', null=True, blank=True)
     state = models.ForeignKey('localization.State', verbose_name="Departamento", null=True, blank=True, on_delete=models.SET_NULL)
     city = models.ForeignKey('localization.City', verbose_name="Ciudad", null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(verbose_name="Fecha Creación", auto_now_add=True)

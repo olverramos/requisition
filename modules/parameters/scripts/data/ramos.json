@@ -3,13 +3,242 @@
         "id": "cumplimiento",
         "name": "Cumplimiento",
         "fields": [
-            "contract_number"
+            {
+                "field_type": "IN",
+                "name": "contract_number",
+                "title": "Nro Contrato",
+                "mandatory": true
+            }
         ],
-        "document_classes": [
-            "contrato",
-            "rut",
-            "cc",
-            "requerimiento"
+        "required_documents": [
+            {
+                "document_class": "contrato",
+                "mandatory": true
+            },
+            {
+                "document_class": "rut",
+                "mandatory": false
+            },
+            {
+                "document_class": "cc",
+                "mandatory": false
+            },
+            {
+                "document_class": "requerimiento",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "DL",
+        "name": "Disposiciones Legales"
+    },
+    {
+        "id": "AUT",
+        "name": "Autos",
+        "fields": [
+            {
+                "field_type": "IN",
+                "name": "placa_veh",
+                "title": "Placa vehiculo",
+                "mandatory": true
+            }
+        ],
+        "required_documents": [
+            {
+                "document_class": "CERACC",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "ap",
+        "required_documents": [
+            {
+                "document_class": "rut",
+                "mandatory": true
+            }
+        ],
+        "name": "Accidentes Personales"
+    },
+    {
+        "id": "RC_hidro",
+        "name": "Responsabilidad civil hidrocarburos",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "Riesgo",
+                "title": "Datos del Riesgo",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "arre_mto",
+        "name": "Arrendamiento",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "des_inm",
+                "title": "DESTINO INMUEBLE",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "RCP",
+        "name": "Responsabilidad Civil Profesional Medico",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "Profesion",
+                "title": "Profesion",
+                "mandatory": false
+            }
+        ],
+        "required_documents": [
+            {
+                "document_class": "CC",
+                "mandatory": false
+            },
+            {
+                "document_class": "rut",
+                "mandatory": false
+            },
+            {
+                "document_class": "DP",
+                "mandatory": false
+            },
+            {
+                "document_class": "for_rc_prof_med",
+                "mandatory": false
+            },
+            {
+                "document_class": "FUCC",
+                "mandatory": false
+            },
+            {
+                "document_class": "TP",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "VD",
+        "name": "Vida Individual",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "Fecha de Nacimiento",
+                "title": "Fecha de Nacimiento",
+                "mandatory": false
+            }
+        ],
+        "required_documents": [
+            {
+                "document_class": "Poliza",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "RC",
+        "name": "RC PARQUEADERO",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "Riesgo",
+                "title": "Datos del Riesgo",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "DL_MIN",
+        "required_documents": [
+            {
+                "document_class": "CC",
+                "mandatory": false
+            },
+            {
+                "document_class": "cregmin",
+                "mandatory": false
+            },
+            {
+                "document_class": "contrato",
+                "mandatory": false
+            },
+            {
+                "document_class": "cc",
+                "mandatory": false
+            },
+            {
+                "document_class": "rut",
+                "mandatory": false
+            },
+            {
+                "document_class": "EF1",
+                "mandatory": false
+            },
+            {
+                "document_class": "EF2",
+                "mandatory": false
+            },
+            {
+                "document_class": "EF3",
+                "mandatory": false
+            },
+            {
+                "document_class": "EF4",
+                "mandatory": false
+            },
+            {
+                "document_class": "ipol",
+                "mandatory": false
+            },
+            {
+                "document_class": "lam",
+                "mandatory": false
+            },
+            {
+                "document_class": "reg",
+                "mandatory": false
+            },
+            {
+                "document_class": "FUCC",
+                "mandatory": false
+            },
+            {
+                "document_class": "infulvis",
+                "mandatory": false
+            },
+            {
+                "document_class": "polanterios",
+                "mandatory": false
+            }
+        ],
+        "name": "Disposicion legal Minera",
+        "ramo_fields": [
+            {
+                "field_type": "IN",
+                "name": "Tit_min",
+                "title": "Titulo Minero",
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "id": "vid.deudor",
+        "name": "Vida deudores",
+        "required_documents": [
+            {
+                "document_class": "CA",
+                "mandatory": false
+            },
+            {
+                "document_class": "extr_ban",
+                "mandatory": false
+            }
         ]
     }
 ]

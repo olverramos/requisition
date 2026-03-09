@@ -1,0 +1,79 @@
+[
+    {
+        "id": "000",
+        "title": "Admin",
+        "url": "/admin/",
+        "target": "_blank",
+        "section": "admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "001",
+        "title": "Usuarios",
+        "url": "auth_accounts",
+        "section": "admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "101",
+        "title": "Ramos",
+        "url": "parameters_ramos",
+        "section": "admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "102",
+        "title": "Clase Documentos",
+        "url": "parameters_documentclass",
+        "section": "admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "103",
+        "title": "Campos de Ramo",
+        "url": "parameters_ramo_field",
+        "section": "admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "201",
+        "title": "Solicitantes",
+        "url": "base_applicants",
+        "section": "base",
+        "roles": [
+            "admin",
+            "assitant"
+        ]
+    },
+    {
+        "id": "202",
+        "title": "Tomadores",
+        "url": "base_takers",
+        "section": "base",
+        "roles": [
+            "admin",
+            "assitant"
+        ]
+    },
+    {
+        "id": "301",
+        "title": "Solicitudes",
+        "url": "operative_requests",
+        "section": "operative",
+        "roles": [
+            "admin",
+            "assitant",
+            "applicant"
+        ]
+    }
+]
