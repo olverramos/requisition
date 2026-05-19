@@ -115,12 +115,12 @@ def requests_index_view(request):
                 messages.error(request, error)
 
     try:
-        paginator = getPaginator(operative_request_list, page, items_per_page=10)
+        paginator = getPaginator(operative_request_list, page, items_per_page=20)
     except Exception as e:
         error = f'Error al filtrar las solicitudes: {str(e)}'
         messages.error(request, error)
         operative_request_list = OperativeRequest.objects.none()
-        paginator = getPaginator(operative_request_list, page, items_per_page=10)
+        paginator = getPaginator(operative_request_list, page, items_per_page=20)
 
     user_list = User.objects.filter(is_active=True)
     form.fields['assigned_to'].queryset = Account.objects.filter(
@@ -230,7 +230,7 @@ def requests_applicant_search_view(request, phone=None):
     if applicant is None:
         operative_request_list = OperativeRequest.objects.none()
 
-    paginator = getPaginator(operative_request_list, page, items_per_page=10)
+    paginator = getPaginator(operative_request_list, page, items_per_page=20)
 
     if current_account is None:
         can_register_payment = True
@@ -322,7 +322,7 @@ def requests_taker_search_view(request, phone=None):
     if not search_data:
         operative_request_list = OperativeRequest.objects.none()
 
-    paginator = getPaginator(operative_request_list, page, items_per_page=10)
+    paginator = getPaginator(operative_request_list, page, items_per_page=20)
 
     if current_account is None:
         can_register_payment = True
@@ -1085,7 +1085,7 @@ def documents_request_view(request, operative_request_id, source=None):
                     document_name__icontains=search
                 )
 
-    paginator = getPaginator(document_list, page, items_per_page=10)
+    paginator = getPaginator(document_list, page, items_per_page=20)
 
     custom_document_classes_id = [document_class.id for document_class in operative_request.ramo.document_classes]
 
