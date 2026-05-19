@@ -3,7 +3,7 @@ from modules.localization.models import State, City
 from django_mongoengine import Document, fields
 from core.utils import send_basic_mail
 from django.conf import settings
-from enum import StrEnum
+from enum import Enum
 import pyshorteners
 import mongoengine
 import datetime
@@ -47,8 +47,7 @@ class Genre(Document):
         except FileNotFoundError:
             pass
 
-
-class RoleEnum(StrEnum):
+class RoleEnum(str, Enum):
     ADMIN = 'admin'
     ASSISTANT = 'assitant'
     APPLICANT = 'applicant'
