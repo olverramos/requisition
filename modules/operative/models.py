@@ -130,7 +130,7 @@ class OperativeRequest(Document):
 
     meta = {
         'collection': 'operative_requests',
-        'ordering': ['number'],
+        'ordering': ['-updated_at'],
         'indexes': [
             ('number',), 
         ]

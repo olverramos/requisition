@@ -80,6 +80,7 @@ def requests_index_view(request):
             number = filter_form.cleaned_data['number']
             applicant = filter_form.cleaned_data['applicant']
             ramo = filter_form.cleaned_data['ramo']
+            status = filter_form.cleaned_data['status']
             date = filter_form.cleaned_data['date']
             try:
                 if number is not None and number != '':
@@ -97,6 +98,10 @@ def requests_index_view(request):
                 if ramo is not None:
                     operative_request_list = operative_request_list.filter(
                         ramo=ramo
+                    )
+                if status is not None:
+                    operative_request_list = operative_request_list.filter(
+                        status=status
                     )
                 if date is not None:
                     start_date_time = datetime.datetime.combine(date, datetime.time.min)

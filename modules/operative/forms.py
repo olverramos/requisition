@@ -1247,6 +1247,18 @@ class RequestFilterForm(forms.Form):
             }
         ),
     )
+    status = forms.ModelChoiceField(
+        label=_("Estado"),
+        required=False,
+        queryset=RequestStatus.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control form-select', 
+                'placeholder': 'Estado', 
+                'id': 'filter_status_id'
+            }
+        ),
+    )
     date = forms.DateField(
         label=_("Fecha Solicitud"),
         required=False,
