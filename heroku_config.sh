@@ -2,7 +2,7 @@ APP_NAME=Arvii
 DATABASE_USERNAME=admin
 DATABASE_PASSWORD=am3ricas2024
 DATABASE_NAME=requisitiondb
-DATABASE_HOST=arviidedicado.s82cu.mongodb.net
+DATABASE_HOST=arviicluster.s82cu.mongodb.net
 DATABASE_PORT=27017
 DATABASE_SCHEME=mongodb+srv
 MONGO_OPTIONS="authSource=${DATABASE_USERNAME}&appName=${APP_NAME}"
@@ -10,7 +10,7 @@ DATABASE_URL=${DATABASE_SCHEME}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DA
 echo ${DATABASE_URL}
 
 # mongodump --uri="mongodb+srv://admin:am3ricas2024@arvii.i9iybpi.mongodb.net/requisitiondb"  --out=./dump_requisitiondb_20261113
-# mongorestore --uri="mongodb+srv://admin:am3ricas2024@arviidedicado.s82cu.mongodb.net/requisitiondb"  --dir=./dump_requisitiondb_20261113
+# mongorestore --uri="mongodb+srv://admin:am3ricas2024@arviicluster.s82cu.mongodb.net"  --dir=./dump_requisitiondb_20261113
 
 
 # heroku config:set APP_NAME=Arvii
