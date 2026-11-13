@@ -79,7 +79,7 @@ class OperativeRequestDocument(Document):
 
     meta = {
         'collection': 'operative_requestdocuments',
-       # 'ordering': ['operative_request', 'document_class'],
+        'ordering': ['operative_request', 'created_at'],
     }
     
     def __str__(self):
