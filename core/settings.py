@@ -158,7 +158,12 @@ for database_key, database_conf in MONGODB_DATABASES.items():
     connect(
         alias=database_key, 
         db=database_conf['name'],
-        host=database_conf['url']
+        host=database_conf['url'],
+        connect=False,
+        maxIdleTimeMS=45000,
+        serverSelectionTimeoutMS=30000,
+        retryReads=True,
+        retryWrites=True,        
     )
 
 
