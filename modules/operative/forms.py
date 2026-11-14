@@ -1262,13 +1262,13 @@ class RequestFilterForm(forms.Form):
     date = forms.DateField(
         label=_("Fecha Solicitud"),
         required=False,
-        widget=DatePickerInput(
-            attrs={
-                'class': 'form-control text-end', 
-                'name': "date", 
-                'placeholder': 'AAAA-MM-DD'
-            }
-        ),
+        # widget=DatePickerInput(
+        #     attrs={
+        #         'class': 'form-control text-end', 
+        #         'name': "date", 
+        #         'placeholder': 'AAAA-MM-DD'
+        #     }
+        # ),
     )
 
     class Media:

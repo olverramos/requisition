@@ -14,3 +14,4 @@ pyshorteners
 django-fileprovider
 django-bootstrap-datepicker-plus
 styleframe
+setuptools==81
